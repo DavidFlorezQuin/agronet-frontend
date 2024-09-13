@@ -1,0 +1,20 @@
+<main class="d-flex h-100">
+    <section class="col-6 bg-green">
+
+    </section>
+    <section class="col-6 d-flex justify-content-center align-items-center btn-seccion">
+        <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+            <div class="mb-3">
+                <label for="name" id="text-green" class="fw-normal text-white">Usuario</label>
+                <input type="text" [(ngModel)]="newAuth.username" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="mb-3 justify-content-center h-100 align-content-center">
+                <label for="name" id="text-green" class="fw-norma text-white">Contraseña</label>
+                <input type="text" [(ngModel)]="newAuth.password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="button"  type="submit" id="btn-forms" class="btn btn-form">Guardar</button>
+            
+        </form>
+
+    </section>
+</main>

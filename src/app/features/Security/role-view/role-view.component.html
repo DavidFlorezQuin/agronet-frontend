@@ -1,0 +1,60 @@
+<div class="container">
+    <section class="d-flex justify-content-between my-3">
+    
+      <h1 class="fw-normal">Vistas del role : <span class="rounded-5 text-white px-3" style="width: 180px; background-color: var(--color-green-950);"> {{ currentRole.name }}</span></h1>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50"><i class="bi bi-plus-circle mx-2"></i>
+        Agregar Vista</button>
+    </section>
+      <table class="table">
+        <thead>
+          <tr class="table-success">
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Acciones</th> 
+    
+          </tr>
+        </thead>
+        <tbody>
+    
+          <tr *ngFor="let item of viewRole; index as i">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.description }}</td>
+            <td class="gap-3 d-flex">
+                <i class="bi bi-trash action-icon" (click)="onDelete(item.id)"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    
+    </div>
+    
+    
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fw-bold fs-4" id="text-green">Agregar vista</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="px-5" #roleForm="ngForm" (ngSubmit)="onSubmit(roleForm)">
+           
+            <div class="my-3">
+              <label for="Modulo"  id="text-green"  class="fw-normal">Modulo</label>
+              <select class="form-select form-select-lg mb-3" [(ngModel)]="newRoleModule.viewId" name="moduleId" aria-label="Large select example">
+                <option selected>Selecciona un modulo</option>
+                <option *ngFor = "let view of views" [value]="view.id">
+                  {{ view.name }}
+                </option>
+              </select>
+            </div>
+              
+            <!-- <button class="btn btn-success mt-5" type="submit">{{ newRole.id ? 'Actualizar' : 'Guardar' }}</button> -->
+            <div class="modal-footer">
+              <button type="button" id="btn-forms" type="submit" class="btn btn-form">{{ newRoleModule.id ? 'Actualizar' : 'Guardar' }}</button>
+            </div>
+          </form>
+     

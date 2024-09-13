@@ -1,0 +1,26 @@
+/* main.component.css */
+.container-main {
+    display: flex;
+    height: 100vh; /* Ocupa todo el alto de la ventana */
+    margin: 0;
+  }
+  
+  .app-menu {
+    flex: 0 0 16.6667%; /* Ocupa 2 de 12 columnas (aproximadamente 16.67%) */
+    background: #fff;
+    border-right: 1px solid #ccc; /* Línea de separación */
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    position: fixed; /* Fija el menú en una posición */
+    top: 0;
+    left: 0;
+    overflow-y: auto; /* Permite el scroll si el contenido es grande */
+  }
+  
+  .content {
+    margin-left: 16.6667%; /* Ajusta el contenido para que no quede debajo del menú */
+    width: 83.3333%; /* Ocupa el espacio restante (10 de 12 columnas) */
+    padding: 20px; /* Espaciado interno */
+    overflow-y: auto; /* Permite el scroll si el contenido es grande */
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+  }
+  

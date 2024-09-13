@@ -1,0 +1,62 @@
+<div class="container">
+    <section class="d-flex justify-content-between my-3">
+      <h1 class="fw-normal">Modules</h1>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50"><i class="bi bi-plus-circle mx-2"></i>
+        Agregar Modulo</button>
+    </section>
+    <table class="table" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger">
+      <thead>
+        <tr class="table-success">
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripcion</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let modulo of modulos">
+          <td>{{ modulo.id }}</td>
+          <td>{{ modulo.name }}</td>
+          <td>{{ modulo.description }}</td>
+          <td class="d-flex gap-3">
+            <i class="bi bi-pencil-square action-icon" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(modulo)"></i>
+            <i class="bi bi-trash action-icon" (click)="onDelete(modulo.id)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    
+    </div>
+
+
+    
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fw-bold fs-4" id="text-green">Nuevo Modulo</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="px-5" #moduleForm="ngForm" (ngSubmit)="onSubmit(moduleForm)">
+          <div class="mb-3">
+            <label for="name" id="text-green" class="fw-normal">Nombre</label>
+            <input class="form-control" type="text" id="name" name="name" [(ngModel)]="newModulo.name" required>
+          </div>
+        
+          <div>
+            <label for="description"  id="text-green" class="fw-normal">Descripción</label>
+            <input class="form-control form-green" type="text" id="description" name="description" [(ngModel)]="newModulo.description" required>
+          </div>
+        
+          <button class="btn btn-success mt-5" type="submit">{{ newModulo.id ? 'Actualizar' : 'Guardar' }}</button>
+        </form>
+        
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>

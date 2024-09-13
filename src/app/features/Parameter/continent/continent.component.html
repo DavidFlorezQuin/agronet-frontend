@@ -1,0 +1,59 @@
+<div class="container">
+    <section class="d-flex justify-content-between my-3">
+      <h1 class="fw-normal">Continentes</h1>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#continentModal" id="btn-forms" class="btn h-50">
+        <i class="bi bi-plus-circle mx-2"></i> Agregar Continente
+      </button>
+    </section>
+    <table datatable [dtOptions]="dtoptions" [dtTrigger]="dttrigger" class="table">
+      <thead>
+        <tr class="table-success">
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of continents; index as i">
+          <td>{{ item.id }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.description }}</td>
+          <td class="gap-3 d-flex">
+            <i class="bi bi-pencil-square action-icon" data-bs-toggle="modal" data-bs-target="#continentModal" (click)="onEdit(item)"></i>
+            <i class="bi bi-trash action-icon" (click)="onDelete(item.id)"></i>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="continentModal" tabindex="-1" aria-labelledby="continentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fw-bold fs-4" id="text-green">Nuevo Continente</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="px-5" #continentForm="ngForm" (ngSubmit)="onSubmit(continentForm)">
+            <div class="mb-3">
+              <label for="name" id="text-green" class="fw-normal">Nombre</label>
+              <input class="form-control" type="text" id="name" name="name" [(ngModel)]="newContinent.name" required>
+            </div>
+  
+            <div class="mb-3">
+              <label for="description" id="text-green" class="fw-normal">Descripción</label>
+              <input class="form-control form-green" type="text" id="description" name="description" [(ngModel)]="newContinent.description" required>
+            </div>
+  
+            <div class="modal-footer">
+              <button type="submit" id="btn-forms" class="btn btn-form">{{ newContinent.id ? 'Actualizar' : 'Guardar' }}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

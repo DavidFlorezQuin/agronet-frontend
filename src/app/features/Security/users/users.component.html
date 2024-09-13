@@ -1,0 +1,30 @@
+<div class="container">
+    <section class="d-flex justify-content-between my-3">
+      <h1 class="fw-normal">Usuarios</h1>
+      <a type="button" href="/form-role" id="btn-forms" class="btn h-50"><i class="bi bi-plus-circle mx-2"></i>
+          Agregar Usuarios</a>
+    </section>
+      <table datatable [dtOptions]="dtoptions" [dtTrigger]="dttrigger" class="table shadow-sm">
+        <thead>
+          <tr class="table-success">
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+    
+            <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.userName }}</td>
+            <td class="d-flex gap-3">
+              <i class="bi bi-pencil-square action-icon" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(user)"></i>
+              <i class="bi bi-trash action-icon"></i>
+              <i class="bi bi-gear action-icon" (click)="onView({id:user.id, name:user.userName})"></i>
+            </td>
+          </tr>
+    
+        </tbody>
+      </table>
+    
+    </div>

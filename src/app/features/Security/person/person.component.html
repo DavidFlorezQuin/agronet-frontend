@@ -1,0 +1,131 @@
+<div class="container">
+  <section class="d-flex justify-content-between my-3">
+    <h1 class="fw-normal">Personas</h1>
+    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50"><i
+        class="bi bi-plus-circle mx-2"></i>
+      Agregar Persona</button>
+  </section>
+  <table datatable [dtOptions]="dtoptions" [dtTrigger]="dttrigger" class="table shadow-sm">
+    <thead>
+      <tr class="table-success">
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Email</th>
+        <th>Género</th>
+        <th>Documento</th>
+        <th>CC</th>
+        <th>Direccion</th>
+        <th>Teléfono</th>
+        <th>Cumpleaños</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr *ngFor="let person of persons">
+        <td>{{ person.id }}</td>
+        <td>{{ person.firstName }}</td>
+        <td>{{ person.lastName }}</td>
+        <td>{{ person.email }}</td>
+        <td>{{ person.gender }}</td>
+        <td>{{ person.document }}</td>
+        <td>{{ person.typeDocument }}</td>
+        <td>{{ person.direction }}</td>
+        <td>{{ person.phone }}</td>
+        <td>{{ person.birthday }}</td>
+        <td class="d-flex gap-3">
+          <i class="bi bi-pencil-square action-icon" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
+          <i class="bi bi-trash action-icon"></i>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fw-bold fs-4" id="text-green">Nueva vista</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="px-5" #roleForm="ngForm" (ngSubmit)="onSubmit(roleForm)">
+          <div>
+            <label for="firstName" id="text-green" class="fw-normal">Nombre</label>
+            <input class="form-control" type="text" id="firstName" name="firstName" [(ngModel)]="newPerson.firstName"
+              required>
+          </div>
+
+          <div>
+            <label for="description" id="text-green" class="fw-normal">Apellidos</label>
+            <input class="form-control form-green" type="text" id="lastName" name="lastName"
+              [(ngModel)]="newPerson.lastName" required>
+          </div>
+
+          <div>
+            <label for="description" id="text-green" class="fw-normal">Correo</label>
+            <input class="form-control form-green" type="text" id="email" name="email" [(ngModel)]="newPerson.email"
+              required>
+          </div>
+
+          <div>
+            <label for="description" class="fw-normal" id="text-green">Género</label>
+            <select class="form-select" [(ngModel)]="newPerson.gender" name="gender" aria-label="Seleccionar">
+              <option selected>---Seleccionar</option>
+              <option value="M">Masculino</option>
+              <option value="F">Femenino</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="description" id="text-green" class="fw-normal">Documento</label>
+            <input class="form-control form-green" type="text" id="document" name="document"
+              [(ngModel)]="newPerson.document" required>
+          </div>
+          <div>
+            <label for="description" id="text-green typeDocument" class="fw-normal">Tipo documento</label>
+            <select class="form-select" id="typeDocument" name="typeDocument" [(ngModel)]="newPerson.typeDocument"
+              aria-label="--Seleccionar tipo--">
+              <option selected>--Seleccionar</option>
+              <option value="CC">CC</option>
+              <option value="TI">TI</option>
+              <option value="PP">PP</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="description" id="text-green" class="fw-normal">Direccion</label>
+            <input class="form-control form-green" type="text" id="direction" name="direction"
+              [(ngModel)]="newPerson.direction" required>
+          </div>
+
+          <div>
+            <label for="description" id="text-green" class="fw-normal">Telefono</label>
+            <input class="form-control form-green" type="text" id="phone" name="phone" [(ngModel)]="newPerson.phone"
+              required>
+          </div>
+
+          <div>
+            <label for="description" id="text-green" class="fw-normal">Cumpleaños</label>
+            <input class="form-control form-green" type="date" id="birthday" name="birthday"
+              [(ngModel)]="newPerson.birthday" required>
+          </div>
+
+          <!-- <button class="btn btn-success mt-5" type="submit">{{ newRole.id ? 'Actualizar' : 'Guardar' }}</button> -->
+          <div class="modal-footer">
+            <button type="button" id="btn-forms" type="submit" class="btn btn-form">{{ newPerson.id ? 'Actualizar' :
+              'Guardar' }}</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

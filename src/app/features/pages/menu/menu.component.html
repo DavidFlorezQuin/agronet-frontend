@@ -1,0 +1,33 @@
+<div class="flex-shrink-0 p-3 bg-green" style="height: 100vh; width: 200px;">
+  <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+    <img src="assets/logo_agronet.png" class="logo mx-2" alt="Logo">
+    <span class="fs-5 fw-bold link-light">AGRONET</span>
+  </a>
+  <ul class="list-unstyled ps-0">
+    <!-- Itera sobre cada rol en los datos del menú -->
+    <li *ngFor="let role of menuData">
+      <!-- Nombre del rol -->
+      <!-- <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#role-collapse-' + role.roleId" aria-expanded="false">
+        {{ role.roleName }}
+      </button> -->
+      <!-- <div class="collapse" [id]="'role-collapse-' + role.roleId"> -->
+        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+          <!-- Itera sobre cada módulo dentro del rol -->
+          <li *ngFor="let modulo of role.modulo">
+            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#modulo-collapse-' + modulo.id" aria-expanded="false">
+              {{ modulo.name }}
+            </button>
+            <div class="collapse" [id]="'modulo-collapse-' + modulo.id">
+              <ul class="list-unstyled ps-0">
+                <!-- Itera sobre cada vista dentro del módulo -->
+                <li *ngFor="let view of modulo.views">
+                  <a [routerLink]="view.route" class="link-light nav-link rounded">{{ view.name }}</a>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      <!-- </div> -->
+    </li>
+  </ul>
+</div>
