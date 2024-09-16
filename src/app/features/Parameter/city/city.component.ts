@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { City } from './city.module';
+import { DataTablesModule } from 'angular-datatables';
+import { FormsModule } from '@angular/forms';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { CityService } from './city.service';
@@ -11,7 +13,7 @@ import { Country } from '../country/Country.module';
 @Component({
   selector: 'app-city',
   standalone: true,
-  imports: [],
+  imports: [DataTablesModule, FormsModule],
   templateUrl: './city.component.html'
 })
 export class CityComponent implements OnInit{

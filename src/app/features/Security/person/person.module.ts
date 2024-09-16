@@ -1,3 +1,5 @@
+import { DataType } from "datatables.net";
+
 export interface Person{
     id: number, 
     firstName: string,
@@ -8,5 +10,5 @@ export interface Person{
     typeDocument: string,
     direction: string,
     phone: string,
-    birthday: Date
+    birthday: string
 }

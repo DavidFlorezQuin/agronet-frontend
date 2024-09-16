@@ -18,14 +18,14 @@ export class PersonService {
     return this.http.get<Person[]>(`${this._baseUrl}/Person`);
   }
 
-  onDelete(id:number):Observable<void>{
+  onDeletePerson(id:number):Observable<void>{
      return this.http.delete<void>(`${this._baseUrl}/Person/${id}`)
     }
 
     updatePerson(person: Person, id: number):Observable<Person>
     {
-      const url = `${this._baseUrl}/Person/${id}`;
-      return this.http.put<Person>(url, person)
+
+      return this.http.put<Person>(`${this._baseUrl}/Person/${id}`, person)
     }
 
     createPerson(person: Person):Observable<Person>{
