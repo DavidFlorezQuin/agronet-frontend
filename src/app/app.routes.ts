@@ -13,6 +13,10 @@ import { ViewsComponent } from './features/Security/views/views.component';
 import { UsersComponent } from './features/Security/users/users.component';
 import { PersonComponent } from './features/Security/person/person.component';
 import { HomeComponentD } from './features/Security/home/home.component';
+import { FincaComponent } from './pages/operational/finca/finca.component';
+import { AnimalComponent } from './pages/operational/animal/animal.component';
+import { NacimientoComponent } from './pages/operational/nacimiento/nacimiento.component';
+import { LoteComponent } from './pages/operational/lote/lote.component';
 
 export const routes: Routes = [
     {
@@ -30,7 +34,7 @@ export const routes: Routes = [
     },
     {
         path: 'dashboard',
-        component: MainComponent,
+        component: LoteComponent,
         children: [
 
             {
@@ -65,6 +69,22 @@ export const routes: Routes = [
             {
                 path: '',
                 component: HomeComponentD
+            },
+            {
+                path:'finca',
+                component: FincaComponent
+            },
+            {
+                path:'animal',
+                component:AnimalComponent
+            },
+            {
+                path:'nacimiento',
+                component:NacimientoComponent
+            },
+            {
+                path:'lote',
+                component:LoteComponent
             }
         ]
     }

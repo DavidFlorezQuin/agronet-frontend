@@ -1,12 +1,14 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 import { Animal } from './animal.module';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgForm } from '@angular/forms';
-
+import { FormsModule } from '@angular/forms';
 import { AlertService } from '../../../shared/components/alert.service';
+import { NgModule } from '@angular/core';
+
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,10 +21,12 @@ import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
 import { AnimalService } from './animal.service';
+import { state } from '@angular/animations';
 @Component({
   selector: 'app-animal',
   standalone: true,
-  imports: [CommonModule,
+  imports: [CommonModule, FormsModule,
+
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
@@ -32,13 +36,16 @@ import { AnimalService } from './animal.service';
   templateUrl: './animal.component.html',
   styleUrl: './animal.component.css'
 })
-export class AnimalComponent {
-displayedColumns:string[] = ['id','animal','gender','weight','photo','race','purpuse','birthDay','dateRegister', 'acciones'];
+export class AnimalComponent implements OnInit {
+
+displayedColumns:string[] = ['id','name','gender','weight','photo','race','purpuse','birthDay', 'LotId','state'];
 dataSource: MatTableDataSource<Animal> = new MatTableDataSource<Animal>();
 dtoptions: Config={};
 dttrigger: Subject<any>= new Subject<any>();
-  animales: Animal[] = [];
-  newAnimales: Animal = {id: 0, animal:'',gender:'',weight:0,photo:'',race:'',purpose:'',birthDay: new Date(),dateRegister: new Date(),LotId: 0 };
+animales: Animal[] = [];
+newAnimales: Animal = {id: 0, name:'',gender:'',weight:0,photo:'',raceId:0,purpose:'',
+  birthDay: new Date(),state: true,LotId: 0 };
+  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -51,9 +58,11 @@ dttrigger: Subject<any>= new Subject<any>();
     };
 this.ListAnimal();
   }
+
   ListAnimal(): void{
     this.animalService.getAnimals().subscribe({
 next:(animals)=>{
+ 
   this.animales=animals;
   this.dataSource.data =animals;
   this.dataSource.paginator=this.paginator;
@@ -64,6 +73,7 @@ next:(animals)=>{
       this.alertaService.ErrorAlert('Error al obtener los animales');
     }
   }
+  //ng generate component pages/about
 
 aplicarFiltro(event:Event): void{
 
@@ -109,6 +119,38 @@ editar(form:NgForm):void{
   }else{
     this.alertaService.ErrorAlert('Por favor, complete los datos requeridos');
   }
+}
+
+onSubmit(form:NgForm):void{
+if(form.valid){
+  if(this.newAnimales.id>0){
+    this.animalService.updateAnimal(this.newAnimales,this.newAnimales.id).subscribe({
+      next:()=>{
+        this.alertaService.SuccessAlert('Actualizado correctamente');
+        form.reset();
+        this.ListAnimal();
+            },
+            error:()=>{
+              this.alertaService.ErrorAlert('Error al actualizar');
+            }
+    });
+  }else{
+    this.animalService.createAnimal(this.newAnimales).subscribe({
+      next:()=>{
+        this.alertaService.SuccessAlert('Creado correctamente');
+        form.reset();
+        this.ListAnimal();
+      },
+      error:()=>{
+        this.alertaService.ErrorAlert('Error al crear');
+
+      }
+    });
+  }
+}else{
+  this.alertaService.ErrorAlert('Por favor completa todod los campos');
+
+}
 }
 
 

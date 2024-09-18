@@ -21,7 +21,11 @@ export class CityComponent implements OnInit{
   cities: City[] = []; 
   countries: Country[] = []; 
 
-  newCity: City = {id:0, name:'', descripcion: '', countryId:0 }
+  newCity: City = {id:0, name:'', descripcion: '', countryId:0,
+    country:{id:0,name:'',countryCode:'',continentId:0,
+    continent:{ id:0,name:'',description: ''
+    } 
+  } }
 
   dtoptions: Config={}
   dttrigger: Subject<any> = new  Subject<any>();
@@ -88,7 +92,12 @@ export class CityComponent implements OnInit{
             next: (res) =>{
               this.serviceAlert.SuccessAlert('Actualizado ');
               form.reset();
-              this.newCity = {id:0, name:'', descripcion: '', countryId:0 }
+              this.newCity = {id:0, name:'', descripcion: '', countryId:0,
+                country:{id:0,name:'',countryCode:'',continentId:0,
+                continent:{ id:0,name:'',description: ''}
+              
+              } 
+              }
               this.listCity();
             }, 
             error: (err)=>{

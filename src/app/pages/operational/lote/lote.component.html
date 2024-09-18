@@ -1,1 +1,94 @@
-<p>lote works!</p>
+<div class="container mt-4">
+    <h2>Gestión de Lotes</h2>
+  
+    <!-- Filtro de búsqueda -->
+    <div class="row mb-3">
+      <div class="col-4">
+        <mat-form-field appearance="fill">
+          <mat-label>Buscar</mat-label>
+          <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar por nombre o descripción" />
+        </mat-form-field>
+      </div>
+      <div class="col-8 text-end">
+        <!-- Botón verde para abrir modal de agregar lote -->
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalLote">
+          Agregar Lote
+        </button>
+      </div>
+    </div>
+  
+    <!-- Tabla de lotes -->
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+  
+      <!-- Columnas -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+        <td mat-cell *matCellDef="let lote">{{ lote.id }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nombre</th>
+        <td mat-cell *matCellDef="let lote">{{ lote.name }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="hectare">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Hectáreas</th>
+        <td mat-cell *matCellDef="let lote">{{ lote.hectare }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="farm.name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Granja</th>
+        <td mat-cell *matCellDef="let lote">{{ lote.farm.name }}</td>
+      </ng-container>
+  
+      <!-- Botones de acción -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let lote">
+          <button class="btn btn-warning btn-sm me-2" (click)="onEdit(lote)" data-bs-toggle="modal" data-bs-target="#modalLote">
+            Editar
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="onDelete(lote.id)">
+            Eliminar
+          </button>
+        </td>
+      </ng-container>
+  
+      <!-- Encabezado y filas -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <!-- Paginación -->
+    <mat-paginator [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
+  
+    <!-- Modal para agregar/editar lote -->
+    <div class="modal fade" id="modalLote" tabindex="-1" aria-labelledby="modalLoteLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalLoteLabel">{{ newLote.id ? 'Editar Lote' : 'Agregar Lote' }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form #loteForm="ngForm" (ngSubmit)="onSubmit(loteForm)">
+              <div class="mb-3">
+                <label for="name" class="form-label">Nombre del lote</label>
+                <input type="text" id="name" class="form-control" name="name" [(ngModel)]="newLote.name" required />
+              </div>
+              <div class="mb-3">
+                <label for="hectare" class="form-label">Hectáreas</label>
+                <input type="number" id="hectare" class="form-control" name="hectare" [(ngModel)]="newLote.hectare" required />
+              </div>
+              <div class="mb-3">
+                <label for="farm" class="form-label">Granja</label>
+                <input type="text" id="farm" class="form-control" name="farm" [(ngModel)]="newLote.farm.name" required />
+              </div>
+              <button type="submit" class="btn btn-success">{{ newLote.id ? 'Actualizar' : 'Agregar' }}</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,7 +1,7 @@
 <div class="container">
   <section class="d-flex justify-content-between my-3">
     <h1 class="fw-normal">Personas</h1>
-    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50">
+    <button type="button" data-bs-toggle="modal" data-bs-target="#personModal" id="btn-forms" class="btn h-50">
       <i class="bi bi-plus-circle mx-2"></i>
       Agregar Persona
     </button>
@@ -99,3 +99,44 @@
 
 <!-- Modal -->
 <!-- Aquí va el modal que ya tienes implementado -->
+<!-- Modal --><div class="modal fade" id="personModal" tabindex="-1" aria-labelledby="personModalLabel" aria-hidden="true">
+  <div class="modal fade" id="personModal" tabindex="-1" aria-labelledby="personModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="personModalLabel">Agregar/Editar Persona</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #personForm="ngForm" (ngSubmit)="onSubmit(personForm)">
+            <div class="mb-3">
+              <label for="firstName" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="newPerson.firstName" required>
+            </div>
+            <div class="mb-3">
+              <label for="lastName" class="form-label">Apellido</label>
+              <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="newPerson.lastName" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newPerson.email" required>
+            </div>
+            <div class="mb-3">
+              <label for="phone" class="form-label">Teléfono</label>
+              <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="newPerson.phone" required>
+            </div>
+            <div class="mb-3">
+              <label for="birthday" class="form-label">Fecha de Nacimiento</label>
+              <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday" required>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="!personForm.valid">Guardar</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+

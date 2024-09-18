@@ -1,26 +1,47 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { NgForm } from '@angular/forms';
-import { InseminationService } from './insemination.service';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { FormsModule, NgForm } from '@angular/forms';
+import { InseminationService } from './inseminacion.service'; 
 import { AlertService } from '../../../shared/components/alert.service';
-import { Insemination } from './insemination.model';
+import { Insemination } from './inseminacion.module'; 
 import { Subject } from 'rxjs';
+import { Config } from 'datatables.net';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-insemination',
-  templateUrl: './insemination.component.html',
+  standalone: true,
+  imports: [CommonModule, FormsModule,
+
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
+  templateUrl: './inseminacion.component.html',
   styles: []
 })
 export class InseminationComponent implements OnInit {
-
+  dataSource: MatTableDataSource<Insemination> = new MatTableDataSource<Insemination>();
+  displayedColumns:string[] = ['id', 'description','FatherId','father','MotherId','mother','result' ,'inseminationType' ];
   inseminations: Insemination[] = [];
   newInsemination: Insemination = {
-    id: 0, date: new Date(), observation: '', FatherId: 0, MotherId: 0, father: { id: 0, animal: '', gender: '', weight: 0, photo: '', race: '', purpose: '', birthDay: new Date(), dateRegister: new Date(), LotId: 0 }, mother: { id: 0, animal: '', gender: '', weight: 0, photo: '', race: '', purpose: '', birthDay: new Date(), dateRegister: new Date(), LotId: 0 }
+    id: 0, description: '',
+    FatherId: 0,
+    MotherId: 0,
+    father: { id: 0, name: '', gender: '', weight: 0, photo: '', raceId: 0, purpose: '', birthDay: new Date(), dateRegister: new Date(), LotId: 0, state: true },
+    mother: { id: 0, name: '', gender: '', weight: 0, photo: '', raceId: 0, purpose: '', birthDay: new Date(), dateRegister: new Date(), LotId: 0, state: true },
+    result: '',
+    inseminationType: ''
   };
 
-  dtoptions: DataTables.Settings = {};
+  dtoptions: Config = {};
   dttrigger: Subject<any> = new Subject<any>();
 
   constructor(private inseminationService: InseminationService, private alertService: AlertService) {}
@@ -94,4 +115,11 @@ export class InseminationComponent implements OnInit {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
   }
+
+  aplicarFiltro(event:Event): void{
+
+    const filterValue=(event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    
+    }
 }

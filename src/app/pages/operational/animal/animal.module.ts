@@ -1,12 +1,13 @@
 export interface Animal {
     id: number;
-    animal: string;
+    name: string;
     gender: string;
-    weight: number;
+    weight: number;//peso
     photo: string;
-    race: string;
-    purpose: string;
+    raceId?: number;
+    purpose: string;//objetivo
     birthDay: Date;
-    dateRegister: Date;
-    LotId: number;
+    
+  state:true;
+    LotId?: number;
   }

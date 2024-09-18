@@ -16,11 +16,11 @@ import { CommonModule } from '@angular/common';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
-
+import { FormsModule } from '@angular/forms'; 
 @Component({
   selector: 'app-person',
   standalone: true,
-  imports: [CommonModule,
+  imports: [CommonModule,FormsModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,

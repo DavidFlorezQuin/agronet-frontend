@@ -83,3 +83,51 @@
 
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="animalModal" tabindex="-1" aria-labelledby="animalModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="animalModalLabel">Agregar Animal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #animalForm="ngForm" (ngSubmit)="onSubmit(animalForm)">
+          <div class="mb-3">
+            <label for="animalName" class="form-label">Nombre del Animal</label>
+            <input type="text" class="form-control" id="animalName" name="animal" [(ngModel)]="newAnimales.name" required>
+          </div>
+          <div class="mb-3">
+            <label for="gender" class="form-label">Género</label>
+            <input type="text" class="form-control" id="gender" name="gender" [(ngModel)]="newAnimales.gender" required>
+          </div>
+          <div class="mb-3">
+            <label for="weight" class="form-label">Peso (kg)</label>
+            <input type="number" class="form-control" id="weight" name="weight" [(ngModel)]="newAnimales.weight" required>
+          </div>
+          <div class="mb-3">
+            <label for="race" class="form-label">Raza</label>
+            <input type="text" class="form-control" id="race" name="race" [(ngModel)]="newAnimales.raceId" required>
+          </div>
+          <div class="mb-3">
+            <label for="purpose" class="form-label">Propósito</label>
+            <textarea class="form-control" id="purpose" name="purpose" [(ngModel)]="newAnimales.purpose" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="birthDay" class="form-label">Cumpleaños</label>
+            <input type="date" class="form-control" id="birthDay" name="birthDay" [(ngModel)]="newAnimales.birthDay" required>
+          </div>
+          <div class="mb-3">
+            <label for="file-upload" class="form-label">Subir una Foto</label>
+            <input type="file" class="form-control" id="file-upload" name="file-upload" accept="image/*, .pdf">
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!animalForm.valid">Guardar</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>

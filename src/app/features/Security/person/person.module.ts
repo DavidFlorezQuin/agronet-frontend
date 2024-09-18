@@ -1,4 +1,5 @@
 import { DataType } from "datatables.net";
+import { City } from "../../Parameter/city/city.module";
 
 export interface Person{
     id: number, 
@@ -10,5 +11,6 @@ export interface Person{
     typeDocument: string,
     direction: string,
     phone: string,
-    birthday: string
+    birthday: string,
+    
 }
