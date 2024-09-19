@@ -34,7 +34,7 @@ export const routes: Routes = [
     },
     {
         path: 'dashboard',
-        component: LoteComponent,
+        component: RoleViewComponent,
         children: [
 
             {

@@ -25,7 +25,8 @@ export class ViewsComponent implements OnInit {
   dtoptions: Config={}
   dttrigger: Subject<any> = new  Subject<any>();
 
-  newView: View = { id: 0, name: '', description: '', route: '', moduleId: 0 };
+  newView: View = { id: 0, name: '', description: '', route: '',
+     moduleId:{id: 0,name: '',description: ''} };
 
   modules: any[] = [];
 
@@ -74,7 +75,7 @@ export class ViewsComponent implements OnInit {
           next: (res) => {
             this.serviceAlert.SuccessAlert('Actualizado con éxito!');
             form.reset();
-            this.newView = { id: 0, name: '', description: '', route: '', moduleId: 0 }
+            this.newView = { id: 0, name: '', description: '', route: '', moduleId:{id: 0,name: '',description: ''} }
             this.getViews();
           },
           error: (err) => {

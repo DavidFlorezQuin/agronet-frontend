@@ -17,11 +17,16 @@ import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms'; 
+
+import { MatButtonModule } from '@angular/material/button';
+
 @Component({
   selector: 'app-person',
   standalone: true,
   imports: [CommonModule,FormsModule,
     MatIconModule,
+   
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
@@ -35,8 +40,8 @@ export class PersonComponent implements OnInit {
 
   
   persons: Person[]= [];
-  newPerson: Person = {id: 0, firstName:'',lastName:'',email:'',gender:'',document:'',typeDocument:'',direction:'',phone:'', birthday:'' }
-displayedColumns: string[] = [ 'id', 'firstName', 'lastName', 'email', 'gender', 'document', 'direction', 'phone', 'birthday'];
+  newPerson: Person = {id: 0, state: true,firstName:'',lastName:'',email:'',gender:'',document:'',typeDocument:'',direction:'',phone:'', birthday:'' }
+displayedColumns: string[] = [ 'id', 'firstName', 'lastName', 'email', 'gender', 'document', 'direction', 'phone', 'birthday','acciones'];
   dataSource!: MatTableDataSource<Person>;
 dtoptions: Config={};
 dttrigger: Subject<any>= new Subject<any>();
@@ -60,12 +65,13 @@ constructor(private personService: PersonService,private alertService: AlertServ
 
 listPersons(): void {
   this.personService.getPerson().subscribe({
-    next: (res)=>{
+    next: (res: Person[])=>{
       this.dataSource= new MatTableDataSource(res);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.persons = res;
       this.dttrigger.next(null);
+      this.dataSource.data = res;
     },
     error: ()=>{
       this.alertService. ErrorAlert('Error al obtener los datos');
@@ -75,6 +81,11 @@ listPersons(): void {
 
 onEdit(person:Person): void {
   this.newPerson = {...person};
+
+  if (this.newPerson.birthday) {
+    // Convierte la fecha en formato 'YYYY-MM-DD'
+    this.newPerson.birthday = new Date(this.newPerson.birthday).toISOString().split('T')[0];
+  }
 }
 
 onDelete(id:number): void {
@@ -92,7 +103,10 @@ onDelete(id:number): void {
     }
   });
 }
-
+onView(role: { id: number, name: string }): void {
+  this.personService.changePerson(role);
+  //this.rolesService.router.navigate(['dashboard/role-view']);
+}
 onSubmit(form:NgForm): void{
   if(form.valid){
     if(this.newPerson.id>0){
@@ -100,7 +114,10 @@ onSubmit(form:NgForm): void{
         next: ()=>{
           this.alertService.SuccessAlert('Actualizado correctamente');
           form.reset();
-          this.listPersons();
+          this.newPerson={id:0,state: true, 
+            firstName:'',lastName:'',email:'',gender:'',document:'',typeDocument:'',direction:'',phone:'', birthday:'' }; 
+            this.listPersons();
+          
         },
         error: ()=>{
           this.alertService.ErrorAlert('Error al actualizar');
@@ -127,7 +144,11 @@ onSubmit(form:NgForm): void{
 aplicarFiltro(event:Event){
   const filterValue = (event.target as HTMLInputElement).value;
 this.dataSource.filter =filterValue.trim().toLowerCase();
-  }
+
+if (this.dataSource.paginator) {
+  this.dataSource.paginator.firstPage();
+}  
+}
 
 
 

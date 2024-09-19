@@ -72,10 +72,13 @@
             <input class="form-control form-green" type="text" id="description" name="description" [(ngModel)]="newRole.description" required>
           </div>
           <div class="modal-footer">
-            <button type="button" id="btn-forms" class="btn btn-form">{{ newRole.id ? 'Actualizar' : 'Guardar' }}</button>
+            <button type="submit" id="btn-forms" class="btn btn-form"  [disabled]="!roleForm.valid"  >{{ newRole.id ? 'Actualizar' : 'Guardar' }}</button>
           </div>
         </form>
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+  
     </div>
   </div>
 </div>

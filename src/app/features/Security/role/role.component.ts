@@ -40,7 +40,7 @@ export class RoleComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  newRole: Role = { id: 0, name: '', description: '' };
+  newRole: Role = { id: 0,state:true, name: '', description: '' };
   dtoptions: Config={};
   dttrigger: Subject<any>= new Subject<any>();
 
@@ -96,7 +96,7 @@ export class RoleComponent implements OnInit, AfterViewInit {
           next: () => {
             this.serviceAlert.SuccessAlert('Actualizado');
             form.reset();
-            this.newRole = { id: 0, name: '', description: '' };
+            this.newRole = { id: 0, state:true, name: '', description: '' };
             this.listRole();
           },
           error: () => {
@@ -115,6 +115,8 @@ export class RoleComponent implements OnInit, AfterViewInit {
           }
         });
       }
+    }else{
+      this.serviceAlert.ErrorAlert('Por favor complete todos los campos');
     }
   }
 

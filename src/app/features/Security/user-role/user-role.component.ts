@@ -21,7 +21,17 @@ export class UserRoleComponent implements OnInit {
 
   userRole: any[] = [];
   roles: any[] = [];
-  newUserRole: UserRole = { id: 0, RoleId: 0, UserId: 0 }
+  newUserRole: UserRole = { id: 0, RoleId: 0, UserId: 0,user:{
+    id:0,
+    userName:''
+  },
+  role:{
+    id:0,
+    state:true,
+    name:'',
+    description:''
+  } };
+
 
   currentUser: { id: number, name: string } = { id: 0, name: '' };
 
@@ -81,7 +91,16 @@ export class UserRoleComponent implements OnInit {
           next: (res) => {
             this.serviceAlert.SuccessAlert('Actualizado con éxito!')
             form.reset();
-            this.newUserRole = { id: 0, RoleId: 0, UserId: 0 }
+            this.newUserRole = { id: 0, RoleId: 0, UserId: 0,user:{
+              id:0,
+              userName:''
+            },
+            role:{
+              id:0,
+              state:true,
+              name:'',
+              description:''
+            } }; 
             this.listUserRole();
           }
         })

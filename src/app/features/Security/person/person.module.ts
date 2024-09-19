@@ -3,6 +3,7 @@ import { City } from "../../Parameter/city/city.module";
 
 export interface Person{
     id: number, 
+    state: true,
     firstName: string,
     lastName: string,
     email: string,

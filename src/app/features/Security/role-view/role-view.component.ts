@@ -19,7 +19,12 @@ export class RoleViewComponent implements OnInit {
 
   viewRole: any[] = [];
   views: any[] = [];
-  newRoleModule: RoleView = { id: 0, roleId: 0, viewId: 0 }
+  newRoleModule: RoleView = {
+    id: 0, roleId: 0, viewId: 0,
+    view: {id: 0, name: '', description: '', route: '',
+            moduleId: {id: 0,name: '',description: ''}},
+    role: { id: 0, name: '', description: '', state: true }
+  } 
 
   currentRole: { id: number, name: string } = { id: 0, name: '' };
 
@@ -69,7 +74,10 @@ export class RoleViewComponent implements OnInit {
             this.serviceAlert.SuccessAlert('Actualizado con éxito!')
 
             form.reset()
-            this.newRoleModule = { id: 0, roleId: 0, viewId: 0 }
+            this.newRoleModule = { id: 0, roleId: 0, viewId: 0,
+              view: {id: 0, name: '', description: '', route: '',
+                      moduleId: {id: 0,name: '',description: ''}},
+              role: { id: 0, name: '', description: '', state: true } }
             this.listViewRole();
           },
           error: (err) => {
