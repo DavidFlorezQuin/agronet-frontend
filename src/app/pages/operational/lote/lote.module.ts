@@ -7,6 +7,6 @@ export interface Lote {
   hectare: number;
   farmId: number;
   farm: Finca;
-  
+
 }
 

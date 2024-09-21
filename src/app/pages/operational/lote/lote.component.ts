@@ -4,7 +4,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FormsModule, NgForm } from '@angular/forms';
-import { LoteService } from './lote.service';  
+import { LoteService } from './lote.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import { Lote } from './lote.module';
 import { Subject } from 'rxjs';
@@ -33,15 +33,19 @@ export class LoteComponent implements OnInit {
   dttrigger: Subject<any> = new Subject<any>();
   dataSource: MatTableDataSource<Lote> = new MatTableDataSource<Lote>();
   displayedColumns:string[] = ['id', 'description','FatherId','father','MotherId','mother','result' ,'inseminationType' ];
-  
+
   lote: Lote[] = [];
   newLote: Lote = {
     id: 0, name: '',hectare: 0,
-   
+
     farmId: 0,
-    farm: { id: 0, name: '', dimension: 0, description: '', userId: 0, 
-      user: { id:0,userName:''},cityId:0,
-      city:{id:0, name:'',descripcion:'',countryId:0, 
+    farm: { id: 0, name: '', dimension: 0, description: '', userId: 0,
+      user: {  id: 0,
+        userName:'',
+        password:'',
+        state:true,
+      },cityId:0,
+      city:{id:0, name:'',descripcion:'',countryId:0,
         country:{id:0, name:'', countryCode:'',continentId:0,
          continent:{id:0, name:'', description:''}
       }

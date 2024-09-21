@@ -3,9 +3,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgForm } from '@angular/forms';
-import { RolesService } from './roles.service'; 
+import { RolesService } from './roles.service';
 import { AlertService } from '../../../shared/components/alert.service';
-import { Role } from './role.module'; 
+import { Role } from './role.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,7 +20,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-role',
   standalone: true,
-  imports: [ 
+  imports: [
     FormsModule,
     CommonModule,
     MatIconModule,

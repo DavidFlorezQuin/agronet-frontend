@@ -17,6 +17,7 @@ import { FincaComponent } from './pages/operational/finca/finca.component';
 import { AnimalComponent } from './pages/operational/animal/animal.component';
 import { NacimientoComponent } from './pages/operational/nacimiento/nacimiento.component';
 import { LoteComponent } from './pages/operational/lote/lote.component';
+import { MenuComponent } from './features/pages/menu/menu.component';
 
 export const routes: Routes = [
     {
@@ -31,10 +32,13 @@ export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent
-    },
+    }, {
+      path: 'menu',
+      component: MenuComponent
+  },
     {
         path: 'dashboard',
-        component: RoleViewComponent,
+        component: UsersComponent,
         children: [
 
             {

@@ -22,6 +22,10 @@
                 <!-- Itera sobre cada vista dentro del módulo -->
                 <li *ngFor="let view of modulo.views">
                   <a [routerLink]="view.route" class="link-light nav-link rounded">{{ view.name }}</a>
+
+                </li>
+                <li>
+                  <a routerLink="/users" class="link-light nav-link">Users</a>
                 </li>
               </ul>
             </div>

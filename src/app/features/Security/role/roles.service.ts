@@ -16,7 +16,7 @@ export class RolesService {
   constructor(private http: HttpClient) {
     const savedRole = localStorage.getItem('currentRole');
     if (savedRole) {
-      this.roleSource.next(JSON.parse(savedRole)); // Restaurar el rol desde LocalStorage
+      this.roleSource.next(JSON.parse(savedRole));
     }
    }
 
@@ -30,7 +30,7 @@ export class RolesService {
   deleteRole(id: number): Observable<void> {
     return this.http.delete<void>(`${this._baseUrl}/Role/${id}`);
   }
-  
+
   updateRole(role: Role, id: number): Observable<Role> {
     const url = `${this._baseUrl}/Role/${id}`;  // Incluye el id en la URL
     console.log(url)
