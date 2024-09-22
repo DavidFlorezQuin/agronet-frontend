@@ -38,7 +38,7 @@ export const routes: Routes = [
   },
     {
         path: 'dashboard',
-        component: UsersComponent,
+        component: RoleComponent,
         children: [
 
             {
