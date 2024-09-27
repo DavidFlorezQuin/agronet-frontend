@@ -37,9 +37,6 @@ export class RolesService {
     return this.http.put<Role>(url, role);
   }
 
-  changeRole(role:{id: number, name: string}){
-    this.roleSource.next(role)
-    localStorage.setItem('currentRole', JSON.stringify(role))
-  }
+
 
 }

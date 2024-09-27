@@ -17,6 +17,7 @@ import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-role',
@@ -123,8 +124,6 @@ export class RoleComponent implements OnInit, AfterViewInit {
   }
 
   onView(role: { id: number, name: string }): void {
-    this.rolesService.changeRole(role);
-    //this.rolesService.router.navigate(['dashboard/role-view']);
   }
 
   aplicarFiltro(event: Event): void {
