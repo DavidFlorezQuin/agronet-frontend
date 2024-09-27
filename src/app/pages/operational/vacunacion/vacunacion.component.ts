@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { VaccineAnimalsService } from './vaccine-animals.service';
+import { VaccineAnimalsService } from './vacunacion.service'; 
 import { AlertService } from '../../../shared/components/alert.service';
+import { VaccineAnimals } from './vacunacion.module';
 
 @Component({
   selector: 'app-vacunacion',
@@ -14,10 +15,7 @@ export class VacunacionComponent implements OnInit {
   newVaccineAnimal: VaccineAnimals = {
     id: 0,
     animalId: 0,
-    animal: { id: 0, name: '' },
     vaccineId: 0,
-    vaccines: { id: 0, name: '' },
-    dateApplied: new Date(),
     nextDose: new Date(),
   };
 

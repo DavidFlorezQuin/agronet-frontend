@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ProductionsService } from './productions.service';
+import { ProductionsService } from './produccion.service'; 
 import { AlertService } from '../../../shared/components/alert.service';
+import { Productions } from './produccion.module';
 
 @Component({
   selector: 'app-produccion',
@@ -21,7 +22,7 @@ export class ProduccionComponent implements OnInit {
     quantityTotal: 0,
     expirateDate: undefined,
     animalId: 0,
-    animal: { id: 0, name: '' }
+   
   };
 
   productions: Productions[] = [];

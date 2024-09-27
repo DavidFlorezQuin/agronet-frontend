@@ -8,7 +8,7 @@ export interface Nacimiento{
     BirthWeight: number 
     Inseminacionid:string
     AnimalId?:number,
-    Animal?: Animal
+   
 }
 
 

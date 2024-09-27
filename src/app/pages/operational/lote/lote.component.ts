@@ -32,7 +32,7 @@ export class LoteComponent implements OnInit {
   dtoptions: Config = {};
   dttrigger: Subject<any> = new Subject<any>();
   dataSource: MatTableDataSource<Lote> = new MatTableDataSource<Lote>();
-  displayedColumns:string[] = ['id', 'description','FatherId','father','MotherId','mother','result' ,'inseminationType' ];
+  displayedColumns:string[] = ['id', 'Nombre','Hectarea','fincaId','acciones' ];
 
   lote: Lote[] = [];
   newLote: Lote = {

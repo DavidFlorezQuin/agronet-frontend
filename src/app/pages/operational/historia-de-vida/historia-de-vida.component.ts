@@ -17,7 +17,7 @@ export class HistoriaDeVidaComponent implements OnInit {
   editMode: boolean = false;
   currentEditingIndex: number | null = null; // Índice para el registro actual que se está editando
 
-  constructor(  private dialog: MatDialogRef<HistoriaDeVidaComponent>,  // Referencia al diálogo
+  constructor(  private dialog: MatDialog,  // Referencia al diálogo
     private fb: FormBuilder) {}
 
   ngOnInit() {

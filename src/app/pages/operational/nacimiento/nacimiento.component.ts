@@ -40,12 +40,10 @@ export class NacimientoComponent implements OnInit{
      Description:'',
     BirthWeight:0, 
     Inseminacionid:'',AnimalId: 0,
-    Animal:{id:0,name:'',gender:'',
-      weight:0,photo:'',raceId:0,purpose:'',
-      birthDay: new Date(),state:true,LotId:0}
+
 
   };
-displayedColumns: string[]=['id','Assistence','Result','Description','BirthWeight','Inseminacionid','AnimalId','Animal'];
+displayedColumns: string[]=['id','Assistence','Result','Description','BirthWeight','Inseminacionid','AnimalId'];
 dtoptions: Config={};
 dttrigger: Subject<any>= new Subject<any>();
 dataSource: MatTableDataSource<Nacimiento>=new MatTableDataSource<Nacimiento>();

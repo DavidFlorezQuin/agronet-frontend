@@ -5,6 +5,7 @@ export interface HealthHistory {
     treatment_days: number;
     description: string;
     date: Date;
+   
     animalId: number;
    
   }

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { SalesService } from './sales.service';
+import { SalesService } from './ventas.service'; 
 import { AlertService } from '../../../shared/components/alert.service';
+import { Sales } from './ventas.module';
 
 @Component({
   selector: 'app-ventas',
@@ -17,7 +18,6 @@ export class VentasComponent implements OnInit {
     quantity: 0,
     measurement: '',
     productionId: 0,
-    production: { id: 0, typeProduction: '' },
     currency: ''
   };
 
