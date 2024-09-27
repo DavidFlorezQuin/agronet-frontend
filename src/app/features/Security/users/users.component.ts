@@ -48,10 +48,6 @@ export class UsersComponent implements OnInit {
     UserName: '',
     PersonId: 0,
     password: '',
-   
-
-
-
   }
   displayedColumns: string[] = ['id', 'personName','personaid','contraseñas', 'acciones'];
 

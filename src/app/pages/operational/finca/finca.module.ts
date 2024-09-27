@@ -7,6 +7,6 @@ export interface Finca {
   dimension: number;
   description: string;
   userId: number;
-  cityId?: number; // Propiedad opcional
+  cityId: number; // Propiedad opcional
 }
 

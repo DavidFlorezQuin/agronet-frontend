@@ -36,7 +36,7 @@ export class LoteComponent implements OnInit {
 
   lote: Lote[] = [];
   newLote: Lote = {
-    id: 0, name: '',hectare: 0,
+    id: 0, name: '',hectare: 0, 
     farmId: 0,
     
   }

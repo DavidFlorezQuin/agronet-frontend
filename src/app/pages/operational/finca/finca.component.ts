@@ -36,8 +36,6 @@ import { UserService } from '../../../features/Security/users/user.service';
 })
 export class FincaComponent implements OnInit {
  //definicion de cities
-  cities: City[]=[];
-users: User[]=[];
   fincas: Finca[] = [];
   newFinca: Finca = { id: 0,
      name: '',
@@ -62,25 +60,12 @@ users: User[]=[];
     };
     this.listFincas();
     this.loadCities();
-    this.loadUsers();
   }
-//llama la lista de usuarios
-  loadUsers(): void{
-    this.userService.getUsers().subscribe({
-      next: (users) => {
-        this.users = users;
-      },
-      error: () => {
-        this.alertService.ErrorAlert('Error al obtener los usuarios');
-      }
-    });
-  }
+
 //llama la lista de ciudades
   loadCities(): void {
     this.cityService.getCity().subscribe({
       next: (cities) => {
-        // Maneja la lista de ciudades
-        console.log('Cities:', cities);
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener las ciudades');
