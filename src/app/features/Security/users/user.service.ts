@@ -23,7 +23,7 @@ export class UserService {
   }
 
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this._baseUrl}/User`);
+    return this.http.get<User[]>(`${this._baseUrl}/User/list`);
   }
 
 
