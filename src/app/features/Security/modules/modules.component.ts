@@ -26,9 +26,12 @@ import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-modules',
   standalone: true,
-  imports: [CommonModule, FormsModule, DataTablesModule,CommonModule,FormsModule,
+  imports: [CommonModule, 
+    FormsModule, 
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
     MatIconModule,
-   
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,

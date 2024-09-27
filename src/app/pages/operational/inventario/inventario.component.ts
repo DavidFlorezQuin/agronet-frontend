@@ -1,9 +1,40 @@
-import { Component } from '@angular/core';
+import { Component,OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormsModule, NgForm } from '@angular/forms';
 
+import { AlertService } from '../../../shared/components/alert.service';
+import { Inventories } from './inventario.module';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { CommonModule } from '@angular/common';
+import { Config } from 'datatables.net';
+import { Subject } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { InventoriesService } from './inventario.service';
+import { Finca } from '../finca/finca.module';
+import { FincaService } from '../finca/finca.service';  
+import { DataTablesModule } from 'angular-datatables';
 @Component({
   selector: 'app-inventario',
   standalone: true,
-  imports: [],
+  imports: [ CommonModule, 
+    FormsModule, 
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
   templateUrl: './inventario.component.html',
   styleUrl: './inventario.component.css'
 })
@@ -13,15 +44,20 @@ export class InventarioComponent implements OnInit {
     name: '',
     description: '',
     farmId: 0,
-    farm: { id: 0, name: '' }
+   
   };
 
   inventories: Inventories[] = [];
-
-  constructor(private inventoriesService: InventoriesService, private alertService: AlertService) { }
+  displayedColumns: string[] = ['id', 'name', 'description','farmId', 'acciones'];
+  dataSource!: MatTableDataSource<Inventories>; 
+finca: Finca[]=[];
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  constructor(private inventoriesService: InventoriesService, private alertService: AlertService , private fincaService:FincaService) { }
 
   ngOnInit(): void {
     this.listInventories();
+    this.listFinca();
   }
 
   listInventories(): void {
@@ -35,6 +71,27 @@ export class InventarioComponent implements OnInit {
     });
   }
 
+  listFinca(): void {
+    this.fincaService.getFincas().subscribe({
+      next: (res: Finca[]) => {
+        // Mapeamos los datos de Finca a Inventories
+        const mappedInventories: Inventories[] = res.map(finca => ({
+          id: finca.id,  // Asignamos el id de la finca
+          name: finca.name,  // Asignamos el nombre de la finca
+          description: finca.description,  // Puedes ajustar los campos según lo que necesites
+          farmId: finca.id,  // Asignamos el farmId si es necesario
+        }));
+  
+        this.dataSource = new MatTableDataSource(mappedInventories);  // Asignamos los datos mapeados
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los datos de las fincas');
+      }
+    });
+  }
+  
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newInventory.id > 0) {
@@ -85,4 +142,13 @@ export class InventarioComponent implements OnInit {
     });
   }
 
+ 
+  aplicarFiltro(event: Event): void {
+    const valorFiltro = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = valorFiltro.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 }

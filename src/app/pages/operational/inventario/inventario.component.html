@@ -6,31 +6,60 @@
     Agregar Inventario
   </button>
 
-  <!-- Tabla de inventarios -->
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Granja</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let inventory of inventories">
-        <td>{{ inventory.id }}</td>
-        <td>{{ inventory.name }}</td>
-        <td>{{ inventory.description }}</td>
-        <td>{{ inventory.farm.name }}</td>
-        <td>
-          <button class="btn btn-warning" (click)="onEdit(inventory)" data-bs-toggle="modal" data-bs-target="#modalInventory">Editar</button>
-          <button class="btn btn-danger" (click)="onDelete(inventory.id)">Eliminar</button>
-        </td>
-      </tr>
-    </tbody>
+  <!-- Tabla con MatTable -->
+  <mat-form-field appearance="fill">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+  </mat-form-field>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Animal Column -->
+    <ng-container matColumnDef="animal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <!-- Peso Column -->
+    <ng-container matColumnDef="weight">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    </ng-container>
+
+    <!-- Raza Column -->
+    <ng-container matColumnDef="race">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Finca </th>
+      <td mat-cell *matCellDef="let element"> {{element.finca.id}} </td>
+    </ng-container>
+
+   
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" (click)="onSubmit(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Definitions -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
   <!-- Modal -->
   <div class="modal fade" id="modalInventory" tabindex="-1" aria-labelledby="modalInventoryLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -49,14 +78,24 @@
               <label for="description" class="form-label">Descripción</label>
               <textarea id="description" class="form-control" name="description" [(ngModel)]="newInventory.description" required></textarea>
             </div>
+
+            <div class="mb-3">
+              <label for="farmId" class="form-label">Finca ID</label>
+              <select class="form-control" id="farmId" name="farmId" [(ngModel)]="newInventory.farmId" required>
+                <option *ngFor="let finca of finca" [value]="finca.id">{{ finca.name }}</option>
+              </select>
+            </div>
+                  <!--
             <div class="mb-3">
               <label for="farm" class="form-label">Granja</label>
-              <input type="text" id="farm" class="form-control" name="farm" [(ngModel)]="newInventory.farm.name" required />
+              <input type="text" id="farm" class="form-control" name="farm" [(ngModel)]="newInventory.farmId" required />
             </div>
+                  -->
+            
             <button type="submit" class="btn btn-success">{{ newInventory.id ? 'Actualizar' : 'Agregar' }}</button>
           </form>
         </div>
       </div>
     </div>
   </div>
-</div>
+
