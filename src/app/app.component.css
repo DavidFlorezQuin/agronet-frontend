@@ -1,16 +1,15 @@
 :host {
   display: block;
-  /* height: 100vh; */
+  height: 100vh; /* Ocupa el 100% del alto de la ventana */
+  width: 100vw;  /* Ocupa el 100% del ancho de la ventana */
   margin: 0;
   padding: 0;
   overflow: hidden; /* Evita barras de desplazamiento */
-  box-sizing: border-box;
-
 }
 
-/* html, body {
+html, body {
   height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
-} */
+}

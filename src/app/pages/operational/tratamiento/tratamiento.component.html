@@ -1,1 +1,68 @@
-<p>tratamiento works!</p>
+<div class="container mt-4">
+  <h2>Gestión de Tratamientos</h2>
+
+  <!-- Botón para abrir modal -->
+  <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalTreatment">
+    Agregar Tratamiento
+  </button>
+
+  <!-- Tabla de tratamientos -->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Descripción</th>
+        <th>Fecha de Inicio</th>
+        <th>Fecha de Finalización</th>
+        <th>Diagnóstico Animal</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let treatment of treatments">
+        <td>{{ treatment.id }}</td>
+        <td>{{ treatment.description }}</td>
+        <td>{{ treatment.startDate | date }}</td>
+        <td>{{ treatment.finishiedDate | date }}</td>
+        <td>{{ treatment.animalDiagnostics.name }}</td>
+        <td>
+          <button class="btn btn-warning" (click)="onEdit(treatment)" data-bs-toggle="modal" data-bs-target="#modalTreatment">Editar</button>
+          <button class="btn btn-danger" (click)="onDelete(treatment.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal fade" id="modalTreatment" tabindex="-1" aria-labelledby="modalTreatmentLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTreatmentLabel">{{ newTreatment.id ? 'Editar Tratamiento' : 'Agregar Tratamiento' }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #treatmentForm="ngForm" (ngSubmit)="onSubmit(treatmentForm)">
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <textarea id="description" class="form-control" name="description" [(ngModel)]="newTreatment.description" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="startDate" class="form-label">Fecha de Inicio</label>
+              <input type="date" id="startDate" class="form-control" name="startDate" [(ngModel)]="newTreatment.startDate" required />
+            </div>
+            <div class="mb-3">
+              <label for="finishiedDate" class="form-label">Fecha de Finalización</label>
+              <input type="date" id="finishiedDate" class="form-control" name="finishiedDate" [(ngModel)]="newTreatment.finishiedDate" required />
+            </div>
+            <div class="mb-3">
+              <label for="animalDiagnostics" class="form-label">Diagnóstico Animal</label>
+              <input type="text" id="animalDiagnostics" class="form-control" name="animalDiagnostics" [(ngModel)]="newTreatment.animalDiagnostics.name" required />
+            </div>
+            <button type="submit" class="btn btn-success">{{ newTreatment.id ? 'Actualizar' : 'Agregar' }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

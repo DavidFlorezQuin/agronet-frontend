@@ -44,5 +44,5 @@ h1{
     color: var(--color-green-700) ;
     transform: scale(1.2);
   }
-/* html, body { height: 100%; } */
+html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

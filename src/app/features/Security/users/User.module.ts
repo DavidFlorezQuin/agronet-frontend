@@ -2,8 +2,9 @@ import { Person } from "../person/person.module"
 
 export interface  User{
   id: number;
-  userName: string;
+  UserName: string;
+  PersonId: number;
   password?: string;
-  state: boolean;
+  
 
 }

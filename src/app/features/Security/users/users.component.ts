@@ -45,14 +45,15 @@ export class UsersComponent implements OnInit {
   user: User[]= [];
   newUser: User = {
     id: 0,
-    userName: '',
+    UserName: '',
+    PersonId: 0,
     password: '',
-    state: true,
+   
 
 
 
   }
-  displayedColumns: string[] = ['id', 'personName', 'acciones'];
+  displayedColumns: string[] = ['id', 'personName','personaid','contraseñas', 'acciones'];
 
   dataSource!: MatTableDataSource<User>;
 dtoptions: Config={};

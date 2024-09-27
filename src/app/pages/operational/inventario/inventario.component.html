@@ -1,1 +1,62 @@
-<p>inventario works!</p>
+<div class="container mt-4">
+  <h2>Gestión de Inventarios</h2>
+
+  <!-- Botón para abrir modal -->
+  <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalInventory">
+    Agregar Inventario
+  </button>
+
+  <!-- Tabla de inventarios -->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Granja</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let inventory of inventories">
+        <td>{{ inventory.id }}</td>
+        <td>{{ inventory.name }}</td>
+        <td>{{ inventory.description }}</td>
+        <td>{{ inventory.farm.name }}</td>
+        <td>
+          <button class="btn btn-warning" (click)="onEdit(inventory)" data-bs-toggle="modal" data-bs-target="#modalInventory">Editar</button>
+          <button class="btn btn-danger" (click)="onDelete(inventory.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal fade" id="modalInventory" tabindex="-1" aria-labelledby="modalInventoryLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalInventoryLabel">{{ newInventory.id ? 'Editar Inventario' : 'Agregar Inventario' }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #inventoryForm="ngForm" (ngSubmit)="onSubmit(inventoryForm)">
+            <div class="mb-3">
+              <label for="name" class="form-label">Nombre</label>
+              <input type="text" id="name" class="form-control" name="name" [(ngModel)]="newInventory.name" required />
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <textarea id="description" class="form-control" name="description" [(ngModel)]="newInventory.description" required></textarea>
+            </div>
+            <div class="mb-3">
+              <label for="farm" class="form-label">Granja</label>
+              <input type="text" id="farm" class="form-control" name="farm" [(ngModel)]="newInventory.farm.name" required />
+            </div>
+            <button type="submit" class="btn btn-success">{{ newInventory.id ? 'Actualizar' : 'Agregar' }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

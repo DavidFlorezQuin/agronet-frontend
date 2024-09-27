@@ -51,7 +51,7 @@ export const routes: Routes = [
             },
 
             {
-                path: 'rol',
+                path: 'roles',
                 component: RoleComponent
             },
             {
