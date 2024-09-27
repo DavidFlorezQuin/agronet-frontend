@@ -17,21 +17,22 @@ import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-role',
   standalone: true,
   imports: [
-    FormsModule,
     CommonModule,
+    FormsModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    RouterModule // Importar directamente RouterModule
   ],
   templateUrl: './role.component.html'
 })
@@ -47,7 +48,7 @@ export class RoleComponent implements OnInit, AfterViewInit {
   dtoptions: Config={};
   dttrigger: Subject<any>= new Subject<any>();
 
-  constructor(private rolesService: RolesService, private serviceAlert: AlertService) {}
+  constructor(private rolesService: RolesService, private serviceAlert: AlertService, private router: Router) {}
 
   ngOnInit(): void {
     this.dtoptions={
@@ -123,7 +124,9 @@ export class RoleComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onView(role: { id: number, name: string }): void {
+  onView(role: { id: number, name: string }) {
+    this.rolesService.setCurrentRole(role);
+    this.router.navigate(['dashboard/rol-vista']);
   }
 
   aplicarFiltro(event: Event): void {

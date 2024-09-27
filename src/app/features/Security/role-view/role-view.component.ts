@@ -34,6 +34,8 @@ export class RoleViewComponent implements OnInit {
     });
     this.listViewRole();
     this.listViews();
+
+    
   }
 
   listViews(): void {
