@@ -51,15 +51,15 @@ export const routes: Routes = [
             },
 
             {
-                path: 'roles',
+                path: 'role',
                 component: RoleComponent
             },
             {
-                path: 'modules',
+                path: 'modulo',
                 component: ModulesComponent
             },
             {
-                path: 'views',
+                path: 'vista',
                 component: ViewsComponent
             },
             {
