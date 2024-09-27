@@ -1,8 +1,8 @@
-import { Component,OnInit, AfterViewInit } from '@angular/core';
+import { Component,OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import { RolesService } from './roles.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import { Role } from './role.module';
@@ -15,14 +15,16 @@ import { MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
-import { ViewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+
+import { MatButtonModule } from '@angular/material/button';
+
 @Component({
   selector: 'app-role',
   standalone: true,
   imports: [
     FormsModule,
     CommonModule,
+    MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
