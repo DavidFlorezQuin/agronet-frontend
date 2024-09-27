@@ -1,60 +1,52 @@
-<div class="container">
-    <section class="d-flex justify-content-between my-3">
-    
-      <h1 class="fw-normal">Roles del Usuario : <span class="rounded-5 text-white px-3" style="width: 180px; background-color: var(--color-green-950);"> {{ currentUser.name }}</span></h1>
-      <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50"><i class="bi bi-plus-circle mx-2"></i>
-        Agregar Rol</button>
-    </section>
-      <table class="table">
-        <thead>
-          <tr class="table-success">
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripcion</th>
-            <th>Acciones</th> 
-    
-          </tr>
-        </thead>
-        <tbody>
-    
-          <tr *ngFor="let item of userRole; index as i">
-            <td>{{ item.id }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.description }}</td>
-            <td class="gap-3 d-flex">
-                <i class="bi bi-trash action-icon" (click)="onDelete(item.id)"></i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    
-    </div>
-    
-    
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fw-bold fs-4" id="text-green">Agregar Rol</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form class="px-5" #roleForm="ngForm" (ngSubmit)="onSubmit(roleForm)">
-           
-            <div class="my-3">
-              <label for="Modulo"  id="text-green"  class="fw-normal">Roles</label>
-              <select class="form-select form-select-lg mb-3" [(ngModel)]="newUserRole.RoleId" name="RoleId" aria-label="Large select example">
-                <option selected>Selecciona un modulo</option>
-                <option *ngFor = "let rol of roles" [value]="rol.id">
-                  {{ rol.name }}
-                </option>
-              </select>
-            </div>
-              
-            <!-- <button class="btn btn-success mt-5" type="submit">{{ newRole.id ? 'Actualizar' : 'Guardar' }}</button> -->
-            <div class="modal-footer">
-              <button type="button" id="btn-forms" type="submit" class="btn btn-form">{{ newUserRole.id ? 'Actualizar' : 'Guardar' }}</button>
-            </div>
-          </form>
-     
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="users" class="full-width-table" matSort>
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()" [indeterminate]="selection.hasValue() && !isAllSelected()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let user">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? toggleSelection(user) : null" [checked]="selection.isSelected(user)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <!-- User ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let user"> {{ user.id }} </td>
+    </ng-container>
+
+    <!-- User Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+      <td mat-cell *matCellDef="let user"> {{ user.name }} </td>
+    </ng-container>
+
+    <!-- Roles Column -->
+    <ng-container matColumnDef="roles">
+      <th mat-header-cell *matHeaderCellDef> Roles </th>
+      <td mat-cell *matCellDef="let user">
+        <mat-form-field>
+          <mat-select [(ngModel)]="user.roles" multiple (selectionChange)="onRoleChange(user)">
+            <mat-option *ngFor="let role of availableRoles" [value]="role">{{ role.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </td>
+    </ng-container>
+
+    <!-- Action Column -->
+    <ng-container matColumnDef="action">
+      <th mat-header-cell *matHeaderCellDef> Action </th>
+      <td mat-cell *matCellDef="let user">
+        <button mat-raised-button color="primary" (click)="updateUserRole(user)">
+          Save Roles
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</div>
