@@ -18,7 +18,11 @@ export class CountryComponent implements OnInit {
 
   countries: Country[] = []; 
   continents: Continent[] = []; 
-  newCountry: Country = { id: 0, name: '',  countryCode:'', continentId: 0 }; // Objeto de país inicializado
+  newCountry: Country = { id: 0, name: '',  countryCode:'', continentId: 0,continent:{
+    id: 0,
+    name: '',
+    description: '' 
+  } }; // Objeto de país inicializado
 
   dtoptions: Config = {};
   dttrigger: Subject<any> = new Subject<any>();
@@ -86,7 +90,12 @@ export class CountryComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('País actualizado ');
             form.reset();
-            this.newCountry = { id: 0, name: '',  countryCode:'', continentId: 0 }; // Objeto de país inicializado
+            this.newCountry = { id: 0, name: '',  countryCode:'', continentId: 0,
+              continent:{
+                id: 0,
+                name: '',
+                description: '' 
+              }}; // Objeto de país inicializado
             this.listCountries();
           },
           error: () => {

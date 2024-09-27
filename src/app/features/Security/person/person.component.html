@@ -1,131 +1,145 @@
 <div class="container">
   <section class="d-flex justify-content-between my-3">
     <h1 class="fw-normal">Personas</h1>
-    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50"><i
-        class="bi bi-plus-circle mx-2"></i>
-      Agregar Persona</button>
+    <button type="button" data-bs-toggle="modal" data-bs-target="#personModal" id="btn-forms" class="btn h-50">
+      <i class="bi bi-plus-circle mx-2"></i>
+      Agregar Persona
+    </button>
   </section>
-  <table datatable [dtOptions]="dtoptions" [dtTrigger]="dttrigger" class="table shadow-sm">
-    <thead>
-      <tr class="table-success">
-        <th>#</th>
-        <th>Nombre</th>
-        <th>Apellidos</th>
-        <th>Email</th>
-        <th>Género</th>
-        <th>Documento</th>
-        <th>CC</th>
-        <th>Direccion</th>
-        <th>Teléfono</th>
-        <th>Cumpleaños</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
 
-      <tr *ngFor="let person of persons">
-        <td>{{ person.id }}</td>
-        <td>{{ person.firstName }}</td>
-        <td>{{ person.lastName }}</td>
-        <td>{{ person.email }}</td>
-        <td>{{ person.gender }}</td>
-        <td>{{ person.document }}</td>
-        <td>{{ person.typeDocument }}</td>
-        <td>{{ person.direction }}</td>
-        <td>{{ person.phone }}</td>
-        <td>{{ person.birthday }}</td>
-        <td class="d-flex gap-3">
-          <i class="bi bi-pencil-square action-icon" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
-          <i class="bi bi-trash action-icon"></i>
-        </td>
-      </tr>
+  <!-- Tabla con MatTable -->
+  <mat-form-field appearance="fill">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+  </mat-form-field>
 
-    </tbody>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Nombre Column -->
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element.firstName}} </td>
+    </ng-container>
+
+    <!-- Apellido Column -->
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Apellidos </th>
+      <td mat-cell *matCellDef="let element"> {{element.lastName}} </td>
+    </ng-container>
+
+    <!-- Correo Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+      <td mat-cell *matCellDef="let element"> {{element.email}} </td>
+    </ng-container>
+
+    <!-- Género Column -->
+    <ng-container matColumnDef="gender">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Género </th>
+      <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
+    </ng-container>
+
+    <!-- Documento Column -->
+    <ng-container matColumnDef="document">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Documento </th>
+      <td mat-cell *matCellDef="let element"> {{element.document}} </td>
+    </ng-container>
+
+    <!-- Tipo Documento Column -->
+    <ng-container matColumnDef="typeDocument">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo Documento </th>
+      <td mat-cell *matCellDef="let element"> {{element.typeDocument}} </td>
+    </ng-container>
+
+    <!-- Dirección Column -->
+    <ng-container matColumnDef="direction">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Dirección </th>
+      <td mat-cell *matCellDef="let element"> {{element.direction}} </td>
+    </ng-container>
+
+    <!-- Teléfono Column -->
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Teléfono </th>
+      <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+    </ng-container>
+
+    <!-- Cumpleaños Column -->
+    <ng-container matColumnDef="birthday">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cumpleaños </th>
+      <td mat-cell *matCellDef="let element"> {{element.birthday | date}} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+   
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef>Acciones</th>
+      <td mat-cell *matCellDef="let item">
+        <button mat-icon-button color="primary" (click)="onEdit(item)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(item.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="onView({id:item.id, name:item.name})">
+          <mat-icon>visibility</mat-icon>
+        </button>
+    </ng-container>
+
+    <!-- Header and Row Definitions -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
 </div>
-
-
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fw-bold fs-4" id="text-green">Nueva vista</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form class="px-5" #roleForm="ngForm" (ngSubmit)="onSubmit(roleForm)">
-          <div>
-            <label for="firstName" id="text-green" class="fw-normal">Nombre</label>
-            <input class="form-control" type="text" id="firstName" name="firstName" [(ngModel)]="newPerson.firstName"
-              required>
-          </div>
+<!-- Aquí va el modal que ya tienes implementado -->
+<!-- Modal -->
 
-          <div>
-            <label for="description" id="text-green" class="fw-normal">Apellidos</label>
-            <input class="form-control form-green" type="text" id="lastName" name="lastName"
-              [(ngModel)]="newPerson.lastName" required>
-          </div>
 
-          <div>
-            <label for="description" id="text-green" class="fw-normal">Correo</label>
-            <input class="form-control form-green" type="text" id="email" name="email" [(ngModel)]="newPerson.email"
-              required>
-          </div>
+  <div class="modal fade" id="personModal" tabindex="-1" aria-labelledby="personModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="personModalLabel">Agregar/Editar Persona</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #personForm="ngForm" (ngSubmit)="onSubmit(personForm)">
+            <div class="mb-3">
+              <label for="firstName" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="newPerson.firstName" required>
+            </div>
 
-          <div>
-            <label for="description" class="fw-normal" id="text-green">Género</label>
-            <select class="form-select" [(ngModel)]="newPerson.gender" name="gender" aria-label="Seleccionar">
-              <option selected>---Seleccionar</option>
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="description" id="text-green" class="fw-normal">Documento</label>
-            <input class="form-control form-green" type="text" id="document" name="document"
-              [(ngModel)]="newPerson.document" required>
-          </div>
-          <div>
-            <label for="description" id="text-green typeDocument" class="fw-normal">Tipo documento</label>
-            <select class="form-select" id="typeDocument" name="typeDocument" [(ngModel)]="newPerson.typeDocument"
-              aria-label="--Seleccionar tipo--">
-              <option selected>--Seleccionar</option>
-              <option value="CC">CC</option>
-              <option value="TI">TI</option>
-              <option value="PP">PP</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="description" id="text-green" class="fw-normal">Direccion</label>
-            <input class="form-control form-green" type="text" id="direction" name="direction"
-              [(ngModel)]="newPerson.direction" required>
-          </div>
-
-          <div>
-            <label for="description" id="text-green" class="fw-normal">Telefono</label>
-            <input class="form-control form-green" type="text" id="phone" name="phone" [(ngModel)]="newPerson.phone"
-              required>
-          </div>
-
-          <div>
-            <label for="description" id="text-green" class="fw-normal">Cumpleaños</label>
-            <input class="form-control form-green" type="date" id="birthday" name="birthday"
-              [(ngModel)]="newPerson.birthday" required>
-          </div>
-
-          <!-- <button class="btn btn-success mt-5" type="submit">{{ newRole.id ? 'Actualizar' : 'Guardar' }}</button> -->
-          <div class="modal-footer">
-            <button type="button" id="btn-forms" type="submit" class="btn btn-form">{{ newPerson.id ? 'Actualizar' :
-              'Guardar' }}</button>
-          </div>
-        </form>
-
+            <div class="mb-3">
+              <label for="lastName" class="form-label">Apellido</label>
+              <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="newPerson.lastName" required>
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newPerson.email" required>
+            </div>
+            <div class="mb-3">
+              <label for="phone" class="form-label">Teléfono</label>
+              <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="newPerson.phone" required>
+            </div>
+            <div class="mb-3">
+              <label for="birthday" class="form-label">Fecha de Nacimiento</label>
+              <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday" required>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="!personForm.valid">{{ newPerson.id ? 'Actualizar' : 'Guardar' }}</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
       </div>
     </div>
-  </div>
-</div>

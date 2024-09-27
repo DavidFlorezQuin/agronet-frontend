@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { City } from './city.module';
+import { DataTablesModule } from 'angular-datatables';
+import { FormsModule } from '@angular/forms';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { CityService } from './city.service';
@@ -11,7 +13,7 @@ import { Country } from '../country/Country.module';
 @Component({
   selector: 'app-city',
   standalone: true,
-  imports: [],
+  imports: [DataTablesModule, FormsModule],
   templateUrl: './city.component.html'
 })
 export class CityComponent implements OnInit{
@@ -19,7 +21,11 @@ export class CityComponent implements OnInit{
   cities: City[] = []; 
   countries: Country[] = []; 
 
-  newCity: City = {id:0, name:'', descripcion: '', countryId:0 }
+  newCity: City = {id:0, name:'', descripcion: '', countryId:0,
+    country:{id:0,name:'',countryCode:'',continentId:0,
+    continent:{ id:0,name:'',description: ''
+    } 
+  } }
 
   dtoptions: Config={}
   dttrigger: Subject<any> = new  Subject<any>();
@@ -86,7 +92,12 @@ export class CityComponent implements OnInit{
             next: (res) =>{
               this.serviceAlert.SuccessAlert('Actualizado ');
               form.reset();
-              this.newCity = {id:0, name:'', descripcion: '', countryId:0 }
+              this.newCity = {id:0, name:'', descripcion: '', countryId:0,
+                country:{id:0,name:'',countryCode:'',continentId:0,
+                continent:{ id:0,name:'',description: ''}
+              
+              } 
+              }
               this.listCity();
             }, 
             error: (err)=>{

@@ -1,27 +1,34 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component,OnInit, AfterViewInit } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { NgForm } from '@angular/forms';
 import { RolesService } from './roles.service';
-import { CommonModule } from '@angular/common';
+import { AlertService } from '../../../shared/components/alert.service';
 import { Role } from './role.module';
-import { FormsModule, NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { AlertService } from '../../../shared/components/alert.service';
-
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { CommonModule } from '@angular/common';
+import { Config } from 'datatables.net';
+import { Subject } from 'rxjs';
+import { ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-role',
   standalone: true,
   imports: [
-    CommonModule,
     FormsModule,
+    CommonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule
+    MatSortModule
   ],
   templateUrl: './role.component.html'
 })
@@ -33,11 +40,16 @@ export class RoleComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  newRole: Role = { id: 0, name: '', description: '' };
+  newRole: Role = { id: 0,state:true, name: '', description: '' };
+  dtoptions: Config={};
+  dttrigger: Subject<any>= new Subject<any>();
 
-  constructor(private rolesService: RolesService, private router: Router, private serviceAlert: AlertService) {}
+  constructor(private rolesService: RolesService, private serviceAlert: AlertService) {}
 
   ngOnInit(): void {
+    this.dtoptions={
+      pagingType:'ful_numbers',
+      lengthMenu:[5,10,15,20]}
     this.listRole();
   }
 
@@ -84,7 +96,7 @@ export class RoleComponent implements OnInit, AfterViewInit {
           next: () => {
             this.serviceAlert.SuccessAlert('Actualizado');
             form.reset();
-            this.newRole = { id: 0, name: '', description: '' };
+            this.newRole = { id: 0, state:true, name: '', description: '' };
             this.listRole();
           },
           error: () => {
@@ -103,12 +115,14 @@ export class RoleComponent implements OnInit, AfterViewInit {
           }
         });
       }
+    }else{
+      this.serviceAlert.ErrorAlert('Por favor complete todos los campos');
     }
   }
 
   onView(role: { id: number, name: string }): void {
     this.rolesService.changeRole(role);
-    this.router.navigate(['dashboard/role-view']);
+    //this.rolesService.router.navigate(['dashboard/role-view']);
   }
 
   aplicarFiltro(event: Event): void {

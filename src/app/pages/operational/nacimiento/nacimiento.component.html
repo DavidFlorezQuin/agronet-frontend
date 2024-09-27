@@ -1,0 +1,100 @@
+<div class="container">
+    <!-- Filtro de búsqueda -->
+    <div class="row mb-3" >
+      <div class="col">
+        <input matInput placeholder="Buscar nacimiento" (keyup)="aplicarFiltro($event)" class="form-control" />
+      </div>
+      <div class="col text-right" >
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalNacimiento">Agregar Nacimiento</button>
+    </div>
+    </div>
+  
+    <!-- Tabla de Nacimientos -->
+    <table mat-table [dataSource]="dataSource" matSort class="table table-striped">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="Assistence">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Asistencia</th>
+        <td mat-cell *matCellDef="let row">{{ row.Assistence }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="Result">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Resultado</th>
+        <td mat-cell *matCellDef="let row">{{ row.Result }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="Description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción</th>
+        <td mat-cell *matCellDef="let row">{{ row.Description }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="BirthWeight">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso al Nacer</th>
+        <td mat-cell *matCellDef="let row">{{ row.BirthWeight }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="Inseminacionid">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID Inseminación</th>
+        <td mat-cell *matCellDef="let row">{{ row.Inseminacionid }}</td>
+      </ng-container>
+  
+      <ng-container matColumnDef="AnimalId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID Animal</th>
+        <td mat-cell *matCellDef="let row">{{ row.AnimalId }}</td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator [length]="dataSource.data.length" [pageSize]="5"></mat-paginator>
+  
+    <!-- Modal para Agregar/Editar Nacimiento -->
+    <div class="modal fade" id="modalNacimiento" tabindex="-1" aria-labelledby="modalNacimientoLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalNacimientoLabel">{{ newNacimiento.id ? 'Editar' : 'Agregar' }} Nacimiento</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+              <div class="mb-3">
+                <label for="Assistence" class="form-label">Asistencia</label>
+                <input type="text" id="Assistence" class="form-control" [(ngModel)]="newNacimiento.Assistence" name="Assistence" required />
+              </div>
+  
+              <div class="mb-3">
+                <label for="Result" class="form-label">Resultado</label>
+                <input type="number" id="Result" class="form-control" [(ngModel)]="newNacimiento.Result" name="Result" required />
+              </div>
+  
+              <div class="mb-3">
+                <label for="Description" class="form-label">Descripción</label>
+                <input type="text" id="Description" class="form-control" [(ngModel)]="newNacimiento.Description" name="Description" required />
+              </div>
+  
+              <div class="mb-3">
+                <label for="BirthWeight" class="form-label">Peso al Nacer</label>
+                <input type="number" id="BirthWeight" class="form-control" [(ngModel)]="newNacimiento.BirthWeight" name="BirthWeight" required />
+              </div>
+  
+              <div class="mb-3">
+                <label for="Inseminacionid" class="form-label">ID Inseminación</label>
+                <input type="text" id="Inseminacionid" class="form-control" [(ngModel)]="newNacimiento.Inseminacionid" name="Inseminacionid" required />
+              </div>
+  
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">{{ newNacimiento.id ? 'Actualizar' : 'Agregar' }}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
