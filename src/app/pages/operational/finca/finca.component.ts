@@ -44,17 +44,7 @@ users: User[]=[];
      dimension: 0,
      description: '',
      userId: 0,
-     user:{ id: 0,
-      userName:'',
-      password:'',
-      state:true,
-     },
-     cityId: 0,
-     city:{ id: 0, name: '',descripcion:'',countryId:0,
-      country:{id:0, name:'',countryCode:'',continentId:0,
-       continent:{id:0, name:'',description:''
-       }
-     } } };
+     cityId: 0}
 
   displayedColumns: string[] = ['id', 'name', 'dimension', 'description', 'cityName', 'userName', 'acciones'];
   dataSource!: MatTableDataSource<Finca>;

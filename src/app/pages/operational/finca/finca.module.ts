@@ -6,11 +6,7 @@ export interface Finca {
   name: string;
   dimension: number;
   description: string;
-  
   userId: number;
-  user?: User; 
   cityId?: number; // Propiedad opcional
-  city?: City;// Suponiendo que quieres mostrar el nombre de la ciudad
-   // Suponiendo que quieres mostrar el nombre del usuario
 }
 
