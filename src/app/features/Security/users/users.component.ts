@@ -45,7 +45,7 @@ export class UsersComponent implements OnInit {
   user: User[]= [];
   newUser: User = {
     id: 0,
-    UserName: '',
+    username: '',
     PersonId: 0,
     password: '',
   }
