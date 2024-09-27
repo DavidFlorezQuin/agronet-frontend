@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserRole } from './UserRole.module';
 import { environment } from '../../../../env/enviroment';
-
+import { User } from '../users/User.module';
 @Injectable({
   providedIn: 'root'
 })
@@ -20,9 +20,8 @@ export class UserRoleService {
     return this.http.delete<void>(`${this._baseUrl}/UserRole/${id}`);
   }
 
-  updateUserRole(userRole: UserRole, id:number):Observable<UserRole>{
-    const url = `${this._baseUrl}/UserRole/${id}`;
-    return this.http.put<UserRole>(url, userRole);
+  updateUserRoles(user: User): Observable<User> {
+    return this.http.put<User>(`${this._baseUrl}/${user.id}/roles`, user);
   }
 
   createUserRole(userRole: UserRole):Observable<UserRole>{
