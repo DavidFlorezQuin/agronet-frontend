@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { RoleViewService } from './role-view.service';
@@ -8,11 +8,28 @@ import { RoleView } from './ViewRole.module';
 import Swal from 'sweetalert2';
 import { AlertService } from '../../../shared/components/alert.service';
 import { RolesService } from '../role/roles.service';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { Subject } from 'rxjs/internal/Subject';
+import { Config } from 'datatables.net';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-role-view',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule,FormsModule,
+    MatIconModule,
+   
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
   templateUrl: './role-view.component.html'
 })
 export class RoleViewComponent implements OnInit {
@@ -22,9 +39,15 @@ export class RoleViewComponent implements OnInit {
   newRoleModule: RoleView = {
     id: 0, roleId: 0, viewId: 0
   } 
-
+  
+  displayedColumns: string[]=['id','roleId','viewId','acciones'];
   currentRole: { id: number, name: string } = { id: 0, name: '' };
-
+  dtoptions: Config={};
+  dttrigger: Subject<any>= new Subject<any>();
+dataSource!: MatTableDataSource<RoleView>;
+// referenicas del paginador y sort
+@ViewChild(MatPaginator) paginator!: MatPaginator;
+@ViewChild(MatSort) sort!: MatSort;
   constructor( private roleViewService:RoleViewService, private roleService: RolesService, private viewRoleService: RoleViewService, private viewService: ViewService, private serviceAlert: AlertService,) { }
 
   ngOnInit(): void {
@@ -105,5 +128,14 @@ export class RoleViewComponent implements OnInit {
         })
       }
     }
+  }
+
+  aplicarFiltro(event:Event){
+    const filterValue = (event.target as HTMLInputElement).value;
+  this.dataSource.filter =filterValue.trim().toLowerCase();
+  
+  if (this.dataSource.paginator) {
+    this.dataSource.paginator.firstPage();
+  }  
   }
 }
