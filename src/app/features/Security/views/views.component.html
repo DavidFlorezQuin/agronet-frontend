@@ -1,80 +1,114 @@
 <!--  -->
 <div class="container">
-    <section class="d-flex justify-content-between my-3">
-      <h1 class="fw-normal">Vistas</h1>
-      <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50"><i class="bi bi-plus-circle mx-2"></i>
-          Agregar Vista</button>
-    </section>
-      <table datatable [dtOptions]="dtoptions" [dtTrigger]="dttrigger" class="table shadow-sm">
-        <thead>
-          <tr class="table-success">
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripcion</th>
-            <th>Route</th>
-            <th>Modulo</th>
-            <th>Acciones</th> 
-    
-          </tr>
-        </thead>
-        <tbody>
-    
-            <tr *ngFor="let view of views">
-            <td>{{ view.id }}</td>
-            <td>{{ view.name }}</td>
-            <td>{{ view.description }}</td>
-            <td>{{ view.route }}</td>
-            <td>{{ view.moduleId }}</td>
-            <td class="d-flex gap-3">
-              <i class="bi bi-pencil-square action-icon" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="onEdit(view)"></i>
-              <i class="bi bi-trash action-icon" (click)="onDelete(view.id)"></i>
-            </td>
-          </tr>
-    
-        </tbody>
-      </table>
-    
-    </div>
+  <section class="d-flex justify-content-between my-3">
+    <h1 class="fw-normal">Vistas</h1>
+    <button type="button" data-bs-toggle="modal" data-bs-target="#viewModal" id="btn-forms" class="btn h-50">
+      <i class="bi bi-plus-circle mx-2"></i>
+      Agregar Vista
+    </button>
+  </section>
+
+  <!-- Tabla con MatTable -->
+  <mat-form-field appearance="fill">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+  </mat-form-field>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Nombre Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <!-- Descripción Column -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    </ng-container>
+
+    <!-- Ruta Column -->
+    <ng-container matColumnDef="route">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Ruta </th>
+      <td mat-cell *matCellDef="let element"> {{element.route}} </td>
+    </ng-container>
+
+    <!-- Módulo Column -->
+    <ng-container matColumnDef="moduloId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Módulo ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.moduloId}} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let item">
+        <button mat-icon-button color="primary" (click)="onEdit(item)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(item.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <!--
+         <button mat-icon-button color="accent" (click)="onView({ id: item.id, name: item.name })">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        -->
+       
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Definitions -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+</div>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewModal" tabindex="-1" aria-labelledby="viewModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fw-bold fs-4" id="text-green">Nueva vista</h1>
+        <h5 class="modal-title" id="viewModalLabel">Agregar/Editar Vista</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form class="px-5" #roleForm="ngForm" (ngSubmit)="onSubmit(roleForm)">
-          <div>
-            <label for="name" id="text-green" class="fw-normal">Nombre</label>
-            <input class="form-control" type="text" id="name" name="name" [(ngModel)]="newView.name" required>
+        <form #viewForm="ngForm" (ngSubmit)="onSubmit(viewForm)">
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newView.name" required>
           </div>
-        
-          <div class="my-3">
-            <label for="description"  id="text-green" class="fw-normal">Descripción</label>
-            <input class="form-control form-green" type="text" id="description" name="description" [(ngModel)]="newView.description" required>
+
+          <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newView.description" required>
           </div>
-          <div>
-            <label for="description"  id="text-green" class="fw-normal">Ruta</label>
-            <input class="form-control form-green" type="text" id="route" name="route" [(ngModel)]="newView.route" required>
+
+          <div class="mb-3">
+            <label for="route" class="form-label">Ruta</label>
+            <input type="text" class="form-control" id="route" name="route" [(ngModel)]="newView.route" required>
           </div>
-          <div class="my-3">
-            <label for="Modulo"  id="text-green"  class="fw-normal">Modulo</label>
-            <select class="form-select form-select-lg mb-3" [(ngModel)]="newView.moduleId" name="moduleId" aria-label="Large select example">
-              <option selected>Selecciona un modulo</option>
-              <option *ngFor = "let modulo of modules" [value]="modulo.id">
-                {{ modulo.name }}
-              </option>
-            </select>
+
+          <div class="mb-3">
+            <label for="moduloId" class="form-label">Módulo ID</label>
+            <input type="number" class="form-control" id="moduloId" name="moduloId" [(ngModel)]="newView.moduleId" required>
           </div>
-            
-          <!-- <button class="btn btn-success mt-5" type="submit">{{ newRole.id ? 'Actualizar' : 'Guardar' }}</button> -->
-          <div class="modal-footer">
-            <button type="button" id="btn-forms" type="submit" class="btn btn-form">{{ newView.id ? 'Actualizar' : 'Guardar' }}</button>
-          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="!viewForm.valid">{{ newView.id ? 'Actualizar' : 'Guardar' }}</button>
         </form>
-        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
       </div>
     </div>
   </div>

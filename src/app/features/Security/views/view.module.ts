@@ -5,5 +5,5 @@ export interface View {
     name:string,
     description:string,
     route:string,
-    moduleId:Modulo
+    moduleId:number
 }
