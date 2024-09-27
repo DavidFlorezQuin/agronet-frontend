@@ -41,7 +41,7 @@ dataSource: MatTableDataSource<Animal> = new MatTableDataSource<Animal>();
 dtoptions: Config={};
 dttrigger: Subject<any>= new Subject<any>();
 animales: Animal[] = [];
-newAnimales: Animal = {id: 0, name:'',gender:'',weight:0,photo:'',raceId:0,purpose:'',
+newAnimales: Animal = {id: 0, name:'',weight:0,photo:'',raceId:0,purpose:'',
   birthDay: new Date(),state: true,LotId: 0 };
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;

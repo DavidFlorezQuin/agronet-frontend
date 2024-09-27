@@ -101,7 +101,9 @@
 
           <div class="mb-3">
             <label for="moduloId" class="form-label">Módulo ID</label>
-            <input type="number" class="form-control" id="moduloId" name="moduloId" [(ngModel)]="newView.moduleId" required>
+            <select class="form-control" id="moduloId" name="moduloId" [(ngModel)]="newView.moduleId" required>
+              <option *ngFor="let modulo of modulos" [value]="modulo.id">{{ modulo.id }}</option>
+            </select>
           </div>
 
           <button type="submit" class="btn btn-primary" [disabled]="!viewForm.valid">{{ newView.id ? 'Actualizar' : 'Guardar' }}</button>
