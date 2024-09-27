@@ -33,6 +33,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatSortModule
   ],
   templateUrl: './users.component.html',
+  styleUrl: './users.component.css',
   styles: [`
     .action-icon {
       cursor: pointer;
@@ -47,9 +48,8 @@ export class UsersComponent implements OnInit {
     id: 0,
     username: '',
     PersonId: 0,
-    password: '',
   }
-  displayedColumns: string[] = ['id', 'personName','personaid','contraseñas', 'acciones'];
+  displayedColumns: string[] = ['id', 'userName', 'acciones'];
 
   dataSource!: MatTableDataSource<User>;
 dtoptions: Config={};
@@ -88,7 +88,7 @@ constructor(private userService: UserService,private alertService: AlertService)
 
 
   onEdit(user: User): void {
-    this.newUser = { ...user, password: user.password || '' };
+    this.newUser = { ...user || '' };
   }
 
   onDelete(id: number): void {

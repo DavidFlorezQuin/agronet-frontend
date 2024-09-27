@@ -1,0 +1,14 @@
+mat-table {
+    width: 100%;
+  }
+  mat-header-cell, mat-cell {
+    flex: 1;
+    width: 100%;
+  }
+  
+  mat-table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    width: 100%;
+  }
+    

@@ -88,12 +88,12 @@
               <label for="description" class="form-label">Descripción</label>
               <textarea class="form-control" id="description" name="description" [(ngModel)]="newFinca.description" required></textarea>
             </div>
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="cityId" class="form-label">Ciudad</label>
               <select class="form-select" id="cityId" name="cityId" [(ngModel)]="newFinca.cityId" required>
                 <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
               </select>
-            </div>
+            </div> -->
             <button type="submit" class="btn btn-primary" [disabled]="!fincaForm.valid">Guardar</button>
           </form>
         </div>
