@@ -139,5 +139,12 @@ displayColums: string[] =[ 'id',
       }
     });
   }
+  aplicarFiltro(event: Event): void {
+    const valorFiltro = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = valorFiltro.trim().toLowerCase();
 
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 }
