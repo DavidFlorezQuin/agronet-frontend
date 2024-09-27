@@ -67,6 +67,10 @@ export const routes: Routes = [
                 component: UsersComponent
             },
             {
+                path: 'rol-vista',
+                component: RoleViewComponent
+            },
+            {
                 path: 'person',
                 component: PersonComponent
             },
