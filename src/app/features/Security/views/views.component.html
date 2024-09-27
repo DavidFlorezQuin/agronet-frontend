@@ -102,6 +102,7 @@
           <div class="mb-3">
             <label for="moduloId" class="form-label">Módulo ID</label>
             <select class="form-control" id="moduloId" name="moduloId" [(ngModel)]="newView.moduleId" required>
+              <option value="" disabled selected>Seleccione un módulo</option>  
               <option *ngFor="let modulo of modulos" [value]="modulo.id">{{ modulo.name }}</option>
             </select>
           </div>

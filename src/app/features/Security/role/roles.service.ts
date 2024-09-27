@@ -9,6 +9,8 @@ import { environment } from '../../../../env/enviroment';
   providedIn: 'root'
 })
 export class RolesService {
+
+  
   private _baseUrl = environment.apiBaseUrl;
   private roleSource = new BehaviorSubject<{id:number, name:string}>({id:0, name: ''});
   currentRole = this.roleSource.asObservable();
@@ -37,9 +39,13 @@ export class RolesService {
     return this.http.put<Role>(url, role);
   }
 
-  changeRole(role:{id: number, name: string}){
-    this.roleSource.next(role)
-    localStorage.setItem('currentRole', JSON.stringify(role))
+  setCurrentRole(role: { id: number; name: string }) {
+    // Actualizar el BehaviorSubject
+    this.roleSource.next(role);
+    // Guardar el rol en localStorage
+    localStorage.setItem('currentRole', JSON.stringify(role));
   }
+
+
 
 }
