@@ -30,7 +30,7 @@
         <td>{{ production.description }}</td>
         <td>{{ production.quantityTotal }}</td>
         <td>{{ production.expirateDate | date }}</td>
-        <td>{{ production.animal.name }}</td>
+        <td>{{ production.animalId }}</td>
         <td>
           <button class="btn btn-warning" (click)="onEdit(production)" data-bs-toggle="modal" data-bs-target="#modalProduction">Editar</button>
           <button class="btn btn-danger" (click)="onDelete(production.id)">Eliminar</button>
@@ -75,7 +75,7 @@
             </div>
             <div class="mb-3">
               <label for="animal" class="form-label">Animal</label>
-              <input type="text" id="animal" class="form-control" name="animal" [(ngModel)]="newProduction.animal.name" required />
+              <input type="text" id="animal" class="form-control" name="animal" [(ngModel)]="newProduction.animalId" required />
             </div>
             <button type="submit" class="btn btn-success">{{ newProduction.id ? 'Actualizar' : 'Agregar' }}</button>
           </form>

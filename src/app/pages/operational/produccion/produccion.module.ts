@@ -1,11 +1,11 @@
-export class Productions {
-  id: number = 0;
-  typeProduction: string = '';
-  stock: number = 0;
-  measurement: string = '';
-  description: string = '';
-  quantityTotal: number = 0;
-  expirateDate?: Date;
-  animalId: number = 0;
+export interface Productions {
+  id: number,
+  typeProduction: string,
+  stock: number,
+  measurement: string ,
+  description: string ,
+  quantityTotal: number ,
+  expirateDate?: string;
+  animalId: number ,
 
 }

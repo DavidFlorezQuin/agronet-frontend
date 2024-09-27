@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Productions } from './produccion.module'; 
 
 @Injectable({
@@ -8,7 +8,8 @@ import { Productions } from './produccion.module';
 })
 export class ProductionsService {
   private apiUrl = 'your-api-url/productions';
-
+  private roleSource = new BehaviorSubject<{id:number, name:string }>({id:0, name: ''});
+  currentRole = this.roleSource.asObservable();
   constructor(private http: HttpClient) {}
 
   getProductions(): Observable<Productions[]> {
@@ -25,5 +26,9 @@ export class ProductionsService {
 
   deleteProduction(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+  changeProduction(role:{id: number, name: string}){
+    this.roleSource.next(role)
+    localStorage.setItem('currentRole', JSON.stringify(role))
   }
 }
