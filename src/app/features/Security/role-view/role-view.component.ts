@@ -25,7 +25,7 @@ export class RoleViewComponent implements OnInit {
 
   currentRole: { id: number, name: string } = { id: 0, name: '' };
 
-  constructor(private roleService: RolesService, private viewRoleService: RoleViewService, private viewService: ViewService, private serviceAlert: AlertService) { }
+  constructor( private roleViewService:RoleViewService, private roleService: RolesService, private viewRoleService: RoleViewService, private viewService: ViewService, private serviceAlert: AlertService,) { }
 
   ngOnInit(): void {
     this.roleService.currentRole.subscribe(role => {
@@ -58,8 +58,20 @@ export class RoleViewComponent implements OnInit {
     })
   }
 
-  onDelete(id: number): void {
-
+  onDelete(id:number): void {
+    this.serviceAlert.DeleteAlert().then((res)=>{
+      if(res.isConfirmed){
+        this.roleViewService.onDelete(id).subscribe({
+          next: ()=>{
+            this.serviceAlert.SuccessAlert('Eliminado correctamente');
+            this.listViewRole();
+          },
+          error: ()=>{
+            this.serviceAlert.ErrorAlert('Error al eliminar');
+          }
+        });
+      }
+    });
   }
 
 

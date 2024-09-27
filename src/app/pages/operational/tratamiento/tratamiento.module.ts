@@ -1,8 +1,8 @@
-export class Treatments {
-  id: number = 0;
-  description: string = '';
-  finishiedDate: Date = new Date();
-  startDate: Date = new Date();
-  animalDiagnosticsId: number = 0;
+export interface Treatments {
+  id: number,
+  description: string ,
+  finishiedDate: Date ,
+  startDate: Date ,
+  animalDiagnosticsId: number 
 
 }

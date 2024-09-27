@@ -46,7 +46,8 @@ export class InventarioComponent implements OnInit {
     farmId: 0,
    
   };
-
+  dtoptions: Config={};
+  dttrigger: Subject<any>= new Subject<any>();
   inventories: Inventories[] = [];
   displayedColumns: string[] = ['id', 'name', 'description','farmId', 'acciones'];
   dataSource!: MatTableDataSource<Inventories>; 
