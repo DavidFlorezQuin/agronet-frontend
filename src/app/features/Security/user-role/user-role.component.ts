@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-user-role',
   standalone: true,
-  imports: [CommonModule,FormsModule,
+  imports: [MatCheckboxModule,MatOptionModule,CommonModule,FormsModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
