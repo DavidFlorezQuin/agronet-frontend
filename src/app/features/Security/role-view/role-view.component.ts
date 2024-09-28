@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Modulo } from '../modules/modulo.module';
 
 @Component({
   selector: 'app-role-view',
@@ -33,20 +34,25 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class RoleViewComponent implements OnInit {
 
+  views: View[] = [];
+  newView: View = { id: 0, name: '', description: '', route: '', moduleId: 0 };
+  displayedColumns: string[] = ['id', 'name', 'description', 'route', 'moduloId', 'acciones'];
+  dataSource!: MatTableDataSource<View>;
+  dtoptions: Config={};
+  dttrigger: Subject<any>= new Subject<any>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  modulos!: Modulo[];
+  currentRole: { id: number, name: string } = { id: 0, name: '' };
+
+
+
   viewRole: any[] = [];
-  views: any[] = [];
   newRoleModule: RoleView = {
     id: 0, roleId: 0, viewId: 0
   } 
-  
-  displayedColumns: string[]=['id','roleId','viewId','acciones'];
-  currentRole: { id: number, name: string } = { id: 0, name: '' };
-  dtoptions: Config={};
-  dttrigger: Subject<any>= new Subject<any>();
-  dataSource!: MatTableDataSource<RoleView>;
-
-@ViewChild(MatPaginator) paginator!: MatPaginator;
-@ViewChild(MatSort) sort!: MatSort;
+ 
   constructor( private roleViewService:RoleViewService, private roleService: RolesService, private viewRoleService: RoleViewService, private viewService: ViewService, private serviceAlert: AlertService,) { }
 
   ngOnInit(): void {
@@ -71,8 +77,11 @@ export class RoleViewComponent implements OnInit {
 
   listViewRole(): void {
     this.viewRoleService.getViewRole(this.currentRole.id).subscribe({
-      next: (viewRole: View[]) => {
-        this.viewRole = viewRole;
+      next: (res: View[]) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.views = res;
       },
       error: (error) => {
         this.serviceAlert.ErrorAlert('Algo salió mal')

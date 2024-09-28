@@ -53,9 +53,7 @@ export class ViewsComponent implements OnInit {
   constructor(private viewService: ViewService, private alertService: AlertService,private moduleService: ModuleService,) {}
 
   ngOnInit(): void {
-    this.dtoptions={
-      pagingType:'ful_numbers',
-      lengthMenu:[5,10,15,20]}
+
     this.listViews();
     this.loadModules();
   }
