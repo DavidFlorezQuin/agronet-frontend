@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserRole } from './UserRole.module';
 import { UserRoleService } from './user-role.service';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -10,20 +10,29 @@ import { RolesService } from '../role/roles.service';
 import { User } from '../users/User.module';
 import { SelectionModel } from '@angular/cdk/collections';
 import { UserService } from '../users/user.service';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { Config } from 'datatables.net';
+import { Subject } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-user-role',
   standalone: true,
-  imports: [CommonModule, FormsModule, 
-    MatTableModule,
-    MatCheckboxModule,
+  imports: [CommonModule,FormsModule,
+    MatIconModule,
     MatButtonModule,
-    FormsModule, MatFormFieldModule,MatOptionModule],
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
   templateUrl: './user-role.component.html',
   styles: ``
 })
@@ -31,9 +40,19 @@ export class UserRoleComponent implements OnInit {
   
   users: User[] = [];
   availableRoles: Role[] = [];
-  displayedColumns: string[] = ['select', 'id', 'name', 'roles', 'action'];
-  selection = new SelectionModel<User>(true, []);
+newUserRoles: UserRole = {id: 0, RoleId:0,UserId:0};
 
+
+  displayedColumns: string[] = [ 'id', 'RoleId', 'UserId', 'action'];
+  selection = new SelectionModel<User>(true, []);
+  currentRole: { id: number, name: string } = { id: 0, name: '' };
+  
+  dtoptions: Config={};
+  dttrigger: Subject<any>= new Subject<any>();
+dataSource!: MatTableDataSource<UserRole>;
+// referenicas del paginador y sort
+@ViewChild(MatPaginator) paginator!: MatPaginator;
+@ViewChild(MatSort) sort!: MatSort;
   constructor(
     private roleUserService: UserRoleService, 
     private userService: UserService, 
