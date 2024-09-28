@@ -4,14 +4,31 @@ import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { TreatmentsService } from './tratamiento.service';
 import { AlertService } from '../../../shared/components/alert.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { NgForm } from '@angular/forms';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { RouterModule } from '@angular/router';
+import { MatInputModule } from '@angular/material/input';
+
+
 @Component({
   selector: 'app-tratamiento',
   standalone: true,
-  imports: [],
+  imports: [CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    RouterModule],
   templateUrl: './tratamiento.component.html',
   styleUrl: './tratamiento.component.css'
 })
@@ -31,6 +48,8 @@ dataSource!: MatTableDataSource<Treatments>;
 // referenicas del paginador y sort
 @ViewChild(MatPaginator) paginator!: MatPaginator;
 @ViewChild(MatSort) sort!: MatSort;
+
+
 constructor(private treatmentsService:TreatmentsService, private alertService:AlertService){}
     ngOnInit(): void {
         this.dtoptions={
