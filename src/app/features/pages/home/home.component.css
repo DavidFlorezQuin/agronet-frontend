@@ -1,47 +1,10 @@
-
 *{
-    
-}
-.bg-green{
+    height: 100vh;
     background-color: var(--color-green-600);
 }
-.nav-link{
-    color: white;
-    font-weight: 300;
-}
 
-.navbar-brand{
-    font-weight: bold;
-    color: white;
-}
-main {
-    min-height: 100vh; /* Cambia height a min-height */
+main{
     display: flex;
+    justify-content: center;
     align-items: center;
-    background-image: url("/assets/bg-main.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-}
-
-.text-main {
-    position: relative; /* Para asegurarte de que se coloque correctamente */
-    z-index: 1; /* Asegura que el contenido esté encima de la imagen */
-    color: white; /* Cambia el color del texto si es necesario para que contraste */
-}
-
-.text-main p {
-    line-height: 1.2; /* Ajusta el valor según tus necesidades */
-    margin-bottom: 1rem; /* Agrega margen inferior entre párrafos */
-}
-
-section {
-    margin-top: 20px; /* Espacio superior */
-    padding: 20px; /* Espacio interno */
-}
-
-.contact-section{
-    background-color: var(--color-green-600);
-    color: white;
 }

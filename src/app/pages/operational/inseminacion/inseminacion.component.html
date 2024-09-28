@@ -1,0 +1,67 @@
+<div class="container">
+  <section class="d-flex justify-content-between my-3">
+    <h1 class="fw-normal">Inseminaciones</h1>
+    <button type="button" data-bs-toggle="modal" data-bs-target="#inseminationModal" id="btn-forms" class="btn h-50">
+      <i class="bi bi-plus-circle mx-2"></i>
+      Agregar Inseminación
+    </button>
+  </section>
+
+  <!-- Tabla con MatTable -->
+  <mat-form-field appearance="fill">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+  </mat-form-field>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Fecha Column -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+      <td mat-cell *matCellDef="let element"> {{element.date | date}} </td>
+    </ng-container>
+
+    <!-- Observación Column -->
+    <ng-container matColumnDef="observation">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Observación </th>
+      <td mat-cell *matCellDef="let element"> {{element.observation}} </td>
+    </ng-container>
+
+    <!-- Padre Column -->
+    <ng-container matColumnDef="father">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Padre </th>
+      <td mat-cell *matCellDef="let element"> {{element.father.animal}} </td>
+    </ng-container>
+
+    <!-- Madre Column -->
+    <ng-container matColumnDef="mother">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Madre </th>
+      <td mat-cell *matCellDef="let element"> {{element.mother.animal}} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" (click)="onEdit(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(element)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Definitions -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>

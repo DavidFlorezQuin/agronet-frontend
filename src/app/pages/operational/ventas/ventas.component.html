@@ -1,0 +1,74 @@
+<div class="container mt-4">
+  <h2>Gestión de Ventas</h2>
+
+  <!-- Botón para abrir modal -->
+  <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalSale">
+    Agregar Registro de Venta
+  </button>
+
+  <!-- Tabla de registros de ventas -->
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Medida</th>
+        <th>Producción</th>
+        <th>Moneda</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let sale of sales">
+        <td>{{ sale.id }}</td>
+        <td>{{ sale.price }}</td>
+        <td>{{ sale.quantity }}</td>
+        <td>{{ sale.measurement }}</td>
+        <td>{{ sale.production.typeProduction }}</td>
+        <td>{{ sale.currency }}</td>
+        <td>
+          <button class="btn btn-warning" (click)="onEdit(sale)" data-bs-toggle="modal" data-bs-target="#modalSale">Editar</button>
+          <button class="btn btn-danger" (click)="onDelete(sale.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Modal -->
+  <div class="modal fade" id="modalSale" tabindex="-1" aria-labelledby="modalSaleLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalSaleLabel">{{ newSale.id ? 'Editar Venta' : 'Agregar Venta' }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #saleForm="ngForm" (ngSubmit)="onSubmit(saleForm)">
+            <div class="mb-3">
+              <label for="price" class="form-label">Precio</label>
+              <input type="number" id="price" class="form-control" name="price" [(ngModel)]="newSale.price" required />
+            </div>
+            <div class="mb-3">
+              <label for="quantity" class="form-label">Cantidad</label>
+              <input type="number" id="quantity" class="form-control" name="quantity" [(ngModel)]="newSale.quantity" required />
+            </div>
+            <div class="mb-3">
+              <label for="measurement" class="form-label">Medida</label>
+              <input type="text" id="measurement" class="form-control" name="measurement" [(ngModel)]="newSale.measurement" required />
+            </div>
+            <div class="mb-3">
+              <label for="production" class="form-label">Producción</label>
+              <input type="text" id="production" class="form-control" name="production" [(ngModel)]="newSale.production.typeProduction" required />
+            </div>
+            <div class="mb-3">
+              <label for="currency" class="form-label">Moneda</label>
+              <input type="text" id="currency" class="form-control" name="currency" [(ngModel)]="newSale.currency" required />
+            </div>
+            <button type="submit" class="btn btn-success">{{ newSale.id ? 'Actualizar' : 'Agregar' }}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

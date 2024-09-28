@@ -13,6 +13,12 @@ import { ViewsComponent } from './features/Security/views/views.component';
 import { UsersComponent } from './features/Security/users/users.component';
 import { PersonComponent } from './features/Security/person/person.component';
 import { HomeComponentD } from './features/Security/home/home.component';
+import { FincaComponent } from './pages/operational/finca/finca.component';
+import { AnimalComponent } from './pages/operational/animal/animal.component';
+import { NacimientoComponent } from './pages/operational/nacimiento/nacimiento.component';
+import { LoteComponent } from './pages/operational/lote/lote.component';
+import { MenuComponent } from './features/pages/menu/menu.component';
+import { AnimalDiagnosticoComponent } from './pages/operational/animal-diagnostico/animal-diagnostico.component';
 
 export const routes: Routes = [
     {
@@ -27,11 +33,13 @@ export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent
-    },
+    }, {
+      path: 'menu',
+      component: MenuComponent
+  },
     {
         path: 'dashboard',
-        component: MainComponent,
-        canActivate: [authGuard],
+        component: MenuComponent,
         children: [
 
             {
@@ -44,28 +52,52 @@ export const routes: Routes = [
             },
 
             {
-                path: 'roles',
+                path: 'role',
                 component: RoleComponent
             },
             {
-                path: 'modules',
+                path: 'modulo',
                 component: ModulesComponent
             },
             {
-                path: 'views',
+                path: 'vista',
                 component: ViewsComponent
             },
             {
-                path: 'user',
+                path: 'usuario',
                 component: UsersComponent
             },
             {
-                path: 'person',
+                path: 'rol-vista',
+                component: RoleViewComponent
+            },
+            {
+                path: 'persona',
                 component: PersonComponent
             },
             {
                 path: '',
                 component: HomeComponentD
+            },
+            {
+                path:'finca',
+                component: FincaComponent
+            },
+            {
+                path:'animal',
+                component:AnimalComponent
+            },
+            {
+                path:'nacimiento',
+                component:NacimientoComponent
+            },
+            {
+                path:'lote',
+                component:LoteComponent
+            },
+            {
+                path:'AnimalDiagnostico',
+                component:AnimalDiagnosticoComponent
             }
         ]
     }

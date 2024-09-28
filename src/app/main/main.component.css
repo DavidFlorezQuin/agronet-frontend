@@ -3,7 +3,12 @@
     display: flex;
     height: 100vh; /* Ocupa todo el alto de la ventana */
     margin: 0;
-  }
+    
+  background-image: url('/assets/bg-dashboard.jpg'); /* Reemplaza con la ruta correcta de tu imagen */
+  background-size: cover; /* Ajusta el tamaño de la imagen para cubrir completamente el contenedor */
+  background-position: bottom; /* Centra la imagen dentro del contenedor */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  } 
   
   .app-menu {
     flex: 0 0 16.6667%; /* Ocupa 2 de 12 columnas (aproximadamente 16.67%) */
