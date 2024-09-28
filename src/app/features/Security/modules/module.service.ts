@@ -14,7 +14,7 @@ export class ModuleService {
   constructor(private http:HttpClient) { }
 
   getModules(): Observable<Modulo[]> {
-    return this.http.get<Modulo[]>(`${this._baseUrl}/Modulo`);  
+    return this.http.get<Modulo[]>(`${this._baseUrl}/Modulo/list`);  
   }
   
   createModules(modulo: Modulo): Observable<Modulo> {

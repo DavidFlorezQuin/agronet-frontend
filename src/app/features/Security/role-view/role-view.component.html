@@ -1,35 +1,77 @@
 <div class="container">
     <section class="d-flex justify-content-between my-3">
     
-      <h1 class="fw-normal">Vistas del role : <span class="rounded-5 text-white px-3" style="width: 180px; background-color: var(--color-green-950);"> {{ currentRole.name }}</span></h1>
+      <h2 class="fw-normal">Vistas del role : <span class="rounded-5 text-white px-3" style="width: 180px; background-color: var(--color-green-950);"> {{ currentRole.name }}</span></h2>
       <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50"><i class="bi bi-plus-circle mx-2"></i>
         Agregar Vista</button>
     </section>
-      <table class="table">
-        <thead>
-          <tr class="table-success">
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripcion</th>
-            <th>Acciones</th> 
-    
-          </tr>
-        </thead>
-        <tbody>
-    
-          <tr *ngFor="let item of viewRole; index as i">
-            <td>{{ item.id }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.description }}</td>
-            <td class="gap-3 d-flex">
-                <i class="bi bi-trash action-icon" (click)="onDelete(item.id)"></i>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    
-    </div>
-    
+     
+  <!-- Tabla con MatTable -->
+  <mat-form-field appearance="fill">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+  </mat-form-field>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Nombre Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+    </ng-container>
+
+    <!-- Descripción Column -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    </ng-container>
+
+    <!-- Ruta Column -->
+    <ng-container matColumnDef="route">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Ruta </th>
+      <td mat-cell *matCellDef="let element"> {{element.route}} </td>
+    </ng-container>
+
+    <!-- Módulo Column -->
+    <ng-container matColumnDef="moduloId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Módulo ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.moduloId}} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let item">
+        <button mat-icon-button color="primary" data-bs-toggle="modal" data-bs-target="#Modal" (click)="onSubmit(item)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(item.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <!--
+         <button mat-icon-button color="accent" (click)="onView({ id: item.id, name: item.name })">
+          <mat-icon>visibility</mat-icon>
+        </button>
+        -->
+       
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Definitions -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+</div>
+
     
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

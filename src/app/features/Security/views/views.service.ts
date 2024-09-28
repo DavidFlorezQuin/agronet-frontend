@@ -14,7 +14,7 @@ export class ViewService {
   constructor(private http:HttpClient) { }
 
   getViews(): Observable<View[]> {
-    return this.http.get<View[]>(`${this._baseUrl}/View`);  
+    return this.http.get<View[]>(`${this._baseUrl}/View/list`);  
   }
   createViews(modulo: View): Observable<View> {
     return this.http.post<View>(`${this._baseUrl}/View`, modulo);

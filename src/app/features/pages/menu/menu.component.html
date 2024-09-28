@@ -14,7 +14,7 @@
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
           <!-- Itera sobre cada módulo dentro del rol -->
           <li *ngFor="let modulo of role.modulo">
-            <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#modulo-collapse-' + modulo.id" aria-expanded="false">
+            <button class="btn btn-toggle fw-medium align-items-center rounded collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#modulo-collapse-' + modulo.id" aria-expanded="false">
               {{ modulo.name }}
             </button>
             <div class="collapse" [id]="'modulo-collapse-' + modulo.id">
@@ -22,7 +22,9 @@
                 <!-- Itera sobre cada vista dentro del módulo -->
                 <li *ngFor="let view of modulo.views">
                   <a [routerLink]="view.route" class="link-light nav-link rounded">{{ view.name }}</a>
+
                 </li>
+  
               </ul>
             </div>
           </li>
