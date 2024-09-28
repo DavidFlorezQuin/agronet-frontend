@@ -24,17 +24,7 @@ export class LoginComponent {
   constructor(private serviceAuth: AuthService, private router: Router, private serviceAlert: AlertService) { }
 
   onSubmit(form: NgForm) {
-    this.router.navigate(['/dashboard/'])
-
-
-  }
-
-
-
-}
-/**
- * 
- * this.serviceAuth.login(this.newAuth).subscribe({
+    this.serviceAuth.login(this.newAuth).subscribe({
       next: (res) => {
         const id = res.id;
 
@@ -49,4 +39,14 @@ export class LoginComponent {
 
       }
     })
+
+
+  }
+
+
+
+}
+/**
+ * 
+ * 
  */
