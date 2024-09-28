@@ -16,7 +16,7 @@ export class PersonService {
 
   
   getPerson():Observable<Person[]>{
-    return this.http.get<Person[]>(`${this._baseUrl}/Person`);
+    return this.http.get<Person[]>(`${this._baseUrl}/Person/list`);
   }
 
   onDeletePerson(id:number):Observable<void>{

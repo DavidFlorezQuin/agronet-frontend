@@ -71,7 +71,7 @@ export const routes: Routes = [
                 component: RoleViewComponent
             },
             {
-                path: 'person',
+                path: 'persona',
                 component: PersonComponent
             },
             {

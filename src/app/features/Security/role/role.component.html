@@ -1,15 +1,20 @@
-<div class="container">
-  <section class="d-flex justify-content-between my-3">
-    <h1 class="fw-normal">Roles</h1>
-    <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50"><i class="bi bi-plus-circle mx-2"></i>Agregar Rol</button>
-  </section>
+<div class="container mt-3">
+
 
   <!-- Filtro de búsqueda -->
-  <mat-form-field>
-    <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar roles">
-  </mat-form-field>
+   <div class="d-flex justify-content-between">
 
+    <section class="d-flex align-items-center gap-3">
+      <h2 class="fw-normal mb-0 ">Roles</h2>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50 rounded-5 px-4"><i class="bi bi-plus-circle mx-2 STAR"></i>Agregar Rol</button>
+    </section>
+
+     <mat-form-field>
+       <mat-label>Buscar</mat-label>
+       <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar roles">
+      </mat-form-field>
+    </div>
+      
   <!-- Tabla de Angular Material -->
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
