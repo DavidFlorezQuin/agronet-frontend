@@ -15,7 +15,7 @@ export class RoleViewService {
   constructor(private http:HttpClient) { }
 
   getViewRole(id:number):Observable<View[]>{
-    return this.http.get<View[]>(`${this._baseUrl}/byRole/${id}`);
+    return this.http.get<View[]>(`${this._baseUrl}/View/byRole/${id}`);
   }
 
   onDelete(id:number):Observable<void>{

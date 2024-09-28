@@ -23,14 +23,13 @@ import { MatInputModule } from '@angular/material/input';
   standalone: true,
   imports: [CommonModule,FormsModule,
     MatIconModule,
-   
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './role-view.component.html'
+    templateUrl: './role-view.component.html'
 })
 export class RoleViewComponent implements OnInit {
 
@@ -44,8 +43,8 @@ export class RoleViewComponent implements OnInit {
   currentRole: { id: number, name: string } = { id: 0, name: '' };
   dtoptions: Config={};
   dttrigger: Subject<any>= new Subject<any>();
-dataSource!: MatTableDataSource<RoleView>;
-// referenicas del paginador y sort
+  dataSource!: MatTableDataSource<RoleView>;
+
 @ViewChild(MatPaginator) paginator!: MatPaginator;
 @ViewChild(MatSort) sort!: MatSort;
   constructor( private roleViewService:RoleViewService, private roleService: RolesService, private viewRoleService: RoleViewService, private viewService: ViewService, private serviceAlert: AlertService,) { }
@@ -57,8 +56,6 @@ dataSource!: MatTableDataSource<RoleView>;
     });
     this.listViewRole();
     this.listViews();
-
-    
   }
 
   listViews(): void {
@@ -98,7 +95,6 @@ dataSource!: MatTableDataSource<RoleView>;
       }
     });
   }
-
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
