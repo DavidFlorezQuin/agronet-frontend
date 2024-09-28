@@ -93,12 +93,18 @@ export class RoleComponent implements OnInit, AfterViewInit {
     });
   }
 
+  resetForm(): void {
+    this.newRole = { id: 0, state: true, name: '', description: '' }; // Resetear newRole
+  }
+  
+
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newRole.id) {
         this.rolesService.updateRole(this.newRole, this.newRole.id).subscribe({
           next: () => {
             this.serviceAlert.SuccessAlert('Actualizado');
+            
             form.reset();
             this.newRole = { id: 0, state:true, name: '', description: '' };
             this.listRole();

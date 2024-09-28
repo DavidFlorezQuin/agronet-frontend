@@ -58,6 +58,11 @@ export class ViewsComponent implements OnInit {
     this.loadModules();
   }
 
+  resetForm(): void {
+    this.newView = { id: 0, name: '', description: '', route: '', moduleId: 0 };
+  }
+  
+
   listViews(): void {
     this.viewService.getViews().subscribe({
       next: (res: View[]) => {
