@@ -15,6 +15,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgForm } from '@angular/forms';
 import { AlertService } from '../../../shared/components/alert.service';
+import { Suplemento } from './suplementos.module';
+import { SuplementoService } from './suplementos.service';
 
 @Component({
   selector: 'app-suplementos',
@@ -31,16 +33,101 @@ import { AlertService } from '../../../shared/components/alert.service';
   styleUrls: ['./suplementos.component.css']
 })
 export class SuplementosComponent {
-  /**displayedColumns:string[] = ['id','name','gender','weight','photo','race','purpuse','birthDay', 'LotId','state'];
-  dataSource: MatTableDataSource<Animal> = new MatTableDataSource<Animal>();
+ displayedColumns:string[] = ['id','name','gender','weight','photo','race','purpuse','birthDay', 'LotId','state'];
+  dataSource: MatTableDataSource<Suplemento> = new MatTableDataSource<Suplemento>();
   dtoptions: Config={};
   dttrigger: Subject<any>= new Subject<any>();
-  animales: Animal[] = [];
-  newAnimales: Animal = {id: 0, name:'',weight:0,photo:'',raceId:0,purpose:'',
-    birthDay: new Date(),state: true,LotId: 0 };
+  Suplemento: Suplemento[] = [];
+  newSuplemento: Suplemento = {id: 0, Name:'',CategorySuppliesId:0,Description:'' };
 
     @ViewChild(MatPaginator) paginator!: MatPaginator;
     @ViewChild(MatSort) sort!: MatSort;
-    */
+    constructor(private SuplementoService: SuplementoService, private alertaService: AlertService) {}
+
+    ngOnInit():void{
+      this.dtoptions={
+        pagingType:'ful_numbers',
+        lengthMenu:[5,10,15,20]
+      };
+  this.ListAnimal();
+    }
+
+ListAnimal(): void{
+      this.SuplementoService.getSuplemento().subscribe({
+  next:(Suplemento:Suplemento[])=>{
+    this.dataSource= new MatTableDataSource(Suplemento);
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.Suplemento = Suplemento;
+    this.dttrigger.next(null);
+    this.dataSource.data = Suplemento;
+  }
+      });
+      error:()=>{
+        this.alertaService.ErrorAlert('Error al obtener los animales');
+      }
+    }
+    //ng generate component pages/about
+
+  aplicarFiltro(event:Event): void{
+
+  const filterValue=(event.target as HTMLInputElement).value;
+  this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  }
+
+  onEdit(Suplemento:Suplemento): void{
+  this.newSuplemento={...Suplemento};
+  }
+
+  eliminar(id:number): void{
+  this.alertaService.DeleteAlert().then((res)=>{
+    if(res.isConfirmed){
+      this.SuplementoService.deleteSuplemento(id).subscribe({
+        next:(res)=>{
+          this.alertaService.SuccessAlert('Eliminado con éxito');
+          this.ListAnimal();
+        },
+        error:()=>{
+          this.alertaService.ErrorAlert('Error al eliminar el animal');
+        }
+      });
+    }
+  });
+
+  }
+
+  onSubmit(form:NgForm):void{
+  if(form.valid){
+    if(this.newSuplemento.id>0){
+      this.SuplementoService.updateSuplemento(this.newSuplemento,this.newSuplemento.id).subscribe({
+        next:()=>{
+          this.alertaService.SuccessAlert('Actualizado correctamente');
+          form.reset();
+          this.ListAnimal();
+              },
+              error:()=>{
+                this.alertaService.ErrorAlert('Error al actualizar');
+              }
+      });
+    }else{
+      this.SuplementoService.createuplemento(this.newSuplemento).subscribe({
+        next:()=>{
+          this.alertaService.SuccessAlert('Creado correctamente');
+          form.reset();
+          this.ListAnimal();
+        },
+        error:()=>{
+          this.alertaService.ErrorAlert('Error al crear');
+
+        }
+      });
+    }
+  }else{
+    this.alertaService.ErrorAlert('Por favor completa todod los campos');
+
+  }
+  }
 
 }

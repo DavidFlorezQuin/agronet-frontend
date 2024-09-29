@@ -1,1 +1,103 @@
-<p>suplementos works!</p>
+<div class="container">
+  <section class="d-flex justify-content-between my-3">
+    <h1 class="fw-normal">Gestión de Suplementos</h1>
+    <!-- Botón para abrir el modal -->
+    <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#suplementoModal" id="btn-forms">
+      <i class="bi bi-plus-circle mx-2"></i>
+      Registrar Suplemento
+    </button>
+  </section>
+
+  <!-- Campo de búsqueda -->
+  <mat-form-field appearance="fill">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Filtrar">
+  </mat-form-field>
+
+  <!-- Tabla de datos -->
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let suplemento"> {{ suplemento.id }} </td>
+    </ng-container>
+
+    <!-- Nombre Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+      <td mat-cell *matCellDef="let suplemento"> {{ suplemento.name }} </td>
+    </ng-container>
+
+    <!-- Categoría Column -->
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Categoría </th>
+      <td mat-cell *matCellDef="let suplemento"> {{ suplemento.CategorySuppliesId }} </td>
+    </ng-container>
+
+    <!-- Descripción Column -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+      <td mat-cell *matCellDef="let suplemento"> {{ suplemento.description }} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let suplemento">
+        <button mat-icon-button color="primary" (click)="onEdit(suplemento)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="eliminar(suplemento.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <tr mat-header-row *matHeaderRowDef="['id', 'name', 'category', 'description', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['id', 'name', 'category', 'description', 'acciones'];"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="suplementoModal" tabindex="-1" aria-labelledby="suplementoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="suplementoModalLabel">{{ newSuplemento.id > 0 ? 'Editar Suplemento' : 'Nuevo Suplemento' }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form #suplementoForm="ngForm" (ngSubmit)="onSubmit(suplementoForm)">
+        <div class="modal-body">
+          <!-- Campo para Nombre -->
+          <mat-form-field appearance="fill">
+            <mat-label>Nombre</mat-label>
+            <input matInput name="name" [(ngModel)]="newSuplemento.name" required>
+          </mat-form-field>
+
+          <!-- Campo para Categoría -->
+          <mat-form-field appearance="fill">
+            <mat-label>Categoría</mat-label>
+            <input matInput name="category" [(ngModel)]="newSuplemento.CategorySuppliesId" required>
+          </mat-form-field>
+
+          <!-- Campo para Descripción -->
+          <mat-form-field appearance="fill">
+            <mat-label>Descripción</mat-label>
+            <textarea matInput name="description" [(ngModel)]="newSuplemento.description" required></textarea>
+          </mat-form-field>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">{{ newSuplemento.id > 0 ? 'Actualizar' : 'Crear' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

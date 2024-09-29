@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 
@@ -25,7 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [CommonModule,FormsModule,
     MatIconModule,
-   
+
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
@@ -38,7 +38,7 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class PersonComponent implements OnInit {
 
-  
+
   persons: Person[]= [];
   newPerson: Person = {id: 0, state: true,firstName:'',lastName:'',email:'',gender:'',document:'',typeDocument:'',direction:'',phone:'', birthday:'' }
 displayedColumns: string[] = [ 'id', 'firstName', 'lastName', 'email', 'gender', 'document', 'direction', 'phone', 'birthday','acciones'];
@@ -53,14 +53,14 @@ constructor(private personService: PersonService,private alertService: AlertServ
 
 
   ngOnInit(): void {
-    
+
     this.dtoptions={
       pagingType:'ful_numbers',
       lengthMenu:[5,10,15,20]
     };
     this.listPersons();
   }
- 
+
 
 
 listPersons(): void {
@@ -114,10 +114,10 @@ onSubmit(form:NgForm): void{
         next: ()=>{
           this.alertService.SuccessAlert('Actualizado correctamente');
           form.reset();
-          this.newPerson={id:0,state: true, 
-            firstName:'',lastName:'',email:'',gender:'',document:'',typeDocument:'',direction:'',phone:'', birthday:'' }; 
+          this.newPerson={id:0,state: true,
+            firstName:'',lastName:'',email:'',gender:'',document:'',typeDocument:'',direction:'',phone:'', birthday:'' };
             this.listPersons();
-          
+
         },
         error: ()=>{
           this.alertService.ErrorAlert('Error al actualizar');
@@ -138,7 +138,7 @@ onSubmit(form:NgForm): void{
   }else{
     this.alertService.ErrorAlert('Por favor complete todos los campos');
   }
- 
+
 }
 
 aplicarFiltro(event:Event){
@@ -147,7 +147,7 @@ this.dataSource.filter =filterValue.trim().toLowerCase();
 
 if (this.dataSource.paginator) {
   this.dataSource.paginator.firstPage();
-}  
+}
 }
 
 

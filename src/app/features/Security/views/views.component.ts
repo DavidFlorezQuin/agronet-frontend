@@ -29,7 +29,7 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   imports: [CommonModule, FormsModule, DataTablesModule,CommonModule,FormsModule,
     MatIconModule,
-  
+
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
@@ -46,6 +46,8 @@ export class ViewsComponent implements OnInit {
   newView: View = { id: 0, name: '', description: '', route: '', moduleId: 0 };
   displayedColumns: string[] = ['id', 'name', 'description', 'route', 'moduloId', 'acciones'];
   dataSource!: MatTableDataSource<View>;
+  dtoptions: Config = {};
+  dttrigger: Subject<any> = new Subject<any>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -53,7 +55,10 @@ export class ViewsComponent implements OnInit {
   constructor(private viewService: ViewService, private alertService: AlertService,private moduleService: ModuleService,) {}
 
   ngOnInit(): void {
-
+    this.dtoptions = {
+      pagingType: 'full_numbers',
+      lengthMenu: [5, 10, 15, 20]
+    };
     this.listViews();
     this.loadModules();
   }
@@ -61,7 +66,7 @@ export class ViewsComponent implements OnInit {
   resetForm(): void {
     this.newView = { id: 0, name: '', description: '', route: '', moduleId: 0 };
   }
-  
+
   listViews(): void {
     this.viewService.getViews().subscribe({
       next: (res: View[]) => {
