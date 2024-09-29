@@ -18,6 +18,8 @@ import { AnimalComponent } from './pages/operational/animal/animal.component';
 import { NacimientoComponent } from './pages/operational/nacimiento/nacimiento.component';
 import { LoteComponent } from './pages/operational/lote/lote.component';
 import { MenuComponent } from './features/pages/menu/menu.component';
+import { ContinentComponent } from './features/Parameter/continent/continent.component';
+import { CityComponent } from './features/Parameter/city/city.component';
 
 export const routes: Routes = [
     {
@@ -41,6 +43,7 @@ export const routes: Routes = [
         component: MainComponent,
         children: [
 
+            // SECURITY
             {
                 path: 'role-view',
                 component: RoleViewComponent
@@ -78,12 +81,14 @@ export const routes: Routes = [
                 path: '',
                 component: HomeComponentD
             },
+
+            // OPERATIONAL
             {
                 path:'finca',
                 component: FincaComponent
             },
             {
-                path:'animal',
+                path:'animales',
                 component:AnimalComponent
             },
             {
@@ -93,6 +98,16 @@ export const routes: Routes = [
             {
                 path:'lote',
                 component:LoteComponent
+            },
+            
+            //LOCALITATION
+            {
+                path:'continent',
+                component:ContinentComponent
+            },
+            {
+                path:'city',
+                component: CityComponent
             }
         ]
     }
