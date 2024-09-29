@@ -12,6 +12,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Config } from 'datatables.net';
 
 
 @Component({
