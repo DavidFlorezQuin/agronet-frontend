@@ -41,14 +41,14 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class ViewsComponent implements OnInit {
   views: View[] = [];
+  modulos!: Modulo[];
+
   newView: View = { id: 0, name: '', description: '', route: '', moduleId: 0 };
   displayedColumns: string[] = ['id', 'name', 'description', 'route', 'moduloId', 'acciones'];
   dataSource!: MatTableDataSource<View>;
-  dtoptions: Config={};
-  dttrigger: Subject<any>= new Subject<any>();
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  modulos!: Modulo[];
 
   constructor(private viewService: ViewService, private alertService: AlertService,private moduleService: ModuleService,) {}
 
@@ -62,7 +62,6 @@ export class ViewsComponent implements OnInit {
     this.newView = { id: 0, name: '', description: '', route: '', moduleId: 0 };
   }
   
-
   listViews(): void {
     this.viewService.getViews().subscribe({
       next: (res: View[]) => {
@@ -105,10 +104,6 @@ export class ViewsComponent implements OnInit {
       }
     });
   }
-/** onView(role: { id: number, name: string }): void {
-    this.viewService.changeView(role);
-  } */
- 
 
   onSubmit(form: NgForm): void {
     if (form.valid) {

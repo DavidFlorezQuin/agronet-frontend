@@ -3,18 +3,16 @@ import { ModuleService } from './module.service';
 import { Modulo } from './modulo.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import Swal from 'sweetalert2';
 import { DataTablesModule } from 'angular-datatables';
-import { Config } from 'datatables.net';
-import { Subject } from 'rxjs';
+
 import { AlertService } from '../../../shared/components/alert.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-// Asegúrate de crear este servicio
-// Cambia la ruta según tu estructura
-// Define tu interfaz 'Modulo'
+
+import { jsPDF } from 'jspdf';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -68,6 +66,45 @@ export class ModulesComponent implements OnInit {
     });
   }
 
+  downloadPDF(): void {
+    const doc = new jsPDF();
+    doc.setFontSize(12);
+    
+    // Título del PDF
+    doc.text('Lista de Módulos', 14, 10);
+    
+    // Encabezados de la tabla
+    const headers = ['ID', 'Nombre', 'Descripción', 'Órdenes'];
+    const data = this.dataSource.data.map(modulo => [
+      modulo.id, 
+      modulo.name, 
+      modulo.description, 
+      modulo.orders
+    ]);
+  
+    // Posiciona el encabezado
+    let y = 20;
+    headers.forEach((header, index) => {
+      doc.text(header, 14 + (index * 40), y);
+    });
+    
+    y += 10; // Espacio entre encabezados y datos
+  
+    // Añade los datos
+    data.forEach(row => {
+      row.forEach((cell, index) => {
+        doc.text(String(cell), 14 + (index * 40), y);
+      });
+      y += 10; // Espacio entre filas
+    });
+  
+    doc.save('modulos.pdf');
+  }
+  
+  resetForm(): void {
+    this.newModulo = { id: 0, name: '', description: '', orders: 0 };
+  }
+  
   onEdit(modulo: Modulo): void {
     this.newModulo = { ...modulo };
   }

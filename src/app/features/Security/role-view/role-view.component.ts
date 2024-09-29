@@ -81,7 +81,7 @@ export class RoleViewComponent implements OnInit {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.views = res;
+        this.views = res; 
       },
       error: (error) => {
         this.serviceAlert.ErrorAlert('Algo salió mal')

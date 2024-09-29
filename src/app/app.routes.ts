@@ -46,7 +46,7 @@ export const routes: Routes = [
                 component: RoleViewComponent
             },
             {
-                path: 'user-role',
+                path: 'user-rol',
                 component: UserRoleComponent
             },
 

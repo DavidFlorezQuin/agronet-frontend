@@ -1,16 +1,26 @@
-<div class="container">
-  <section class="d-flex justify-content-between my-3">
-    <h1 class="fw-normal">Módulos</h1>
-    <button type="button" data-bs-toggle="modal" data-bs-target="#moduloModal" id="btn-forms" class="btn h-50">
+<div class="container mt-3">
+
+  <div class="d-flex justify-content-between">
+
+    <section class="d-flex align-items-center gap-3">
+      <h2 class="fw-normal mb-0 ">Módulos</h2>
+    <button type="button" (click)="resetForm()" data-bs-toggle="modal" data-bs-target="#moduloModal" id="btn-forms" class="btn h-50">
       <i class="bi bi-plus-circle mx-2"></i>
       Agregar Módulo
     </button>
+    <button mat-button (click)="downloadPDF()" color="primary">
+      Descargar PDF
+  </button>
+  
   </section>
+  
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
-  </mat-form-field>
+</div>
+
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 
@@ -65,7 +75,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="moduloModalLabel">Agregar/Editar Módulo</h5>
+        <h5 class="modal-title" id="moduloModalLabel">Modulos</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -83,11 +93,10 @@
             <label for="orders" class="form-label">Órdenes</label>
             <input type="number" class="form-control" id="orders" name="orders" [(ngModel)]="newModulo.orders" required>
           </div>
-          <button type="submit" class="btn btn-primary" [disabled]="!moduloForm.valid">{{ newModulo.id ? 'Actualizar' : 'Guardar' }}</button>
+          <div class="modal-footer">
+            <button type="submit" id="btn-forms" class="btn btn-forms" [disabled]="!moduloForm.valid">{{ newModulo.id ? 'Actualizar' : 'Guardar' }}</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
       </div>
     </div>
   </div>

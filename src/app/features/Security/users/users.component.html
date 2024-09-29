@@ -1,14 +1,19 @@
-<!----><div class="container">
-  <section class="d-flex justify-content-between my-3">
-    <h1 class="fw-normal">Usuario</h1>
+<div class="container mt-3">
+
+  <div class="d-flex justify-content-between">
+
+    <section class="d-flex align-items-center gap-3">
+      <h2 class="fw-normal mb-0">Usuario</h2>
   </section>
 
-  <!-- Tabla de usuarios -->
   <mat-form-field>
     <mat-label>Buscar</mat-label>
     <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar roles">
   </mat-form-field>
-<mat-table [dataSource]="dataSource" class="mat-elevation-z2 w-100 " matSort>
+  </div>
+
+  <!-- Tabla de usuarios -->
+<mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 
   <!-- ID Column -->
   <ng-container matColumnDef="id">
@@ -32,8 +37,12 @@
         <mat-icon>edit</mat-icon>
       </button>
       
-      <button mat-icon-button color="warn" (click)="onDelete(user.id)">
+      <button mat-icon-button color="btn-success" (click)="onDelete(user.id)">
         <mat-icon>delete</mat-icon>
+      </button>
+
+      <button mat-icon-button color="green" (click)="loadRoles({id: user.id, name: user.username})">
+        <mat-icon>settings</mat-icon>
       </button>
 
     </td>

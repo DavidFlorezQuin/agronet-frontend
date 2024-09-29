@@ -45,15 +45,12 @@ export class RoleComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   newRole: Role = { id: 0,state:true, name: '', description: '' };
-  dtoptions: Config={};
-  dttrigger: Subject<any>= new Subject<any>();
+
 
   constructor(private rolesService: RolesService, private serviceAlert: AlertService, private router: Router) {}
 
   ngOnInit(): void {
-    this.dtoptions={
-      pagingType:'ful_numbers',
-      lengthMenu:[5,10,15,20]}
+
     this.listRole();
   }
 

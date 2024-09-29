@@ -18,6 +18,7 @@ import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-users',
@@ -30,7 +31,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    RouterModule
   ],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
@@ -58,7 +60,7 @@ dttrigger: Subject<any>= new Subject<any>();
 // referenicas del paginador y sort
 @ViewChild(MatPaginator) paginator!: MatPaginator;
 @ViewChild(MatSort) sort!: MatSort;
-constructor(private userService: UserService,private alertService: AlertService){}
+constructor(private userService: UserService,private alertService: AlertService, private  router: Router){}
 
   ngOnInit(): void {
     this.dtoptions = {
@@ -86,6 +88,10 @@ constructor(private userService: UserService,private alertService: AlertService)
     });
   }
 
+  loadRoles(user: {id: number, name: string}){
+        this.userService.setCurrentUser(user); 
+        this.router.navigate(['dashboard/user-rol']);
+  }
 
   onEdit(user: User): void {
     this.newUser = { ...user || '' };
@@ -108,10 +114,6 @@ constructor(private userService: UserService,private alertService: AlertService)
   }
 
 
-  onView(role: { id: number, name: string }): void {
-    this.userService.changeUser(role);
-    //this.rolesService.router.navigate(['dashboard/role-view']);
-  }
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newUser.id > 0) {

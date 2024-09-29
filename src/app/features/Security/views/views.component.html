@@ -1,24 +1,25 @@
-<div class="container">
+<div class="container mt-3">
 
 
   <div class="d-flex justify-content-between">
 
     <section class="d-flex align-items-center gap-3">
-    
-    <h2 class="fw-normal mb-0 ">Vistas</h2>
-    <button type="button" (click)="resetForm()" data-bs-toggle="modal" data-bs-target="#Modal" id="btn-forms" class="btn h-50">
-      <i class="bi bi-plus-circle mx-2"></i>
-      Agregar Vista
-    </button>
-  </section>
 
+      <h2 class="fw-normal mb-0 ">Vistas</h2>
+      <button type="button" data-bs-toggle="modal" (click)="resetForm()" data-bs-toggle="modal" data-bs-target="#Modal"
+        id="btn-forms" class="btn h-50 rounded-5 px-4"><i class="bi bi-plus-circle mx-2 STAR"></i>Agregar Vista
+      </button>
+
+
+    </section>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+    </mat-form-field>
   </div>
 
   <!-- Tabla con MatTable -->
-  <mat-form-field appearance="fill">
-    <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
-  </mat-form-field>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 
@@ -62,12 +63,7 @@
         <button mat-icon-button color="warn" (click)="onDelete(item.id)">
           <mat-icon>delete</mat-icon>
         </button>
-        <!--
-         <button mat-icon-button color="accent" (click)="onView({ id: item.id, name: item.name })">
-          <mat-icon>visibility</mat-icon>
-        </button>
-        -->
-       
+
       </td>
     </ng-container>
 
@@ -97,7 +93,8 @@
 
           <div class="mb-3">
             <label for="description" class="form-label">Descripción</label>
-            <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newView.description" required>
+            <input type="text" class="form-control" id="description" name="description"
+              [(ngModel)]="newView.description" required>
           </div>
 
           <div class="mb-3">
@@ -108,15 +105,16 @@
           <div class="mb-3">
             <label for="moduloId" class="form-label">Módulo</label>
             <select class="form-control" id="moduloId" name="moduloId" [(ngModel)]="newView.moduleId" required>
-              <option value="" disabled selected>Seleccione un módulo</option>  
+              <option value="" disabled selected>Seleccione un módulo</option>
               <option *ngFor="let modulo of modulos" [value]="modulo.id">{{ modulo.name }}</option>
             </select>
           </div>
 
+          <div class="modal-footer">
+          <button type="submit" id="btn-forms" class="btn btn-form" [disabled]="!viewForm.valid">{{ newView.id ?
+            'Actualizar' : 'Guardar' }}</button>
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" id="btn-forms" class="btn btn-form" [disabled]="!viewForm.valid">{{ newView.id ? 'Actualizar' : 'Guardar' }}</button>
       </div>
     </div>
   </div>

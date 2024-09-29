@@ -40,8 +40,10 @@ export class UserService {
     return this.http.put<User>(url, user);
   }
 
-  changeUser(user: { id: number; name: string }) {
-    localStorage.setItem('currentUser', JSON.stringify(user));
+  setCurrentUser(user: { id: number; name: string }) {
     this.userSource.next(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
   }
+
+
 }

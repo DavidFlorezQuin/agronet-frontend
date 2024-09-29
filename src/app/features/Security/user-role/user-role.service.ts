@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { UserRole } from './UserRole.module';
 import { environment } from '../../../../env/enviroment';
 import { User } from '../users/User.module';
+import { Role } from '../role/role.module';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,8 +13,8 @@ export class UserRoleService {
   private _baseUrl = environment.apiBaseUrl;
   constructor(private http:HttpClient) { }
 
-  getUserRole(id:number):Observable<UserRole[]>{
-    return this.http.get<UserRole[]>(`${this._baseUrl}/Role/UserRole/${id}`);
+  getUserRole(id:number):Observable<Role[]>{
+    return this.http.get<Role[]>(`${this._baseUrl}/Role/UserRole/${id}`);
   }
 
   onDelete(id:number):Observable<void>{

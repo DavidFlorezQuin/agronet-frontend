@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-user-role',
   standalone: true,
-  imports: [CommonModule,FormsModule,
+  imports: [CommonModule, FormsModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -37,63 +37,61 @@ import { MatInputModule } from '@angular/material/input';
   styles: ``
 })
 export class UserRoleComponent implements OnInit {
-  
-  users: User[] = [];
+
+  roles: Role[] = [];
   availableRoles: Role[] = [];
-newUserRoles: UserRole = {id: 0, RoleId:0,UserId:0};
 
+  newUserRoles: UserRole = { id: 0, RoleId: 0, UserId: 0 };
 
-  displayedColumns: string[] = [ 'id', 'RoleId', 'UserId', 'action'];
+  displayedColumns: string[] = ['id', 'name', 'description', 'acciones'];
+  dataSource: MatTableDataSource<Role> = new MatTableDataSource<Role>();
+
   selection = new SelectionModel<User>(true, []);
-  currentRole: { id: number, name: string } = { id: 0, name: '' };
-  
-  dtoptions: Config={};
-  dttrigger: Subject<any>= new Subject<any>();
-dataSource!: MatTableDataSource<UserRole>;
-// referenicas del paginador y sort
-@ViewChild(MatPaginator) paginator!: MatPaginator;
-@ViewChild(MatSort) sort!: MatSort;
+  currentUser: { id: number, name: string } = { id: 0, name: '' };
+
+  newRole: Role = { id: 0,state:true, name: '', description: '' };
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   constructor(
-    private roleUserService: UserRoleService, 
-    private userService: UserService, 
-    private rolesService: RolesService
-  ) {}
+    private roleUserService: UserRoleService,
+    private userService: UserService,
+    private rolesService: RolesService,
+    private serviceAlert: AlertService
+  ) { }
 
   ngOnInit(): void {
-    this.loadUsers();
-    this.loadRoles();
-  }
 
-  loadUsers(): void {
-    this.userService.getUsers().subscribe(users => {
-      this.users = users;
+    this.userService.currentUser.subscribe(user => {
+      this.currentUser = user;
+      this.newUserRoles.UserId = user.id
     });
+
+    this.listUserRole();
+
   }
 
-  loadRoles(): void {
-    this.rolesService.getRoles().subscribe(roles => {
-      this.availableRoles = roles;
-    });
+  listUserRole():void{
+    this.roleUserService.getUserRole(this.currentUser.id).subscribe({
+      next: (res: Role[]) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.roles = res; 
+      },
+      error: (error) => {
+        this.serviceAlert.ErrorAlert('Algo salió mal')
+      }
+    })
+  }
+  
+
+  resetForm(): void {
   }
 
-  isAllSelected(): boolean {
-    const numSelected = this.selection.selected.length;
-    const numRows = this.users.length;
-    return numSelected === numRows;
-  }
-
-  masterToggle(): void {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.users.forEach(row => this.selection.select(row));
-  }
-
+ 
   toggleSelection(user: User): void {
     this.selection.toggle(user);
-  }
-
-  onRoleChange(user: User): void {
-    console.log('Roles updated for user:', user);
   }
 
   updateUserRole(user: User): void {
@@ -102,5 +100,23 @@ dataSource!: MatTableDataSource<UserRole>;
     }, error => {
       Swal.fire('Error', 'There was an error updating the roles', 'error');
     });
+  }
+  onEdit(role: Role): void {
+  }
+
+  onDelete(id:number):void{
+
+  }
+  onSubmit(form: NgForm): void {
+  }
+
+
+  aplicarFiltro(event: Event): void {
+    const valorFiltro = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = valorFiltro.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }
