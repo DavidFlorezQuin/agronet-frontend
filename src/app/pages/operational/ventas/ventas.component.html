@@ -7,20 +7,20 @@
   </button>
 
   <!-- Tabla de registros de ventas -->
-  <table class="table table-bordered">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Precio</th>
-        <th>Cantidad</th>
-        <th>Medida</th>
-        <th>Producción</th>
-        <th>Moneda</th>
-        <th>Acciones</th>
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <th mat-header-cell *matHeaderCellDef>Precio</th>
+        <th mat-header-cell *matHeaderCellDef>Cantidad</th>
+        <th mat-header-cell *matHeaderCellDef>Medida</th>
+        <th mat-header-cell *matHeaderCellDef>Producción</th>
+        <th mat-header-cell *matHeaderCellDef>Moneda</th>
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let sale of sales">
+      <tr mat-row *matRowDef="let sale; columns: displayedColumns;">
         <td>{{ sale.id }}</td>
         <td>{{ sale.price }}</td>
         <td>{{ sale.quantity }}</td>

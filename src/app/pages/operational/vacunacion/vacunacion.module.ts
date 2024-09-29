@@ -1,7 +1,7 @@
-export class VaccineAnimals {
-  id: number = 0;
-  animalId: number = 0;
-  vaccineId: number = 0;
+export interface VaccineAnimals {
+  id: number,
+  animalId: number,
+  vaccineId: number ,
 
-  nextDose: Date = new Date();
+  nextDose: Date
 }
