@@ -13,7 +13,7 @@ export class ContinentService {
   constructor(private http:HttpClient) { }
 
   getContinent():Observable<Continent[]>{
-    return this.http.get<Continent[]>(`${this._baseUrl}/Continent`)
+    return this.http.get<Continent[]>(`${this._baseUrl}/Continent/List`)
   }
 
   createContinent(continent:Continent):Observable<Continent>{
