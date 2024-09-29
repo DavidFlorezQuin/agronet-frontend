@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
 import { Treatments } from './tratamiento.module';
-import { Config } from 'datatables.net';
-import { Subject } from 'rxjs';
+
 import { TreatmentsService } from './tratamiento.service';
 import { AlertService } from '../../../shared/components/alert.service';
+
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Config } from 'datatables.net';
+import { Subject } from 'rxjs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -40,7 +42,7 @@ export class TratamientoComponent implements OnInit {
     finishiedDate:new Date(),
     startDate:new Date(),
     animalDiagnosticsId:0}
-    
+
     displayedColumns: string[]=['id','description','finishiedDate','startDate','animalDiagnosticsId'];
     dtoptions: Config={};
     dttrigger: Subject<any>= new Subject<any>();
@@ -57,7 +59,7 @@ constructor(private treatmentsService:TreatmentsService, private alertService:Al
         lengthMenu:[5,10,15,20]
       };
       this.listTratamiento();
-        
+
     }
 
   listTratamiento():void{
@@ -105,7 +107,7 @@ onSubmit(form:NgForm):void {
             description:'',
             finishiedDate:new Date(),
             startDate:new Date(),
-            animalDiagnosticsId:0};        
+            animalDiagnosticsId:0};
         },
         error: ()=>{
           this.alertService.ErrorAlert('Error al actualizar el tratamiento');
@@ -136,5 +138,5 @@ aplicarFiltro(event:Event){
   }
 
 }
-  
+
 }

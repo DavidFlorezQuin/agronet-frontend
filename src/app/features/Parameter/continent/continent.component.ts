@@ -1,25 +1,47 @@
-import { Component, OnInit } from '@angular/core';
-import { Config } from 'datatables.net';
-import { Subject } from 'rxjs';
+
 import { ContinentService } from './continent.service'; // Servicio para CRUD de continente
 import { AlertService } from '../../../shared/components/alert.service';
-import { NgForm } from '@angular/forms';
+
 import { Continent } from './Continent.module';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Config } from 'datatables.net';
+import { Subject } from 'rxjs';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { RouterModule } from '@angular/router';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-continent',
   standalone: true,
-  imports: [],
+  imports: [CommonModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    RouterModule],
   templateUrl: './continent.component.html' // Cambia al template correspondiente
 })
 export class ContinentComponent implements OnInit {
-  
-  continents: Continent[] = []; 
-  newContinent: Continent = { id: 0, name: '', description: '' }; // Objeto de continente inicializado
 
+  continents: Continent[] = [];
+  newContinent: Continent = { id: 0, name: '', description: '' }; // Objeto de continente inicializado
+  displayedColumns: string[]=['id','name', 'description', 'acciones'];
   dtoptions: Config = {};
   dttrigger: Subject<any> = new Subject<any>();
-
+  dataSource!: MatTableDataSource<Continent>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   constructor(private continentService: ContinentService, private alertService: AlertService) {}
 
   ngOnInit(): void {
@@ -33,10 +55,15 @@ export class ContinentComponent implements OnInit {
 
   listContinents(): void {
     this.continentService.getContinent().subscribe({
-      next: (res) => {
+      next: (res: Continent[]) => {
+        this.dataSource=new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+
         this.continents = res; // Asigna la respuesta a la lista de continentes
         this.dttrigger.next(null);
-      }, 
+        this.dataSource.data = res;
+      },
       error: () => {
         this.alertService.ErrorAlert('Algo salió mal al obtener los continentes');
       }
@@ -54,7 +81,7 @@ export class ContinentComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Continente eliminado');
             this.listContinents();
-          }, 
+          },
           error: () => {
             this.alertService.ErrorAlert('Algo salió mal al eliminar el continente');
           }
@@ -91,6 +118,18 @@ export class ContinentComponent implements OnInit {
           }
         });
       }
+    }else{
+      this.alertService.ErrorAlert('Formulario inclompleto')
     }
   }
+
+  aplicarFiltro(event:Event){
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if(this.dataSource.paginator){
+      this.dataSource.paginator.firstPage();
+    }
+
+  }
+
 }
