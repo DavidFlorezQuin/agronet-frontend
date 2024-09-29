@@ -1,13 +1,22 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
 import { Treatments } from './tratamiento.module';
-import { Config } from 'datatables.net';
-import { Subject } from 'rxjs';
+
 import { TreatmentsService } from './tratamiento.service';
 import { AlertService } from '../../../shared/components/alert.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { NgForm } from '@angular/forms'; 
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { RouterModule } from '@angular/router';
+import { MatInputModule } from '@angular/material/input';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Subject } from 'rxjs';
+import { Config } from 'datatables.net';
+
+
 @Component({
   selector: 'app-tratamiento',
   standalone: true,
@@ -23,7 +32,7 @@ export class TratamientoComponent implements OnInit {
     finishiedDate:new Date(),
     startDate:new Date(),
     animalDiagnosticsId:0}
-    
+
     displayedColumns: string[]=['id','description','finishiedDate','startDate','animalDiagnosticsId'];
     dtoptions: Config={};
     dttrigger: Subject<any>= new Subject<any>();
@@ -38,7 +47,7 @@ constructor(private treatmentsService:TreatmentsService, private alertService:Al
         lengthMenu:[5,10,15,20]
       };
       this.listTratamiento();
-        
+
     }
 
   listTratamiento():void{
@@ -86,7 +95,7 @@ onSubmit(form:NgForm):void {
             description:'',
             finishiedDate:new Date(),
             startDate:new Date(),
-            animalDiagnosticsId:0};        
+            animalDiagnosticsId:0};
         },
         error: ()=>{
           this.alertService.ErrorAlert('Error al actualizar el tratamiento');
@@ -117,5 +126,5 @@ aplicarFiltro(event:Event){
   }
 
 }
-  
+
 }

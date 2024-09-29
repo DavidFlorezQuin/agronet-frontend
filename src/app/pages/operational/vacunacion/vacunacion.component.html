@@ -1,0 +1,113 @@
+<div class="container">
+  <section class="d-flex justify-content-between my-3">
+    <h1 class="fw-normal">Vacunación de Animales</h1>
+    <!-- Botón para abrir el modal -->
+    <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#vaccineAnimalModal" id="btn-forms">
+      <i class="bi bi-plus-circle mx-2"></i>
+      Registrar Vacuna
+    </button>
+  </section>
+
+  <!-- Campo de búsqueda -->
+  <mat-form-field appearance="fill">
+    <mat-label>Buscar</mat-label>
+    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Filtrar">
+  </mat-form-field>
+
+  <!-- Tabla de datos -->
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let vaccine"> {{ vaccine.id }} </td>
+    </ng-container>
+
+    <!-- Animal Column -->
+    <ng-container matColumnDef="Animal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Animal </th>
+      <td mat-cell *matCellDef="let vaccine"> {{ vaccine.animalId }} </td>
+    </ng-container>
+
+    <!-- Vacuna Column -->
+    <ng-container matColumnDef="Vacuna">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Vacuna </th>
+      <td mat-cell *matCellDef="let vaccine"> {{ vaccine.vaccineId }} </td>
+    </ng-container>
+
+    <!-- Próxima Dosis Column -->
+    <ng-container matColumnDef="nextDose">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Próxima Dosis </th>
+      <td mat-cell *matCellDef="let vaccine"> {{ vaccine.nextDose | date }} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let vaccine">
+        <button mat-icon-button color="primary" (click)="onEdit(vaccine)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(vaccine.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <tr mat-header-row *matHeaderRowDef="['id', 'Animal', 'Vacuna', 'nextDose', 'acciones']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['id', 'Animal', 'Vacuna', 'nextDose', 'acciones'];"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="vaccineAnimalModal" tabindex="-1" aria-labelledby="vaccineAnimalModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="vaccineAnimalModalLabel">{{ newVaccineAnimal.id > 0 ? 'Editar Vacuna' : 'Nueva Vacuna' }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form #vaccineForm="ngForm" (ngSubmit)="onSubmit(vaccineForm)">
+        <div class="modal-body">
+          <!-- Select para animales -->
+          <mat-form-field appearance="fill">
+            <mat-label>Animal</mat-label>
+            <mat-select name="animalId" [(ngModel)]="newVaccineAnimal.animalId" required>
+              <mat-option *ngFor="let animal of vaccineAnimals" [value]="animal.id">
+                {{ animal.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Select para vacunas -->
+          <mat-form-field appearance="fill">
+            <mat-label>Vacuna</mat-label>
+            <mat-select name="vaccineId" [(ngModel)]="newVaccineAnimal.vaccineId" required>
+              <mat-option *ngFor="let vaccine of vaccineAnimals" [value]="vaccine.id">
+                {{ vaccine.name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Fecha de próxima dosis -->
+          <mat-form-field appearance="fill">
+            <mat-label>Próxima Dosis</mat-label>
+            <input matInput [matDatepicker]="picker" name="nextDose" [(ngModel)]="newVaccineAnimal.nextDose" required>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">{{ newVaccineAnimal.id > 0 ? 'Actualizar' : 'Crear' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
