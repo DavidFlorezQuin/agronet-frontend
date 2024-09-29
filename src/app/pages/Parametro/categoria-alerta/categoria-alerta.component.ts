@@ -20,7 +20,8 @@ import { CategoriaAlerta } from './categoria-alerta.module';
 import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  selector: 'app-categoria-alerta',standalone: true,
+  selector: 'app-categoria-alerta',
+  standalone: true,
   imports: [CommonModule,FormsModule,
     MatIconModule,
 
