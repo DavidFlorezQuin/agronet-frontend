@@ -16,7 +16,7 @@ export class AnimalService {
   constructor(private http: HttpClient) {}
 
   getAnimals(): Observable<Animal[]> {
-    return this.http.get<Animal[]>(`${this._baseUrl}/Animal`);
+    return this.http.get<Animal[]>(`${this._baseUrl}/Animal/List`);
   }
 
   deleteAnimal(id: number): Observable<void> {

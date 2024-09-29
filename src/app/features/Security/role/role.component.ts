@@ -50,7 +50,6 @@ export class RoleComponent implements OnInit, AfterViewInit {
   constructor(private rolesService: RolesService, private serviceAlert: AlertService, private router: Router) {}
 
   ngOnInit(): void {
-
     this.listRole();
   }
 

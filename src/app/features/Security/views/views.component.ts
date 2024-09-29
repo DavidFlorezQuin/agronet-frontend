@@ -65,10 +65,12 @@ export class ViewsComponent implements OnInit {
   listViews(): void {
     this.viewService.getViews().subscribe({
       next: (res: View[]) => {
+
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.views = res;
+        
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
