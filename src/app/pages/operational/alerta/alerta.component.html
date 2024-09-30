@@ -1,1 +1,134 @@
-<p>alerta works!</p>
+<div class="container mt-3">
+
+  <div class="d-flex justify-content-between">
+    <section class="d-flex align-items-center gap-3">
+      <h2 class="fw-normal mb-0">Alertas</h2>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#alertModal" id="btn-forms" class="btn h-50">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Agregar Alerta
+      </button>
+    </section>
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+    </mat-form-field>
+  </div>
+
+  <!-- Tabla con MatTable -->
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+
+    <!-- Nombre Column -->
+    <ng-container matColumnDef="Name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+    </ng-container>
+
+    <!-- Descripción Column -->
+    <ng-container matColumnDef="Description">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+      <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+    </ng-container>
+
+    <!-- Fecha Column -->
+    <ng-container matColumnDef="Date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
+      <td mat-cell *matCellDef="let element"> {{element.Date | date}} </td>
+    </ng-container>
+
+    <!-- Leída Column -->
+    <ng-container matColumnDef="IsRead">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Leída </th>
+      <td mat-cell *matCellDef="let element"> {{element.IsRead ? 'Sí' : 'No'}} </td>
+    </ng-container>
+
+    <!-- ID Animal Column -->
+    <ng-container matColumnDef="AnimalId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Animal </th>
+      <td mat-cell *matCellDef="let element"> {{element.AnimalId}} </td>
+    </ng-container>
+
+    <!-- ID Categoría Alerta Column -->
+    <ng-container matColumnDef="CategoryAlertId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Categoría Alerta </th>
+      <td mat-cell *matCellDef="let element"> {{element.CategoryAlertId}} </td>
+    </ng-container>
+
+    <!-- ID Usuario Column -->
+    <ng-container matColumnDef="UsersId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Usuario </th>
+      <td mat-cell *matCellDef="let element"> {{element.UsersId}} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let item">
+        <button mat-icon-button color="primary" (click)="onEdit(item)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(item.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" (click)="onView({id: item.id, name: item.name})">
+          <mat-icon>visibility</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Definitions -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="alertModal" tabindex="-1" aria-labelledby="alertModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="alertModalLabel">Agregar/Editar Alerta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #alertForm="ngForm" (ngSubmit)="onSubmit(alertForm)">
+          <div class="mb-3">
+            <label for="Name" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newAlerta.Name" required>
+          </div>
+          <div class="mb-3">
+            <label for="Description" class="form-label">Descripción</label>
+            <input type="text" class="form-control" id="Description" name="Description" [(ngModel)]="newAlerta.Description" required>
+          </div>
+          <div class="mb-3">
+            <label for="Date" class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="Date" name="Date" [(ngModel)]="newAlerta.Date" required>
+          </div>
+          <div class="mb-3">
+            <label for="AnimalId" class="form-label">ID Animal</label>
+            <input type="number" class="form-control" id="AnimalId" name="AnimalId" [(ngModel)]="newAlerta.AnimalId" required>
+          </div>
+          <div class="mb-3">
+            <label for="CategoryAlertId" class="form-label">ID Categoría Alerta</label>
+            <input type="number" class="form-control" id="CategoryAlertId" name="CategoryAlertId" [(ngModel)]="newAlerta.CategoryAlertId" required>
+          </div>
+          <div class="mb-3">
+            <label for="UsersId" class="form-label">ID Usuario</label>
+            <input type="number" class="form-control" id="UsersId" name="UsersId" [(ngModel)]="newAlerta.UsersId" required>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!alertForm.valid">{{ newAlerta.id ? 'Actualizar' : 'Guardar' }}</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
