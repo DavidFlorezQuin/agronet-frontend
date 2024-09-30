@@ -60,7 +60,6 @@ export class LoteComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.lote = Lot;
-      this.dttrigger.next(null);
     },
     error: () => {
       this.alertaService.ErrorAlert('Error al obtener los datos');
