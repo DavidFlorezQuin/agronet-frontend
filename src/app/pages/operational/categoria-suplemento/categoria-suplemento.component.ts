@@ -17,13 +17,15 @@ import { NgForm } from '@angular/forms';
 import { AlertService } from '../../../shared/components/alert.service';
 
 import { MatButtonModule } from '@angular/material/button';
+import { DataTablesModule } from 'angular-datatables';
 
 @Component({
   selector: 'app-categoria-suplemento',
   standalone: true,
-  imports: [CommonModule, FormsModule,
-
+  imports: [CommonModule, FormsModule, DataTablesModule,CommonModule,FormsModule,
     MatIconModule,
+
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,

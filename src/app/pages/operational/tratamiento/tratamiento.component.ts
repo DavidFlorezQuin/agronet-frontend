@@ -15,12 +15,24 @@ import { MatInputModule } from '@angular/material/input';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
+import { DataTablesModule } from 'angular-datatables';
 
 
 @Component({
   selector: 'app-tratamiento',
   standalone: true,
-  imports: [],
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
+   MatIconModule,
+   MatButtonModule,
+   MatFormFieldModule,
+   MatInputModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatSortModule],
   templateUrl: './tratamiento.component.html',
   styleUrl: './tratamiento.component.css'
 })

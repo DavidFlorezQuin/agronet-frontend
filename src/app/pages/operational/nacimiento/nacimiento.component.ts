@@ -4,9 +4,9 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { NgForm } from '@angular/forms';
-import { NacimetoService } from './nacimiento.service'; 
+import { NacimetoService } from './nacimiento.service';
 import { AlertService } from '../../../shared/components/alert.service';
-import { Nacimiento } from './nacimiento.module'; 
+import { Nacimiento } from './nacimiento.module';
 import { Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,30 +15,36 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { Config } from 'datatables.net';
 import { FormsModule } from '@angular/forms';
 import { error } from 'jquery';
+import { DataTablesModule } from 'angular-datatables';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-nacimiento',
   standalone: true,
-  imports: [FormsModule,
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
     CommonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule],
+    FormsModule,
+   MatIconModule,
+   MatButtonModule,
+   MatFormFieldModule,
+   MatInputModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatSortModule],
   templateUrl: './nacimiento.component.html',
   styleUrl: './nacimiento.component.css'
 })
 export class NacimientoComponent implements OnInit{
-  
+
 
   nacimiento: Nacimiento []=[];
   newNacimiento: Nacimiento ={
-    id:0, 
+    id:0,
     Assistence:'', Result:0,
      Description:'',
-    BirthWeight:0, 
+    BirthWeight:0,
     Inseminacionid:'',AnimalId: 0,
 
 
@@ -62,7 +68,7 @@ ngOnInit(): void {
 
 ListNacimiento():void{
 this.nacimientoService.getNacimiento().subscribe({
-  next:(nacimientoss)=>{
+  next:(nacimientoss: Nacimiento[])=>{
     this.nacimientoService;
     this.dataSource.data=nacimientoss;
     this.dataSource.paginator=this.paginator;
@@ -80,8 +86,11 @@ aplicarFiltro(event:Event): void{
 
   const filterValue=(event.target as HTMLInputElement).value;
   this.dataSource.filter = filterValue.trim().toLowerCase();
-  
+  if (this.dataSource.paginator) {
+    this.dataSource.paginator.firstPage();
   }
+}
+
 
   onEdit(nacimiento:Nacimiento):void{
     this.newNacimiento={...nacimiento};
@@ -100,7 +109,7 @@ aplicarFiltro(event:Event): void{
     this.alertaService.DeleteAlert().then((res)=>{
       if(res.isConfirmed){
         this.nacimientoService.deleteNacimiento(id).subscribe({
-          next:(res)=>{ 
+          next:(res)=>{
             this.alertaService.SuccessAlert('Eliminado con éxito');
             this.ListNacimiento();
           },
@@ -111,9 +120,9 @@ aplicarFiltro(event:Event): void{
       }
     });
   }
-  
+
 editar(form:NgForm):void {
-  if (form.valid){ 
+  if (form.valid){
     if(this.newNacimiento.id>0){
       this.nacimientoService.updateNacimiento(this.newNacimiento,this.newNacimiento.id).subscribe({
         next:()=>{
@@ -139,6 +148,14 @@ onSubmit(form:NgForm):void{
         next:()=>{
           this.alertaService.SuccessAlert('Actualizado correctamente');
           form.reset();
+          this.newNacimiento={
+            id:0,
+            Assistence:'', Result:0,
+             Description:'',
+            BirthWeight:0,
+            Inseminacionid:'',AnimalId: 0,
+
+          }
           this.ListNacimiento();
               },
               error:()=>{
@@ -154,13 +171,13 @@ onSubmit(form:NgForm):void{
         },
         error:()=>{
           this.alertaService.ErrorAlert('Error al crear');
-  
+
         }
       });
     }
   }else{
     this.alertaService.ErrorAlert('Por favor completa todod los campos');
-  
+
   }
   }
 }

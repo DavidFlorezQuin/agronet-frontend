@@ -1,12 +1,10 @@
-import { Animal } from "../animal/animal.module"; 
+import { Animal } from "../animal/animal.module";
 
 export interface Insemination {
   id: number;
   description: string;
   FatherId: number;
-  father?: Animal;
   MotherId: number;
-  mother: Animal;
   result:string;
   inseminationType: string;
 }

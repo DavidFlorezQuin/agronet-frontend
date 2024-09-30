@@ -13,13 +13,19 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { DataTablesModule } from 'angular-datatables';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-lote',
   standalone: true,
-  imports: [CommonModule, FormsModule,
-
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
     MatIconModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
@@ -36,9 +42,9 @@ export class LoteComponent implements OnInit {
 
   lote: Lote[] = [];
   newLote: Lote = {
-    id: 0, name: '',hectare: 0, 
+    id: 0, name: '',hectare: 0,
     farmId: 0,
-    
+
   }
    @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -54,7 +60,7 @@ this.listLot();
 listLot():void{
 
   this.loteService.getLote().subscribe({
-    next: (Lot) => {
+    next: (Lot:Lote[]) => {
       this.dataSource = new MatTableDataSource(Lot);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -94,6 +100,10 @@ onSubmit(form: NgForm): void {
         next: () => {
           this.alertaService.SuccessAlert('Actualizado correctamente');
           form.reset();
+          this.newLote={
+            id: 0, name: '',hectare: 0,
+            farmId: 0,
+          };
           this.listLot();
         },
         error: () => {

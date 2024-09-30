@@ -3,22 +3,28 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FormsModule, NgForm } from '@angular/forms';
-import { InseminationService } from './inseminacion.service'; 
+import { InseminationService } from './inseminacion.service';
 import { AlertService } from '../../../shared/components/alert.service';
-import { Insemination } from './inseminacion.module'; 
+import { Insemination } from './inseminacion.module';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { DataTablesModule } from 'angular-datatables';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-insemination',
   standalone: true,
-  imports: [CommonModule, FormsModule,
-
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
     MatIconModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
@@ -35,8 +41,6 @@ export class InseminationComponent implements OnInit {
     id: 0, description: '',
     FatherId: 0,
     MotherId: 0,
-    father: { id: 0, name: '', gender: '', weight: 0, photo: '', raceId: 0, purpose: '', birthDay: new Date(), dateRegister: new Date(), LotId: 0, state: true },
-    mother: { id: 0, name: '', gender: '', weight: 0, photo: '', raceId: 0, purpose: '', birthDay: new Date(), dateRegister: new Date(), LotId: 0, state: true },
     result: '',
     inseminationType: ''
   };
@@ -104,6 +108,11 @@ export class InseminationComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
+            this.newInsemination={ id: 0, description: '',
+              FatherId: 0,
+              MotherId: 0,
+              result: '',
+              inseminationType: ''};
             this.listInseminations();
           },
           error: () => {
@@ -120,6 +129,6 @@ export class InseminationComponent implements OnInit {
 
     const filterValue=(event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-    
+
     }
 }

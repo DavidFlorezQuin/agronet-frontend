@@ -20,12 +20,15 @@ import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
 import { AnimalService } from './animal.service';
 import { state } from '@angular/animations';
+import { DataTablesModule } from 'angular-datatables';
+import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-animal',
   standalone: true,
-  imports: [CommonModule, FormsModule,
-
+  imports: [CommonModule, FormsModule, DataTablesModule,CommonModule,FormsModule,
     MatIconModule,
+
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
@@ -36,14 +39,14 @@ import { state } from '@angular/animations';
 })
 export class AnimalComponent implements OnInit {
 
-displayedColumns:string[] = ['id','name','gender','weight','photo','race','purpuse','birthDay', 'LotId','state'];
+displayedColumns:string[] = ['id','name','weight','photo','race','purpuse','birthDay', 'LotId','accciones'];
 dataSource: MatTableDataSource<Animal> = new MatTableDataSource<Animal>();
 dtoptions: Config={};
 dttrigger: Subject<any>= new Subject<any>();
 animales: Animal[] = [];
 newAnimales: Animal = {id: 0, name:'',weight:0,photo:'',raceId:0,purpose:'',
   birthDay: new Date(),state: true,LotId: 0 };
-  
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -60,7 +63,7 @@ this.ListAnimal();
   ListAnimal(): void{
     this.animalService.getAnimals().subscribe({
 next:(animals)=>{
- 
+
   this.animales=animals;
   this.dataSource.data =animals;
   this.dataSource.paginator=this.paginator;
@@ -88,7 +91,7 @@ eliminar(id:number): void{
 this.alertaService.DeleteAlert().then((res)=>{
   if(res.isConfirmed){
     this.animalService.deleteAnimal(id).subscribe({
-      next:(res)=>{ 
+      next:(res)=>{
         this.alertaService.SuccessAlert('Eliminado con éxito');
         this.ListAnimal();
       },
@@ -101,7 +104,7 @@ this.alertaService.DeleteAlert().then((res)=>{
 
 }
 editar(form:NgForm):void{
-  if (form.valid){ 
+  if (form.valid){
   if(this.newAnimales.id>0){
     this.animalService.updateAnimal(this.newAnimales,this.newAnimales.id).subscribe({
       next:()=>{
@@ -152,7 +155,7 @@ if(form.valid){
 }
 
 
-  
+
 
 
 }

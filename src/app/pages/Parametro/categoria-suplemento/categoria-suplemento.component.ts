@@ -18,17 +18,21 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { CategoriaSuplemento } from './categoria-suplemento.module';
 import { CategoriaSuplementoService } from './categoria-suplemento.service';
+import { DataTablesModule } from 'angular-datatables';
 @Component({
   selector: 'app-categoria-suplemento',standalone: true,
-  imports: [CommonModule,FormsModule,
-    MatIconModule,
-
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
+   MatIconModule,
+   MatButtonModule,
+   MatFormFieldModule,
+   MatInputModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatSortModule
   ],
   templateUrl: './categoria-suplemento.component.html',
   styleUrls: ['./categoria-suplemento.component.css']

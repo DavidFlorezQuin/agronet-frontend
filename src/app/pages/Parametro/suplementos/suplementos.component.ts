@@ -17,18 +17,24 @@ import { NgForm } from '@angular/forms';
 import { AlertService } from '../../../shared/components/alert.service';
 import { Suplemento } from './suplementos.module';
 import { SuplementoService } from './suplementos.service';
+import { DataTablesModule } from 'angular-datatables';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-suplementos',
   standalone: true,
-  imports: [CommonModule, FormsModule,
-
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule],
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
+   MatIconModule,
+   MatButtonModule,
+   MatFormFieldModule,
+   MatInputModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatSortModule],
   templateUrl: './suplementos.component.html',
   styleUrls: ['./suplementos.component.css']
 })

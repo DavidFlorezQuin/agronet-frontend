@@ -19,19 +19,23 @@ import { ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
+import { DataTablesModule } from 'angular-datatables';
 
 @Component({
   selector: 'app-ventas',
   standalone: true,
-  imports: [CommonModule,FormsModule,
-    MatIconModule,
-
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule],
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
+   MatIconModule,
+   MatButtonModule,
+   MatFormFieldModule,
+   MatInputModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatSortModule],
   templateUrl: './ventas.component.html',
   styleUrl: './ventas.component.css'
 })
@@ -88,6 +92,14 @@ dttrigger: Subject<any>= new Subject<any>();
           next: () => {
             this.alertService.SuccessAlert('Venta actualizada correctamente');
             form.reset();
+            this.newSale= {
+              id: 0,
+              price: 0,
+              quantity: 0,
+              measurement: '',
+              productionId: 0,
+              currency: ''
+            };
             this.listSales();
           },
           error: () => {
