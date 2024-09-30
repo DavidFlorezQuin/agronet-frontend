@@ -31,10 +31,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './lote.component.html',
-  styleUrl: './lote.component.css'
-})
+  templateUrl: './lote.component.html'})
 export class LoteComponent implements OnInit {
+  
   dataSource: MatTableDataSource<Lote> = new MatTableDataSource<Lote>();
   displayedColumns: string[] = ['id', 'Nombre', 'Hectarea', 'fincaId', 'acciones'];
 

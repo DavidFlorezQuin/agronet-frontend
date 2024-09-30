@@ -123,7 +123,7 @@ export class RoleViewComponent implements OnInit {
       } else {
         this.viewRoleService.createRoleView(this.newRoleModule).subscribe({
           next: (res) => {
-            this.serviceAlert.SuccessAlert('Guardado con éxito!')
+            this.serviceAlert.SuccessAlert('Guardado ')
             form.reset();
             this.listViewRole();
           },

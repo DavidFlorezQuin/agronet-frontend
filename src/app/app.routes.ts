@@ -26,8 +26,8 @@ import { CityComponent } from './features/Parameter/city/city.component';
 // import { CityComponent } from './features/Parameter/city/city.component';
 // import { InseminationComponent } from './pages/operational/inseminacion/inseminacion.component';
 // import { InventarioComponent } from './pages/operational/inventario/inventario.component';
-// import { ProduccionComponent } from './pages/operational/produccion/produccion.component';
-// import { VentasComponent } from './pages/operational/ventas/ventas.component';
+import { ProduccionComponent } from './pages/operational/produccion/produccion.component';
+import { VentasComponent } from './pages/operational/ventas/ventas.component';
 // import { TratamientoComponent } from './pages/operational/tratamiento/tratamiento.component';
 // import { CategoriaAlertaComponent } from './pages/Parametro/categoria-alerta/categoria-alerta.component';
 // import { CategoriaMedicinaComponent } from './pages/Parametro/categoria-medicina/categoria-medicina.component';
@@ -125,14 +125,14 @@ export const routes: Routes = [
                 path:'lote',
                 component:LoteComponent
             },
-            // {
-            //     path:'produccion',
-            //     component:ProduccionComponent
-            // },
-            // {
-            //     path:'ventas',
-            //     component: VentasComponent
-            // },
+            {
+                path:'produccion',
+                component:ProduccionComponent
+            },
+            {
+                path:'venta',
+                component: VentasComponent
+            },
             // {
             //     path:'tratamientos',
             //     component: TratamientoComponent
