@@ -25,15 +25,18 @@ import { CategoryMedicinas } from '../categoria-medicina/categoria-medicina.modu
 @Component({
   selector: 'app-medicina',
   standalone: true,
-  imports: [CommonModule, FormsModule, DataTablesModule,CommonModule,FormsModule,
-    MatIconModule,
-
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule],
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
+   MatIconModule,
+   MatButtonModule,
+   MatFormFieldModule,
+   MatInputModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatSortModule],
   templateUrl: './medicina.component.html',
   styleUrls: ['./medicina.component.css']
 })

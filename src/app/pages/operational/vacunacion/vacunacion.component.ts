@@ -14,6 +14,7 @@ import { RouterModule } from '@angular/router';
 import { MatInputModule } from '@angular/material/input';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
+import { DataTablesModule } from 'angular-datatables';
 
 
 @Component({
@@ -21,14 +22,16 @@ import { Config } from 'datatables.net';
   standalone: true,
   imports: [CommonModule,
     FormsModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    RouterModule],
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
+   MatIconModule,
+   MatButtonModule,
+   MatFormFieldModule,
+   MatInputModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatSortModule],
   templateUrl: './vacunacion.component.html',
   styleUrl: './vacunacion.component.css'
 })

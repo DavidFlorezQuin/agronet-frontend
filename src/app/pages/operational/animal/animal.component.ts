@@ -22,6 +22,8 @@ import { AnimalService } from './animal.service';
 import { state } from '@angular/animations';
 import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
+import { DataTablesModule } from 'angular-datatables';
+import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-animal',
   standalone: true,
@@ -154,6 +156,7 @@ export class AnimalComponent implements OnInit {
 
     }
   }
+
 
 
 

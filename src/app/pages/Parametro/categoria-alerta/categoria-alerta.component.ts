@@ -18,19 +18,23 @@ import { ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CategoriaAlerta } from './categoria-alerta.module';
 import { MatButtonModule } from '@angular/material/button';
+import { DataTablesModule } from 'angular-datatables';
 
 @Component({
   selector: 'app-categoria-alerta',
   standalone: true,
-  imports: [CommonModule,FormsModule,
-    MatIconModule,
-
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
+   MatIconModule,
+   MatButtonModule,
+   MatFormFieldModule,
+   MatInputModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatSortModule
   ],
   templateUrl: './categoria-alerta.component.html',
   styleUrls: ['./categoria-alerta.component.css']

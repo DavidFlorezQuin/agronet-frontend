@@ -1,7 +1,7 @@
-import { Modulo } from "../modules/modulo.module";
+
 
 export interface View {
-    id: number, 
+    id: number,
     name:string,
     description:string,
     route:string,

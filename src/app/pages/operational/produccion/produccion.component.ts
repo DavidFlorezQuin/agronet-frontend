@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { ProductionsService } from './produccion.service'; 
+import { ProductionsService } from './produccion.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import { Productions } from './produccion.module';
 import { CommonModule } from '@angular/common';
@@ -14,19 +14,23 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
+import { DataTablesModule } from 'angular-datatables';
 
 @Component({
   selector: 'app-produccion',
   standalone: true,
-  imports: [CommonModule,FormsModule,
-    MatIconModule,
-   
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule],
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
+   MatIconModule,
+   MatButtonModule,
+   MatFormFieldModule,
+   MatInputModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatSortModule],
   templateUrl: './produccion.component.html',
   styleUrl: './produccion.component.css'
 })
@@ -40,7 +44,7 @@ export class ProduccionComponent implements OnInit {
     quantityTotal: 0,
     expirateDate: '',
     animalId: 0,
-   
+
   };
 
   productions: Productions[] = [];
@@ -55,7 +59,7 @@ displayColums: string[] =[ 'id',
   dataSource!: MatTableDataSource<Productions>;
   dtoptions: Config={};
   dttrigger: Subject<any>= new Subject<any>();
-  
+
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -92,9 +96,9 @@ displayColums: string[] =[ 'id',
           next: ()=>{
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newProduction={id:0,typeProduction:'',stock:0,measurement:'',description:'',quantityTotal:0,expirateDate:'',animalId:0 }; 
+            this.newProduction={id:0,typeProduction:'',stock:0,measurement:'',description:'',quantityTotal:0,expirateDate:'',animalId:0 };
               this.listProductions();
-            
+
           },
           error: ()=>{
             this.alertService.ErrorAlert('Error al actualizar');
@@ -115,13 +119,13 @@ displayColums: string[] =[ 'id',
     }else{
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
-   
+
   }
 
   onEdit(production: Productions): void {
     this.newProduction = { ...production };
 
-   
+
   }
 
   onDelete(id: number): void {

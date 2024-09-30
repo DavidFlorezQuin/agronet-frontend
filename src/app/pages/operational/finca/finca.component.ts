@@ -14,14 +14,20 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CityService } from '../../../features/Parameter/city/city.service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../features/Security/users/user.service';
+import { MatButtonModule } from '@angular/material/button';
+import { DataTablesModule } from 'angular-datatables';
 
 @Component({
   selector: 'app-finca',
   standalone: true,
   imports: [
-    FormsModule,
     CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
     MatIconModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,

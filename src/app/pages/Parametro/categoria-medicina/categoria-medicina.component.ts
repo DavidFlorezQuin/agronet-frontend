@@ -20,19 +20,23 @@ import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 import { CategoryMedicinas } from './categoria-medicina.module';
+import { DataTablesModule } from 'angular-datatables';
 
 @Component({
   selector: 'app-categoria-medicina',
   standalone: true,
-  imports: [CommonModule,FormsModule,
-    MatIconModule,
-
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
+   MatIconModule,
+   MatButtonModule,
+   MatFormFieldModule,
+   MatInputModule,
+   MatTableModule,
+   MatPaginatorModule,
+   MatSortModule
   ],
   templateUrl: './categoria-medicina.component.html',
   styleUrls: ['./categoria-medicina.component.css']
