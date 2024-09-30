@@ -35,7 +35,6 @@ import { DataTablesModule } from 'angular-datatables';
     MatSortModule],
   templateUrl: './finca.component.html'})
 export class FincaComponent implements OnInit {
-  //definicion de cities
   fincas: Finca[] = [];
   newFinca: Finca = {
     id: 0,

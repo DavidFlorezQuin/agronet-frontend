@@ -7,8 +7,6 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { LoteService } from './lote.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import { Lote } from './lote.module';
-import { Subject } from 'rxjs';
-import { Config } from 'datatables.net';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +17,8 @@ import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-lote',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     FormsModule,
     DataTablesModule,
     CommonModule,
@@ -31,20 +30,22 @@ import { MatButtonModule } from '@angular/material/button';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './lote.component.html'})
+  templateUrl: './lote.component.html'
+})
 export class LoteComponent implements OnInit {
-  
-  dataSource: MatTableDataSource<Lote> = new MatTableDataSource<Lote>();
-  displayedColumns: string[] = ['id', 'Nombre', 'Hectarea', 'fincaId', 'acciones'];
+
+  displayedColumns: string[] = ['id', 'name', 'hectare', 'farmId', 'actions'];
+  dataSource!: MatTableDataSource<Lote>;
 
   lote: Lote[] = [];
   newLote: Lote = {
-    id: 0, name: '',hectare: 0,
+    id: 0, name: '', hectare: 0,
     farmId: 0,
 
   }
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
   constructor(private loteService: LoteService, private alertaService: AlertService) { }
   ngOnInit(): void {
 
@@ -53,17 +54,19 @@ export class LoteComponent implements OnInit {
 
   listLot(): void {
 
-  this.loteService.getLote().subscribe({
-    next: (Lot:Lote[]) => {
-      this.dataSource = new MatTableDataSource(Lot);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.lote = Lot;
-    },
-    error: () => {
-      this.alertaService.ErrorAlert('Error al obtener los datos');
-    }
-  });
+    this.loteService.getLote().subscribe({
+      next: (res: any) => {
+
+        const data = res.data;
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.dataSource.data = data;
+      },
+      error: () => {
+        this.alertaService.ErrorAlert('Error al obtener los datos');
+      }
+    });
 
   }
   onEdit(lot: Lote): void {
@@ -86,39 +89,39 @@ export class LoteComponent implements OnInit {
     });
   }
 
-onSubmit(form: NgForm): void {
-  if (form.valid) {
-    if (this.newLote.id > 0) {
-      this.loteService.updateLote(this.newLote, this.newLote.id).subscribe({
-        next: () => {
-          this.alertaService.SuccessAlert('Actualizado correctamente');
-          form.reset();
-          this.newLote={
-            id: 0, name: '',hectare: 0,
-            farmId: 0,
-          };
-          this.listLot();
-        },
-        error: () => {
-          this.alertaService.ErrorAlert('Error al actualizar');
-        }
-      });
+  onSubmit(form: NgForm): void {
+    if (form.valid) {
+      if (this.newLote.id > 0) {
+        this.loteService.updateLote(this.newLote, this.newLote.id).subscribe({
+          next: () => {
+            this.alertaService.SuccessAlert('Actualizado correctamente');
+            form.reset();
+            this.newLote = {
+              id: 0, name: '', hectare: 0,
+              farmId: 0,
+            };
+            this.listLot();
+          },
+          error: () => {
+            this.alertaService.ErrorAlert('Error al actualizar');
+          }
+        });
+      } else {
+        this.loteService.createLote(this.newLote).subscribe({
+          next: () => {
+            this.alertaService.SuccessAlert('Creado correctamente');
+            form.reset();
+            this.listLot();
+          },
+          error: () => {
+            this.alertaService.ErrorAlert('Error al crear');
+          }
+        });
+      }
     } else {
-      this.loteService.createLote(this.newLote).subscribe({
-        next: () => {
-          this.alertaService.SuccessAlert('Creado correctamente');
-          form.reset();
-          this.listLot();
-        },
-        error: () => {
-          this.alertaService.ErrorAlert('Error al crear');
-        }
-      });
+      this.alertaService.ErrorAlert('Por favor complete todos los campos');
     }
-  } else {
-    this.alertaService.ErrorAlert('Por favor complete todos los campos');
   }
-}
 
   aplicarFiltro(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
