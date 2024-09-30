@@ -16,9 +16,9 @@ import { HomeComponentD } from './features/Security/home/home.component';
 import { AlertaComponent } from './pages/operational/alerta/alerta.component';
 import { AnimalComponent } from './pages/operational/animal/animal.component';
 import { MenuComponent } from './features/pages/menu/menu.component';
-// import { FincaComponent } from './pages/operational/finca/finca.component';
+import { FincaComponent } from './pages/operational/finca/finca.component';
 // import { NacimientoComponent } from './pages/operational/nacimiento/nacimiento.component';
-// import { LoteComponent } from './pages/operational/lote/lote.component';
+import { LoteComponent } from './pages/operational/lote/lote.component';
 import { ContinentComponent } from './features/Parameter/continent/continent.component';
 import { CountryComponent } from './features/Parameter/country/country.component';
 import { DepartamentComponent } from './features/Parameter/departament/departament.component';
@@ -117,14 +117,14 @@ export const routes: Routes = [
             //     path:'inventario',
             //     component: InventarioComponent
             // },  
-            // {
-            //     path:'finca',
-            //     component: FincaComponent
-            // },
-            // {
-            //     path:'lote',
-            //     component:LoteComponent
-            // },
+            {
+                path:'finca',
+                component: FincaComponent
+            },
+            {
+                path:'lote',
+                component:LoteComponent
+            },
             // {
             //     path:'produccion',
             //     component:ProduccionComponent

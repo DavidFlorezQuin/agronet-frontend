@@ -1,4 +1,3 @@
-
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -12,11 +11,8 @@ import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Config } from 'datatables.net';
-import { City } from '../../../features/Parameter/city/city.module';
 import { CityService } from '../../../features/Parameter/city/city.service';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../features/Security/users/User.module';
 import { UserService } from '../../../features/Security/users/user.service';
 
 @Component({
@@ -31,38 +27,32 @@ import { UserService } from '../../../features/Security/users/user.service';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './finca.component.html',
-  styleUrl: './finca.component.css'
-})
+  templateUrl: './finca.component.html'})
 export class FincaComponent implements OnInit {
- //definicion de cities
+  //definicion de cities
   fincas: Finca[] = [];
-  newFinca: Finca = { id: 0,
-     name: '',
-     dimension: 0,
-     description: '',
-     userId: 0,
-     cityId: 0}
+  newFinca: Finca = {
+    id: 0,
+    name: '',
+    dimension: 0,
+    description: '',
+    userId: 0,
+    cityId: 0
+  }
 
-  displayedColumns: string[] = ['id', 'name', 'dimension', 'description', 'cityName', 'userName', 'acciones'];
+  displayedColumns: string[] = ['id', 'name', 'dimension', 'description', 'cityId', 'userId', 'acciones'];
   dataSource!: MatTableDataSource<Finca>;
-  dtoptions: Config = {};
-  dttrigger: Subject<any> = new Subject<any>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private fincaService: FincaService, private alertService: AlertService,private cityService: CityService,private userService: UserService) { }
+  constructor(private fincaService: FincaService, private alertService: AlertService, private cityService: CityService, private userService: UserService) { }
 
   ngOnInit(): void {
-    this.dtoptions = {
-      pagingType: 'full_numbers',
-      lengthMenu: [5, 10, 15, 20]
-    };
     this.listFincas();
     this.loadCities();
   }
 
-//llama la lista de ciudades
+  //llama la lista de ciudades
   loadCities(): void {
     this.cityService.getCity().subscribe({
       next: (cities) => {
@@ -75,12 +65,13 @@ export class FincaComponent implements OnInit {
 
   listFincas(): void {
     this.fincaService.getFincas().subscribe({
-      next: (res) => {
-        this.dataSource = new MatTableDataSource(res);
+      next: (res: any) => {
+        const data = res.data; 
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.fincas = res;
-        this.dttrigger.next(null);
+        this.fincas = data;
+        this.dataSource.data = data; 
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');

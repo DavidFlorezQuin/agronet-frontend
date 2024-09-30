@@ -14,7 +14,7 @@ export class LoteService {
   constructor(private http: HttpClient) {}
 
   getLote(): Observable<Lote[]> {
-    return this.http.get<Lote[]>(`${this._baseUrl}/Lote`);
+    return this.http.get<Lote[]>(`${this._baseUrl}/Lot/List`);
   }
 
   deleteLote(id: number): Observable<void> {

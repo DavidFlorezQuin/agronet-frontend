@@ -14,18 +14,18 @@ export class FincaService {
   constructor(private http: HttpClient) { }
 
   getFincas(): Observable<Finca[]> {
-    return this.http.get<Finca[]>(`${this._baseUrl}/Finca`);
+    return this.http.get<Finca[]>(`${this._baseUrl}/Farm/List`);
   }
 
   deleteFinca(id: number): Observable<void> {
-    return this.http.delete<void>(`${this._baseUrl}/Finca/${id}`);
+    return this.http.delete<void>(`${this._baseUrl}/Farm/${id}`);
   }
 
   updateFinca(finca: Finca, id: number): Observable<Finca> {
-    return this.http.put<Finca>(`${this._baseUrl}/Finca/${id}`, finca);
+    return this.http.put<Finca>(`${this._baseUrl}/Farm/${id}`, finca);
   }
 
   createFinca(finca: Finca): Observable<Finca> {
-    return this.http.post<Finca>(`${this._baseUrl}/Finca`, finca);
+    return this.http.post<Finca>(`${this._baseUrl}/Farm`, finca);
   }
 }

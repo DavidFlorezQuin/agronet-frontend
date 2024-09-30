@@ -46,8 +46,8 @@ export class AnimalComponent implements OnInit {
   newAnimales: Animal = {
     id: 0, name: '', weight: 0, photo: '', raceId: 0, purpose: '', birthDay: new Date(), state: true, LotId: 0
   };
-  displayedColumns: string[] = ['id', 'name', 'gender', 'weight', 'photo', 'race', 'purpuse', 'birthDay', 'LotId', 'state'];
-  
+  displayedColumns: string[] = ['id', 'animal', 'weight', 'race', 'purpose', 'birthDay', 'acciones'];
+
   dataSource!: MatTableDataSource<Animal>;
 
 
@@ -62,11 +62,13 @@ export class AnimalComponent implements OnInit {
 
   ListAnimal(): void {
     this.animalService.getAnimals().subscribe({
-      next: (animals) => {
-        this.animales = animals;
-        this.dataSource.data = animals;
+      next: (res: any) => {
+        const data = res.data; 
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        this.animales = data; 
+        this.dataSource.data = data;
       },
       error: () => {
         this.alertaService.ErrorAlert('Error al obtener los animales');

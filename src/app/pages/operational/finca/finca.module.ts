@@ -1,5 +1,3 @@
-import { City } from "../../../features/Parameter/city/city.module";
-import { User } from "../../../features/Security/users/User.module";
 
 export interface Finca {
   id: number;
