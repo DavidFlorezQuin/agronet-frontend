@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { SalesService } from './ventas.service';
-import { Sales } from './ventas.module';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -19,6 +17,8 @@ import { ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
+import { Ventas } from './Ventas.module';
+import { VentasService } from './ventas.service';
 
 @Component({
   selector: 'app-ventas',
@@ -36,7 +36,7 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './ventas.component.css'
 })
 export class VentasComponent implements OnInit {
-  newSale: Sales = {
+  newSale: Ventas = {
     id: 0,
     price: 0,
     quantity: 0,
@@ -45,34 +45,29 @@ export class VentasComponent implements OnInit {
     currency: ''
   };
 
-  sales: Sales[] = [];
+  sales: Ventas[] = [];
 displayedColumns: string[] = [ 'id', 'firstName', 'lastName', 'email', 'gender', 'document', 'direction', 'phone', 'birthday','acciones'];
-  dataSource!: MatTableDataSource<Sales>;
+  dataSource!: MatTableDataSource<Ventas>;
 dtoptions: Config={};
 dttrigger: Subject<any>= new Subject<any>();
 
 // referenicas del paginador y sort
 @ViewChild(MatPaginator) paginator!: MatPaginator;
 @ViewChild(MatSort) sort!: MatSort;
-  constructor(private salesService: SalesService, private alertService: AlertService) {}
+  constructor(private salesService: VentasService, private alertService: AlertService) {}
 
   ngOnInit(): void {
-    this.dtoptions={
-      pagingType:'ful_numbers',
-      lengthMenu:[5,10,15,20]
-    };
     this.listSales();
   }
 
   listSales(): void {
     this.salesService.getSales().subscribe({
-      next: (res:Sales[]) => {
+      next: (res:Ventas[]) => {
 
         this.dataSource= new MatTableDataSource(res);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.sales = res;
-      this.dttrigger.next(null);
       this.dataSource.data = res
       },
       error: () => {
@@ -111,7 +106,7 @@ dttrigger: Subject<any>= new Subject<any>();
     }
   }
 
-  onEdit(sale: Sales): void {
+  onEdit(sale: Ventas): void {
     this.newSale = { ...sale };
   }
 

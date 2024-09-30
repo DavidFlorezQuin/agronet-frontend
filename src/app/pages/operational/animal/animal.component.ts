@@ -20,12 +20,17 @@ import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
 import { AnimalService } from './animal.service';
 import { state } from '@angular/animations';
+import { DataTablesModule } from 'angular-datatables';
+import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-animal',
   standalone: true,
-  imports: [CommonModule, FormsModule,
-
+  imports: [
+    CommonModule, 
+    FormsModule,
+    DataTablesModule,
     MatIconModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
@@ -36,14 +41,15 @@ import { state } from '@angular/animations';
 })
 export class AnimalComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'name', 'gender', 'weight', 'photo', 'race', 'purpuse', 'birthDay', 'LotId', 'state'];
-  dataSource: MatTableDataSource<Animal> = new MatTableDataSource<Animal>();
-
   animales: Animal[] = [];
+ 
   newAnimales: Animal = {
-    id: 0, name: '', weight: 0, photo: '', raceId: 0, purpose: '',
-    birthDay: new Date(), state: true, LotId: 0
+    id: 0, name: '', weight: 0, photo: '', raceId: 0, purpose: '', birthDay: new Date(), state: true, LotId: 0
   };
+  displayedColumns: string[] = ['id', 'name', 'gender', 'weight', 'photo', 'race', 'purpuse', 'birthDay', 'LotId', 'state'];
+  
+  dataSource!: MatTableDataSource<Animal>;
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -57,18 +63,17 @@ export class AnimalComponent implements OnInit {
   ListAnimal(): void {
     this.animalService.getAnimals().subscribe({
       next: (animals) => {
-
         this.animales = animals;
         this.dataSource.data = animals;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        
+      },
+      error: () => {
+        this.alertaService.ErrorAlert('Error al obtener los animales');
       }
     });
-    error: () => {
-      this.alertaService.ErrorAlert('Error al obtener los animales');
-    }
   }
+  
 
   aplicarFiltro(event: Event): void {
 

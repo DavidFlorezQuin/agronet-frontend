@@ -37,18 +37,14 @@ export class ContinentComponent implements OnInit {
   continents: Continent[] = [];
   newContinent: Continent = { id: 0, name: '', description: '' }; // Objeto de continente inicializado
   displayedColumns: string[]=['id','name', 'description', 'acciones'];
-  dtoptions: Config = {};
-  dttrigger: Subject<any> = new Subject<any>();
+  
   dataSource!: MatTableDataSource<Continent>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private continentService: ContinentService, private alertService: AlertService) {}
 
   ngOnInit(): void {
-    this.dtoptions = {
-      pagingType: 'full_numbers',
-      lengthMenu: [5, 10, 15, 20]
-    };
+ 
 
     this.listContinents(); // Llama a la función para obtener los continentes al iniciar
   }
@@ -61,7 +57,6 @@ export class ContinentComponent implements OnInit {
         this.dataSource.sort = this.sort;
 
         this.continents = res; // Asigna la respuesta a la lista de continentes
-        this.dttrigger.next(null);
         this.dataSource.data = res;
       },
       error: () => {

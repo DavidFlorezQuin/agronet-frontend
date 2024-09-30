@@ -14,7 +14,7 @@ export class CityService {
   constructor(private http:HttpClient) { }
 
   getCity():Observable<City[]>{
-    return this.http.get<City[]>(`${this._baseUrl}/City`)
+    return this.http.get<City[]>(`${this._baseUrl}/City/List`)
   }
 
   createCity(city:City):Observable<City>{

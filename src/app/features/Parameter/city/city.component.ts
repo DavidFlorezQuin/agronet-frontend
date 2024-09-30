@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
@@ -43,11 +43,10 @@ export class CityComponent implements OnInit {
   countries: Country[] = [];
   newCity: City = { id: 0, name: '', descripcion: '', countryId: 0 };
 
-  dtoptions: Config = {};
-  dttrigger: Subject<any> = new Subject<any>();
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
+  dataSource!: MatTableDataSource<City>;
 
   constructor(
     private cityService: CityService,
@@ -56,10 +55,6 @@ export class CityComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dtoptions = {
-      pagingType: "full_numbers",
-      lengthMenu: [5, 10, 15, 20]
-    };
 
     this.listCities();
     this.listCountries();
@@ -69,7 +64,6 @@ export class CityComponent implements OnInit {
     this.cityService.getCity().subscribe({
       next: (res: City[]) => {
         this.cities = res;
-        this.dttrigger.next(null);
       },
       error: () => {
         this.alertService.ErrorAlert('Algo salió mal al obtener las ciudades');
@@ -81,7 +75,6 @@ export class CityComponent implements OnInit {
     this.countryService.getCountry().subscribe({
       next: (countries: Country[]) => {
         this.countries = countries;
-        this.dttrigger.next(null);
       },
       error: () => {
         this.alertService.ErrorAlert('Algo salió mal al obtener los países');
@@ -107,6 +100,14 @@ export class CityComponent implements OnInit {
         });
       }
     });
+  }
+  aplicarFiltro(event:Event){
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if(this.dataSource.paginator){
+      this.dataSource.paginator.firstPage();
+    }
+
   }
 
   onSubmit(form: NgForm): void {

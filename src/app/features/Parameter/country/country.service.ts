@@ -14,7 +14,7 @@ export class CountryService {
   constructor(private http:HttpClient) { }
 
   getCountry():Observable<Country[]>{
-    return this.http.get<Country[]>(`${this._baseUrl}/Country`);
+    return this.http.get<Country[]>(`${this._baseUrl}/Country/List`);
   }
 
   createCountry(country:Country):Observable<Country>{

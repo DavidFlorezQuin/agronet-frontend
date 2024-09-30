@@ -1,26 +1,26 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Sales } from './sales.model';
+import { Ventas } from './Ventas.module';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SalesService {
-  private apiUrl = 'your-api-url/sales';
+export class VentasService {
+  private apiUrl = 'your-api-url/Ventas';
 
   constructor(private http: HttpClient) {}
 
-  getSales(): Observable<Sales[]> {
-    return this.http.get<Sales[]>(this.apiUrl);
+  getSales(): Observable<Ventas[]> {
+    return this.http.get<Ventas[]>(this.apiUrl);
   }
 
-  createSale(sale: Sales): Observable<Sales> {
-    return this.http.post<Sales>(this.apiUrl, sale);
+  createSale(sale: Ventas): Observable<Ventas> {
+    return this.http.post<Ventas>(this.apiUrl, sale);
   }
 
-  updateSale(sale: Sales): Observable<Sales> {
-    return this.http.put<Sales>(`${this.apiUrl}/${sale.id}`, sale);
+  updateSale(sale: Ventas): Observable<Ventas> {
+    return this.http.put<Ventas>(`${this.apiUrl}/${sale.id}`, sale);
   }
 
   deleteSale(id: number): Observable<void> {

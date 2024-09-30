@@ -40,8 +40,6 @@ export class CountryComponent implements OnInit {
   continents: Continent[] = [];
   newCountry: Country = { id: 0, name: '',  countryCode:'', continentId: 0}; // Objeto de país inicializado
   displayedColumns: string[] = [ 'id', 'name', 'countryCode', 'continentId','acciones'];
-  dtoptions: Config = {};
-  dttrigger: Subject<any> = new Subject<any>();
   dataSource!: MatTableDataSource<Country>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -49,10 +47,6 @@ export class CountryComponent implements OnInit {
   constructor(private countryService: CountryService, private alertService: AlertService, private continentService: ContinentService) {}
 
   ngOnInit(): void {
-    this.dtoptions = {
-      pagingType: 'full_numbers',
-      lengthMenu: [5, 10, 15, 20]
-    };
 
     this.listCountries(); // Llama a la función para obtener los países al iniciar
   }
@@ -61,7 +55,6 @@ export class CountryComponent implements OnInit {
     this.continentService.getContinent().subscribe({
       next: (res) => {
         this.continents = res; // Asigna la respuesta a la lista de continentes
-        this.dttrigger.next(null);
       },
       error: () => {
         this.alertService.ErrorAlert('Algo salió mal al obtener los continentes');
@@ -73,7 +66,6 @@ export class CountryComponent implements OnInit {
     this.countryService.getCountry().subscribe({
       next: (contries: Country[]) => {
         this.countries = contries; // Asigna la respuesta a la lista de países
-        this.dttrigger.next(null);
         this.dataSource = new MatTableDataSource();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;

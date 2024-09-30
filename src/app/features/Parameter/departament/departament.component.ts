@@ -1,4 +1,4 @@
-import { Component,OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -34,109 +34,103 @@ import { DepartamentoService } from './departament.service';
   templateUrl: './departament.component.html',
   styleUrl: './departament.component.css'
 })
-export class DepartamentComponent implements OnInit{
+export class DepartamentComponent implements OnInit {
 
-  displayedColumns:string[] = ['id','name','gender','weight','photo','race','purpuse','birthDay', 'LotId','state'];
-dataSource: MatTableDataSource<Departamento> = new MatTableDataSource<Departamento>();
-dtoptions: Config={};
-dttrigger: Subject<any>= new Subject<any>();
-departamento: Departamento[] = [];
-newDepartamento: Departamento = {id: 0,code:'', name:'',CountryId:0 };
+  displayedColumns: string[] = ['id', 'name', 'gender', 'weight', 'photo', 'race', 'purpuse', 'birthDay', 'LotId', 'state'];
+  dataSource: MatTableDataSource<Departamento> = new MatTableDataSource<Departamento>();
+  departamento: Departamento[] = [];
+  newDepartamento: Departamento = { id: 0, code: '', name: '', CountryId: 0 };
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private departamentoService: DepartamentoService, private alertService: AlertService) {}
+  constructor(private departamentoService: DepartamentoService, private alertService: AlertService) { }
 
   ngOnInit(): void {
 
-    this.dtoptions={
-      pagingType:'ful_numbers',
-      lengthMenu:[5,10,15,20]
-    };
     this.listDepartamento();
   }
 
 
+  listDepartamento(): void {
+    this.departamentoService.getDepartamento().subscribe({
+      next: (res: any) => {
+        const data = res.data; // Accede a la propiedad 'data'
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.departamento = data;
+        this.dataSource.data = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los datos');
+      }
+    });
+  }
+  
 
-listDepartamento(): void {
-  this.departamentoService.getDepartamento().subscribe({
-    next: (res: Departamento[])=>{
-      this.dataSource= new MatTableDataSource(res);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.departamento = res;
-      this.dttrigger.next(null);
-      this.dataSource.data = res;
-    },
-    error: ()=>{
-      this.alertService. ErrorAlert('Error al obtener los datos');
-    }
-  });
-}
-
-onEdit(departamento:Departamento): void {
-  this.newDepartamento = {...departamento};
+  onEdit(departamento: Departamento): void {
+    this.newDepartamento = { ...departamento };
 
 
-}
-
-onDelete(id:number): void {
-  this.alertService.DeleteAlert().then((res)=>{
-    if(res.isConfirmed){
-      this.departamentoService.deleteDepartamento(id).subscribe({
-        next: ()=>{
-          this.alertService.SuccessAlert('Eliminado correctamente');
-          this.listDepartamento();
-        },
-        error: ()=>{
-          this.alertService.ErrorAlert('Error al eliminar');
-        }
-      });
-    }
-  });
-}
-
-onSubmit(form:NgForm): void{
-  if(form.valid){
-    if(this.newDepartamento.id>0){
-      this.departamentoService.updateDepartamento(this.newDepartamento,this.newDepartamento.id).subscribe({
-        next: ()=>{
-          this.alertService.SuccessAlert('Actualizado correctamente');
-          form.reset();
-          this.newDepartamento={id:0,code:'', name:'',CountryId:0  };
-            this.listDepartamento();
-
-        },
-        error: ()=>{
-          this.alertService.ErrorAlert('Error al actualizar');
-        }
-      });
-    }else{
-      this.departamentoService.createDepartamento(this.newDepartamento).subscribe({
-        next: ()=>{
-          this.alertService.SuccessAlert('Creado correctamente');
-          form.reset();
-          this.listDepartamento();
-        },
-        error: ()=>{
-          this.alertService.ErrorAlert('Error al crear');
-        }
-      });
-    }
-  }else{
-    this.alertService.ErrorAlert('Por favor complete todos los campos');
   }
 
-}
+  onDelete(id: number): void {
+    this.alertService.DeleteAlert().then((res) => {
+      if (res.isConfirmed) {
+        this.departamentoService.deleteDepartamento(id).subscribe({
+          next: () => {
+            this.alertService.SuccessAlert('Eliminado correctamente');
+            this.listDepartamento();
+          },
+          error: () => {
+            this.alertService.ErrorAlert('Error al eliminar');
+          }
+        });
+      }
+    });
+  }
 
-aplicarFiltro(event:Event){
-  const filterValue = (event.target as HTMLInputElement).value;
-this.dataSource.filter =filterValue.trim().toLowerCase();
+  onSubmit(form: NgForm): void {
+    if (form.valid) {
+      if (this.newDepartamento.id > 0) {
+        this.departamentoService.updateDepartamento(this.newDepartamento, this.newDepartamento.id).subscribe({
+          next: () => {
+            this.alertService.SuccessAlert('Actualizado correctamente');
+            form.reset();
+            this.newDepartamento = { id: 0, code: '', name: '', CountryId: 0 };
+            this.listDepartamento();
 
-if (this.dataSource.paginator) {
-  this.dataSource.paginator.firstPage();
-}
-}
+          },
+          error: () => {
+            this.alertService.ErrorAlert('Error al actualizar');
+          }
+        });
+      } else {
+        this.departamentoService.createDepartamento(this.newDepartamento).subscribe({
+          next: () => {
+            this.alertService.SuccessAlert('Creado correctamente');
+            form.reset();
+            this.listDepartamento();
+          },
+          error: () => {
+            this.alertService.ErrorAlert('Error al crear');
+          }
+        });
+      }
+    } else {
+      this.alertService.ErrorAlert('Por favor complete todos los campos');
+    }
+
+  }
+
+  aplicarFiltro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 
 
 }

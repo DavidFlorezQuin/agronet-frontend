@@ -13,13 +13,27 @@ import { ViewsComponent } from './features/Security/views/views.component';
 import { UsersComponent } from './features/Security/users/users.component';
 import { PersonComponent } from './features/Security/person/person.component';
 import { HomeComponentD } from './features/Security/home/home.component';
-import { FincaComponent } from './pages/operational/finca/finca.component';
+import { AlertaComponent } from './pages/operational/alerta/alerta.component';
 import { AnimalComponent } from './pages/operational/animal/animal.component';
-import { NacimientoComponent } from './pages/operational/nacimiento/nacimiento.component';
-import { LoteComponent } from './pages/operational/lote/lote.component';
 import { MenuComponent } from './features/pages/menu/menu.component';
+// import { FincaComponent } from './pages/operational/finca/finca.component';
+// import { NacimientoComponent } from './pages/operational/nacimiento/nacimiento.component';
+// import { LoteComponent } from './pages/operational/lote/lote.component';
 import { ContinentComponent } from './features/Parameter/continent/continent.component';
+import { CountryComponent } from './features/Parameter/country/country.component';
+import { DepartamentComponent } from './features/Parameter/departament/departament.component';
 import { CityComponent } from './features/Parameter/city/city.component';
+// import { CityComponent } from './features/Parameter/city/city.component';
+// import { InseminationComponent } from './pages/operational/inseminacion/inseminacion.component';
+// import { InventarioComponent } from './pages/operational/inventario/inventario.component';
+// import { ProduccionComponent } from './pages/operational/produccion/produccion.component';
+// import { VentasComponent } from './pages/operational/ventas/ventas.component';
+// import { TratamientoComponent } from './pages/operational/tratamiento/tratamiento.component';
+// import { CategoriaAlertaComponent } from './pages/Parametro/categoria-alerta/categoria-alerta.component';
+// import { CategoriaMedicinaComponent } from './pages/Parametro/categoria-medicina/categoria-medicina.component';
+// import { CategoriaSuplementoComponent } from './pages/Parametro/categoria-suplemento/categoria-suplemento.component';
+// import { MedicinaComponent } from './pages/Parametro/medicina/medicina.component';
+// import { SuplementosComponent } from './pages/Parametro/suplementos/suplementos.component';
 
 export const routes: Routes = [
     {
@@ -35,9 +49,9 @@ export const routes: Routes = [
         path: 'home',
         component: HomeComponent
     }, {
-      path: 'menu',
-      component: MenuComponent
-  },
+        path: 'menu',
+        component: MenuComponent
+    },
     {
         path: 'dashboard',
         component: MainComponent,
@@ -84,31 +98,86 @@ export const routes: Routes = [
 
             // OPERATIONAL
             {
-                path:'finca',
-                component: FincaComponent
+                path: 'alerta',
+                component: AlertaComponent
             },
             {
-                path:'animales',
-                component:AnimalComponent
+                path: 'animales',
+                component: AnimalComponent
+            },
+            // {
+            //     path:'nacimiento',
+            //     component:NacimientoComponent
+            // },
+            // {
+            //     path:'inseminación',
+            //     component: InseminationComponent
+            // },
+            // {
+            //     path:'inventario',
+            //     component: InventarioComponent
+            // },  
+            // {
+            //     path:'finca',
+            //     component: FincaComponent
+            // },
+            // {
+            //     path:'lote',
+            //     component:LoteComponent
+            // },
+            // {
+            //     path:'produccion',
+            //     component:ProduccionComponent
+            // },
+            // {
+            //     path:'ventas',
+            //     component: VentasComponent
+            // },
+            // {
+            //     path:'tratamientos',
+            //     component: TratamientoComponent
+            // },
+
+            // //LOCALITATION
+            {
+                path: 'continent',
+                component: ContinentComponent
             },
             {
-                path:'nacimiento',
-                component:NacimientoComponent
+                path: 'pais',
+                component: CountryComponent
             },
             {
-                path:'lote',
-                component:LoteComponent
-            },
-            
-            //LOCALITATION
-            {
-                path:'continent',
-                component:ContinentComponent
+                path: 'departamento',
+                component: DepartamentComponent
             },
             {
-                path:'city',
+                path:'ciudad',
                 component: CityComponent
-            }
+            },
+
+            // //PARAMETER
+            // {
+            //     path:'categoria-alerta',
+            //     component: CategoriaAlertaComponent
+            // },
+            // {
+            //     path:'categoria-medicina',
+            //     component: CategoriaMedicinaComponent
+            // },
+            // {
+            //     path:'categoria-suplemento',
+            //     component: CategoriaSuplementoComponent
+            // },
+            // {
+            //     path:'Medicina',
+            //     component: MedicinaComponent
+            // },
+            // {
+            //     path:'Suplementos',
+            //     component: SuplementosComponent
+            // },
+
         ]
     }
 ];

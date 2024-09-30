@@ -14,7 +14,7 @@ export class DepartamentoService {
   constructor(private http:HttpClient) { }
 
   getDepartamento():Observable<Departamento[]>{
-    return this.http.get<Departamento[]>(`${this._baseUrl}/Departament`);
+    return this.http.get<Departamento[]>(`${this._baseUrl}/Departament/List`);
   }
 
   createDepartamento(departamento:Departamento):Observable<Departamento>{
