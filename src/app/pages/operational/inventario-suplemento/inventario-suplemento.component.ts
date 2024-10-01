@@ -75,6 +75,8 @@ Inventario:Inventories[] = [];
   ngOnInit(): void {
    
     this.listInventarioSuplemento();
+    this.listInventario();
+    this.listSuplemento();
   }
 
   listInventarioSuplemento(): void {

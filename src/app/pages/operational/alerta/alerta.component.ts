@@ -38,7 +38,7 @@ import { AlertService } from '../../../shared/components/alert.service';
   templateUrl: './alerta.component.html',
   styleUrl: './alerta.component.css'
 })
-export class AlertaComponent {
+export class AlertaComponent implements OnInit{
   alerta: Alerta[] = [];
 
 

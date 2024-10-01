@@ -15,6 +15,8 @@ import { MatInputModule } from '@angular/material/input';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { DataTablesModule } from 'angular-datatables';
+import { Animal } from '../animal/animal.module';
+import { AnimalService } from '../animal/animal.service';
 
 @Component({
   selector: 'app-produccion',
@@ -45,7 +47,7 @@ export class ProduccionComponent implements OnInit {
     animalId: 0,
 
   };
-
+animales: Animal[] = [];
   productions: Productions[] = [];
   displayedColumns: string[] = ['id',
     'typeProduction',
@@ -62,11 +64,12 @@ export class ProduccionComponent implements OnInit {
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private productionsService: ProductionsService, private alertService: AlertService) { }
+  constructor(private productionsService: ProductionsService,private animalService:AnimalService ,private alertService: AlertService) { }
 
   ngOnInit(): void {
    
     this.listProductions();
+    this.listAnimales();
   }
 
   listProductions(): void {
@@ -76,6 +79,18 @@ export class ProduccionComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       
+      },
+      error: (error)=>{
+        console.log(error);
+        this.alertService.ErrorAlert('Error al cargar los medicamentos');
+      }
+    });
+  }
+
+  listAnimales(): void {
+    this.animalService.getAnimals().subscribe({
+      next: (Animales: Animal[]) => {
+        this.animales=Animales;
       },
       error: (error)=>{
         console.log(error);

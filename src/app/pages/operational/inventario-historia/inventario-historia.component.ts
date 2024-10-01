@@ -65,6 +65,8 @@ constructor(private InventarioHistoriaService: InventarioHistoriaService, privat
  ){}
 ngOnInit(): void {  
   this.ListinventarioHistoria();
+  this.listInventarioSuplemento();
+  this.listUsuario();
  
 }
 ListinventarioHistoria(): void {

@@ -16,6 +16,8 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../features/Security/users/user.service';
 import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
+import { City } from '../../../features/Parameter/city/city.module';
+import { User } from '../../../features/Security/users/User.module';
 
 @Component({
   selector: 'app-finca',
@@ -47,20 +49,33 @@ export class FincaComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'name', 'dimension', 'description', 'cityId', 'userId', 'acciones'];
   dataSource!: MatTableDataSource<Finca>;
-
+City: City[] = [];
+User: User[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private fincaService: FincaService, private alertService: AlertService, private cityService: CityService, private userService: UserService) { }
+  constructor(private fincaService: FincaService ,private alertService: AlertService, private cityService: CityService, private userService: UserService) { }
 
   ngOnInit(): void {
     this.listFincas();
     this.loadCities();
+    this.loadUser();
   }
 
   //llama la lista de ciudades
   loadCities(): void {
     this.cityService.getCity().subscribe({
-      next: (cities) => {
+      next: (cities:City[]) => {
+        this.City = cities;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener las ciudades');
+      }
+    });
+  }
+  loadUser(): void {
+    this.userService.getUsers().subscribe({
+      next: (usuario:User[]) => {
+        this.User = usuario;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener las ciudades');

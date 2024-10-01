@@ -1,0 +1,101 @@
+<div class="container mt-3">
+    <div class="d-flex justify-content-between">
+  
+      <section class="d-flex align-items-center gap-3">
+        <h2 class="fw-normal mb-0">Diagnósticos de Animales</h2>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#diagnosticsModal" id="btn-forms" class="btn h-50">
+          <i class="bi bi-plus-circle mx-2"></i>
+          Agregar Diagnóstico
+        </button>
+      </section>
+  
+      <!-- Filtro de búsqueda -->
+      <mat-form-field appearance="fill">
+        <mat-label>Buscar</mat-label>
+        <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+      </mat-form-field>
+    </div>
+  
+    <!-- Tabla con MatTable -->
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+  
+      <!-- Columna Diagnosis -->
+      <ng-container matColumnDef="diagnosis">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnóstico </th>
+        <td mat-cell *matCellDef="let element"> {{element.diagnosis}} </td>
+      </ng-container>
+  
+      <!-- Columna Animal -->
+      <ng-container matColumnDef="animal">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Animal </th>
+        <td mat-cell *matCellDef="let element"> {{element.animal.name}} </td>
+      </ng-container>
+  
+      <!-- Columna Usuario -->
+      <ng-container matColumnDef="users">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
+        <td mat-cell *matCellDef="let element"> {{element.users.name}} </td>
+      </ng-container>
+  
+      <!-- Columna Acciones -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button color="primary" (click)="onSubmit(element)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="onDelete(element.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+  
+      <!-- Definiciones de Header y Rows -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+  
+  <!-- Modal para agregar o editar diagnósticos -->
+  <div class="modal fade" id="diagnosticsModal" tabindex="-1" aria-labelledby="diagnosticsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="diagnosticsModalLabel">Agregar Diagnóstico</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #diagnosticsForm="ngForm" (ngSubmit)="onSubmit(diagnosticsForm)">
+            <div class="mb-3">
+              <label for="diagnosis" class="form-label">Diagnóstico</label>
+              <textarea class="form-control" id="diagnosis" name="diagnosis" [(ngModel)]="newDiagnostic.diagnosis" required></textarea>
+            </div>
+  
+            <div class="mb-3">
+              <label for="animalId" class="form-label">Animal</label>
+              <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newDiagnostic.animalId" required>
+                <option value="" disabled selected>Seleccione un animal</option>
+                <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
+              </select>
+            </div>
+  
+            <div class="mb-3">
+              <label for="usersId" class="form-label">Usuario</label>
+              <select class="form-control" id="usersId" name="usersId" [(ngModel)]="newDiagnostic.usersId" required>
+                <option value="" disabled selected>Seleccione un usuario</option>
+                <option *ngFor="let user of usuarios" [value]="user.id">{{ user.username }}</option>
+              </select>
+            </div>
+  
+            <button type="submit" class="btn btn-primary" [disabled]="!diagnosticsForm.valid">Guardar</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
