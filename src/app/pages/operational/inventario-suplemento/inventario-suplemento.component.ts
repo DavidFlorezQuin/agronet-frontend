@@ -1,9 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { ProductionsService } from './produccion.service';
 import { AlertService } from '../../../shared/components/alert.service';
-import { Productions } from './produccion.module';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,9 +13,14 @@ import { MatInputModule } from '@angular/material/input';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { DataTablesModule } from 'angular-datatables';
-
+import { InventarioSuplemento } from './inventario-suplemento.module';
+import { InventarioSuplementoService } from './inventario-suplemento.service';
+import { Inventories } from '../inventario/Inventories.module';
+import { Suplemento } from '../../Parametro/suplementos/suplementos.module';
+import { InventoriesService } from '../inventario/inventario.service';
+import { SuplementoService } from '../../Parametro/suplementos/suplementos.service';
 @Component({
-  selector: 'app-produccion',
+  selector: 'app-inventario-suplemento',
   standalone: true,
   imports: [CommonModule,
     FormsModule,
@@ -31,47 +34,52 @@ import { DataTablesModule } from 'angular-datatables';
    MatTableModule,
    MatPaginatorModule,
    MatSortModule],
-  templateUrl: './produccion.component.html'
+  templateUrl: './inventario-suplemento.component.html',
+  styleUrl: './inventario-suplemento.component.css'
 })
-export class ProduccionComponent implements OnInit {
-  newProduction: Productions = {
+export class InventarioSuplementoComponent implements OnInit{
+  newInventarioSuplemento: InventarioSuplemento = {
     id: 0,
-    typeProduction: '',
-    stock: 0,
-    measurement: '',
-    description: '',
-    quantityTotal: 0,
-    expirateDate: new Date(),
-    animalId: 0,
+    amount: 0,
+    measure: 0,
+    inventoryId: 0,
+    suppliesId: 0,
+   
 
   };
-
-  productions: Productions[] = [];
+  Suplemento: Suplemento [] = [];
+Inventario:Inventories[] = [];
+  InventarioSuplemento: InventarioSuplemento[] = [];
   displayedColumns: string[] = ['id',
-    'typeProduction',
+    'amount',
     'stock',
-    'measurement',
-    'description ',
-    'quantityTotal',
-    'expirateDate',
-    'animalId']
-  dataSource!: MatTableDataSource<Productions>;
+    'measure',
+    'inventoryId ',
+    'suppliesId'];
+
+  dataSource!: MatTableDataSource<InventarioSuplemento>;
   dtoptions: Config = {};
   dttrigger: Subject<any> = new Subject<any>();
 
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private productionsService: ProductionsService, private alertService: AlertService) { }
+  constructor(private inventarioSuplementoService: InventarioSuplementoService,
+     private alertService: AlertService,
+     private inventarioService:InventoriesService
+    ,private suplementoService:SuplementoService) { }
 
+
+
+  
   ngOnInit(): void {
    
-    this.listProductions();
+    this.listInventarioSuplemento();
   }
 
-  listProductions(): void {
-    this.productionsService.getProductions().subscribe({
-      next: (res: Productions[]) => {
+  listInventarioSuplemento(): void {
+    this.inventarioSuplementoService.getInventarioSuplemento().subscribe({
+      next: (res: InventarioSuplemento[]) => {
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -84,15 +92,44 @@ export class ProduccionComponent implements OnInit {
     });
   }
 
+  
+  listInventario(): void {
+    this.inventarioService.getInventories().subscribe({
+      next: (inventarios: Inventories[]) => {
+        this.Inventario=inventarios;
+      },
+      error: (error)=>{
+        console.log(error);
+        this.alertService.ErrorAlert('Error al cargar los medicamentos');
+      }
+    });
+  }
+
+  listSuplemento(): void {
+    this.suplementoService.getSuplemento().subscribe({
+      next: (Suplemento: Suplemento[]) => {
+        this.Suplemento=Suplemento;
+      },
+      error: (error)=>{
+        console.log(error);
+        this.alertService.ErrorAlert('Error al cargar los medicamentos');
+      }
+    });
+  }
+  
   onSubmit(form: NgForm): void {
     if (form.valid) {
-      if (this.newProduction.id > 0) {
-        this.productionsService.updateProduction(this.newProduction, this.newProduction.id).subscribe({
+      if (this.newInventarioSuplemento.id > 0) {
+        this.inventarioSuplementoService.updateInventarioSuplemento(this.newInventarioSuplemento, this.newInventarioSuplemento.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newProduction = { id: 0, typeProduction: '', stock: 0, measurement: '', description: '', quantityTotal: 0, expirateDate: new Date(), animalId: 0 };
-            this.listProductions();
+            this.newInventarioSuplemento = { id: 0,
+              amount: 0,
+              measure: 0,
+              inventoryId: 0,
+              suppliesId: 0, };
+            this.listInventarioSuplemento();
 
           },
           error: () => {
@@ -100,11 +137,11 @@ export class ProduccionComponent implements OnInit {
           }
         });
       } else {
-        this.productionsService.createProduction(this.newProduction).subscribe({
+        this.inventarioSuplementoService.createInventarioSuplemento(this.newInventarioSuplemento).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
-            this.listProductions();
+            this.listInventarioSuplemento();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');
@@ -117,8 +154,8 @@ export class ProduccionComponent implements OnInit {
 
   }
 
-  onEdit(production: Productions): void {
-    this.newProduction = { ...production };
+  onEdit(InventarioSuplemento: InventarioSuplemento): void {
+    this.newInventarioSuplemento = { ...InventarioSuplemento };
 
 
   }
@@ -126,10 +163,10 @@ export class ProduccionComponent implements OnInit {
   onDelete(id: number): void {
     this.alertService.DeleteAlert().then((res) => {
       if (res.isConfirmed) {
-        this.productionsService.deleteProduction(id).subscribe({
+        this.inventarioSuplementoService.deleteInventarioSuplemento(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Producción eliminada correctamente');
-            this.listProductions();
+            this.listInventarioSuplemento();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar producción');

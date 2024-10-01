@@ -44,7 +44,10 @@ export class AnimalComponent implements OnInit {
   animales: Animal[] = [];
  
   newAnimales: Animal = {
-    id: 0, name: '', weight: 0, photo: '', raceId: 0, purpose: '', birthDay: new Date(), state: true, lotId: 0
+    id: 0, name: '', weight: 0,
+     photo: '', raceId: 0,
+      purpose: '', birthDay: new Date(),
+       state: true, lotId: 0
   };
   displayedColumns: string[] = ['id', 'animal', 'weight', 'race', 'purpose', 'birthDay', 'lotId', 'acciones'];
 
