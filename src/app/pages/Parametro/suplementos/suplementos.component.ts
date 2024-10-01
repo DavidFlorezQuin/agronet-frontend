@@ -35,14 +35,13 @@ import { MatButtonModule } from '@angular/material/button';
    MatTableModule,
    MatPaginatorModule,
    MatSortModule],
-  templateUrl: './suplementos.component.html',
-  styleUrls: ['./suplementos.component.css']
+  templateUrl: './suplementos.component.html'
 })
 export class SuplementosComponent {
-  displayedColumns: string[] = ['id', 'name', 'gender', 'weight', 'photo', 'race', 'purpuse', 'birthDay', 'LotId', 'state'];
+  displayedColumns: string[] = ['id', 'name', 'description', 'CategorySuppliesId'];
   dataSource: MatTableDataSource<Suplemento> = new MatTableDataSource<Suplemento>();
   Suplemento: Suplemento[] = [];
-  newSuplemento: Suplemento = { id: 0, Name: '', CategorySuppliesId: 0, Description: '' };
+  newSuplemento: Suplemento = { id: 0, name: '', CategorySuppliesId: 0, description: '' };
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

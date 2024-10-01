@@ -1,17 +1,23 @@
-<div class="container">
-  <section class="d-flex justify-content-between my-3">
-    <h1 class="fw-normal">Inseminaciones</h1>
-    <button type="button" data-bs-toggle="modal" data-bs-target="#inseminationModal" id="btn-forms" class="btn h-50">
-      <i class="bi bi-plus-circle mx-2"></i>
-      Agregar Inseminación
-    </button>
-  </section>
+<div class="container mt-3">
 
-  <!-- Tabla con MatTable -->
-  <mat-form-field appearance="fill">
-    <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
-  </mat-form-field>
+  <div class="d-flex justify-content-between">
+
+    <section class="d-flex align-items-center gap-3">
+      <h2 class="fw-normal mb-0">Inseminaciones</h2>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#inseminationModal" id="btn-forms" class="btn h-50">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Agregar Inseminación
+      </button>
+    </section>
+
+    <!-- Tabla con MatTable -->
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+    </mat-form-field>
+
+  </div>
+
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 

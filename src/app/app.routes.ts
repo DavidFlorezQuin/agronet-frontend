@@ -17,7 +17,7 @@ import { AlertaComponent } from './pages/operational/alerta/alerta.component';
 import { AnimalComponent } from './pages/operational/animal/animal.component';
 import { MenuComponent } from './features/pages/menu/menu.component';
 import { FincaComponent } from './pages/operational/finca/finca.component';
-// import { NacimientoComponent } from './pages/operational/nacimiento/nacimiento.component';
+import { NacimientoComponent } from './pages/operational/nacimiento/nacimiento.component';
 import { LoteComponent } from './pages/operational/lote/lote.component';
 import { ContinentComponent } from './features/Parameter/continent/continent.component';
 import { CountryComponent } from './features/Parameter/country/country.component';
@@ -28,12 +28,12 @@ import { InseminationComponent } from './pages/operational/inseminacion/insemina
 import { InventarioComponent } from './pages/operational/inventario/inventario.component';
 import { ProduccionComponent } from './pages/operational/produccion/produccion.component';
 import { VentasComponent } from './pages/operational/ventas/ventas.component';
-// import { TratamientoComponent } from './pages/operational/tratamiento/tratamiento.component';
-// import { CategoriaAlertaComponent } from './pages/Parametro/categoria-alerta/categoria-alerta.component';
-// import { CategoriaMedicinaComponent } from './pages/Parametro/categoria-medicina/categoria-medicina.component';
-// import { CategoriaSuplementoComponent } from './pages/Parametro/categoria-suplemento/categoria-suplemento.component';
-// import { MedicinaComponent } from './pages/Parametro/medicina/medicina.component';
-// import { SuplementosComponent } from './pages/Parametro/suplementos/suplementos.component';
+import { TratamientoComponent } from './pages/operational/tratamiento/tratamiento.component';
+import { CategoriaAlertaComponent } from './pages/Parametro/categoria-alerta/categoria-alerta.component';
+import { CategoriaMedicinaComponent } from './pages/Parametro/categoria-medicina/categoria-medicina.component';
+import { CategoriaSuplementoComponent } from './pages/Parametro/categoria-suplemento/categoria-suplemento.component';
+import { MedicinaComponent } from './pages/Parametro/medicina/medicina.component';
+import { SuplementosComponent } from './pages/Parametro/suplementos/suplementos.component';
 
 export const routes: Routes = [
     {
@@ -98,17 +98,17 @@ export const routes: Routes = [
 
             // OPERATIONAL
             {
-                path: 'alerta',
+                path: 'alertas',
                 component: AlertaComponent
             },
             {
                 path: 'animales',
                 component: AnimalComponent
             },
-            // {
-            //     path:'nacimiento',
-            //     component:NacimientoComponent
-            // },
+            {
+                path:'nacimientos',
+                component:NacimientoComponent
+            },
             {
                 path:'inseminacion',
                 component: InseminationComponent
@@ -133,10 +133,11 @@ export const routes: Routes = [
                 path:'venta',
                 component: VentasComponent
             },
-            // {
-            //     path:'tratamientos',
-            //     component: TratamientoComponent
-            // },
+
+            {
+                path:'tratamientos',
+                component: TratamientoComponent
+            },
 
             // //LOCALITATION
             {
@@ -157,26 +158,26 @@ export const routes: Routes = [
             },
 
             // //PARAMETER
-            // {
-            //     path:'categoria-alerta',
-            //     component: CategoriaAlertaComponent
-            // },
-            // {
-            //     path:'categoria-medicina',
-            //     component: CategoriaMedicinaComponent
-            // },
-            // {
-            //     path:'categoria-suplemento',
-            //     component: CategoriaSuplementoComponent
-            // },
-            // {
-            //     path:'Medicina',
-            //     component: MedicinaComponent
-            // },
-            // {
-            //     path:'Suplementos',
-            //     component: SuplementosComponent
-            // },
+            {
+                path:'categoria-alerta',
+                component: CategoriaAlertaComponent
+            },
+            {
+                path:'categoria-medicamentos',
+                component: CategoriaMedicinaComponent
+            },
+            {
+                path:'categoria-suministros',
+                component: CategoriaSuplementoComponent
+            },
+            {
+                path:'medicamentos',
+                component: MedicinaComponent
+            },
+            {
+                path:'suministros',
+                component: SuplementosComponent
+            },
 
         ]
     }

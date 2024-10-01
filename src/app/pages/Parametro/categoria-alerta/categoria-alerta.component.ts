@@ -36,16 +36,12 @@ import { DataTablesModule } from 'angular-datatables';
    MatPaginatorModule,
    MatSortModule
   ],
-  templateUrl: './categoria-alerta.component.html',
-  styleUrls: ['./categoria-alerta.component.css']
-})
+  templateUrl: './categoria-alerta.component.html'})
 export class CategoriaAlertaComponent implements OnInit{
   newCategoryaAlerta: CategoriaAlerta={id:0, Name:'',Description:'',Color:''}
   displayedColumns: string[] = [ 'id','Name','Description','color','Acciones']
   CategoriaAlerta: CategoriaAlerta[]= [];
  dataSource!: MatTableDataSource<CategoriaAlerta>;
- dtoptions: Config={};
- dttrigger: Subject<any>= new Subject<any>();
 
  // referenicas del paginador y sort
  @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -54,10 +50,6 @@ export class CategoriaAlertaComponent implements OnInit{
 constructor(private alertService:AlertService, private CategoriaAlertaaService:CategoriaAlertaaService){}
  ngOnInit(): void {
 
-   this.dtoptions={
-     pagingType:'ful_numbers',
-     lengthMenu:[5,10,15,20]
-   };
    this.listCategoriaAlerta();
  }
  listCategoriaAlerta(): void {
@@ -67,7 +59,6 @@ constructor(private alertService:AlertService, private CategoriaAlertaaService:C
        this.dataSource.paginator = this.paginator;
        this.dataSource.sort = this.sort;
        this.CategoriaAlerta = res;
-       this.dttrigger.next(null);
        this.dataSource.data = res;
      },
      error: ()=>{

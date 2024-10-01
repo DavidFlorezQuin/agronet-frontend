@@ -1,121 +1,132 @@
-<div class="container">
-  <section class="d-flex justify-content-between my-3">
-      <h1 class="fw-normal">Animal Diagnostico</h1>
+<div class="container mt-3">
+  <div class="d-flex justify-content-between">
+
+    <section class="d-flex align-items-center gap-3">
+
+      <h2 class="fw-normal mb-0 ">Tratamiento</h2>
       <!-- Botón para abrir el modal -->
-<button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#animalDiagnosticoModal" id="btn-forms">
-  <i class="bi bi-plus-circle mx-2"></i>
-  Registrar Diagnóstico
-</button>
-  </section>
+      <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#animalDiagnosticoModal"
+        id="btn-forms">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Registrar Tratamiento
+      </button>
+    </section>
 
-
-
-  <mat-form-field appearance="fill">
+    <mat-form-field appearance="fill">
       <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Filtrar">
-  </mat-form-field>
-  
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-    
-    <!-- ID Column -->
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-      <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.id }} </td>
-    </ng-container>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Filtrar">
+    </mat-form-field>
 
-    <!-- Diagnóstico Column -->
-    <ng-container matColumnDef="Diagnostico">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnóstico </th>
-      <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.Diagnosis }} </td>
-    </ng-container>
+  </div>
 
-    <!-- Animal Column -->
-    <ng-container matColumnDef="Animal">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Animal </th>
-      <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.Animal.name }} </td>
-    </ng-container>
+    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-    <!-- User Column -->
-    <ng-container matColumnDef="Users">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
-      <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.Users.username }} </td>
-    </ng-container>
+      <!-- ID Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.id }} </td>
+      </ng-container>
 
-    <!-- Actions Column -->
-    <ng-container matColumnDef="acciones">
-      <th mat-header-cell *matHeaderCellDef> Acciones </th>
-      <td mat-cell *matCellDef="let diagnostico">
-        <button mat-icon-button color="primary" (click)="onSubmit(diagnostico)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="onDelete(diagnostico.id)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <!-- Diagnóstico Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.description }} </td>
+      </ng-container>
 
-    <!-- Header and Row Declarations -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+      <!-- Animal Column -->
+      <ng-container matColumnDef="finishiedDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha final </th>
+        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.finishiedDate}} </td>
+      </ng-container>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-</div>
+      <!-- User Column -->
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de inicio </th>
+        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.startDate}} </td>
+      </ng-container>
+      <!-- User Column -->
+      <ng-container matColumnDef="animalDiagnosticsId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnostico </th>
+        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.animalDiagnosticsId}} </td>
+      </ng-container>
 
-<!-- Modal -->
-<!-- Modal para crear o editar diagnóstico -->
-<div class="modal fade" id="animalDiagnosticoModal" tabindex="-1" aria-labelledby="animalDiagnosticoModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
+      <!-- Actions Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef> Acciones </th>
+        <td mat-cell *matCellDef="let diagnostico">
+          <button mat-icon-button color="primary" (click)="onSubmit(diagnostico)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="onDelete(diagnostico.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <!-- Header and Row Declarations -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+
+
+  <!-- Modal -->
+  <!-- Modal para crear o editar diagnóstico -->
+  <div class="modal fade" id="animalDiagnosticoModal" tabindex="-1" aria-labelledby="animalDiagnosticoModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
           <!--Editar o crear-->
-        <h5 class="modal-title" id="animalDiagnosticoModalLabel"> {{ newAnimalDiagnostico.id > 0 ? 'Editar Diagnóstico' : 'Nuevo Diagnóstico' }} </h5>
-        <!--Boton de cerrar-->
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+          <h5 class="modal-title" id="animalDiagnosticoModalLabel"> {{ newTratamiento.id > 0 ? 'Editar Diagnóstico' :
+            'Nuevo Diagnóstico' }} </h5>
+          <!--Boton de cerrar-->
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <form #diagnosticoForm="ngForm" (ngSubmit)="onSubmit(diagnosticoForm)">
+          <div class="modal-body">
+
+            <!-- Diagnóstico -->
+            <mat-form-field appearance="fill">
+              <mat-label>Diagnóstico</mat-label>
+              <input matInput type="text" name="description" [(ngModel)]="newTratamiento.description" required>
+            </mat-form-field>
+            <!-- Diagnóstico -->
+            <mat-form-field appearance="fill">
+              <mat-label>finishiedDate</mat-label>
+              <input matInput type="text" name="finishiedDate" [(ngModel)]="newTratamiento.finishiedDate" required>
+            </mat-form-field>
+            <!-- Diagnóstico -->
+            <mat-form-field appearance="fill">
+              <mat-label>Diagnóstico</mat-label>
+              <input matInput type="text" name="startDate" [(ngModel)]="newTratamiento.startDate" required>
+            </mat-form-field>
+            <!-- Diagnóstico -->
+            <mat-form-field appearance="fill">
+              <mat-label>Diagnóstico</mat-label>
+              <input matInput type="text" name="animalDiagnosticsId" [(ngModel)]="newTratamiento.animalDiagnosticsId"
+                required>
+            </mat-form-field>
+
+
+
+
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">{{ newTratamiento.id > 0 ? 'Actualizar' : 'Crear' }}</button>
+          </div>
+        </form>
       </div>
-      
-      <form #diagnosticoForm="ngForm" (ngSubmit)="onSubmit(diagnosticoForm)">
-        <div class="modal-body">
-
-          <!-- Diagnóstico -->
-          <mat-form-field appearance="fill">
-            <mat-label>Diagnóstico</mat-label>
-            <input matInput type="text" name="Diagnosis" [(ngModel)]="newAnimalDiagnostico.Diagnosis" required>
-          </mat-form-field>
-
-          <!-- Select para animales -->
-          <mat-form-field appearance="fill">
-            <mat-label>Animal</mat-label>
-            <mat-select name="AnimalId" [(ngModel)]="newAnimalDiagnostico.AnimalId" required>
-              <mat-option *ngFor="let animal of animal" [value]="animal.id">
-                {{ animal.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <!-- Select para usuarios -->
-          <mat-form-field appearance="fill">
-            <mat-label>Usuario</mat-label>
-            <mat-select name="UsersId" [(ngModel)]="newAnimalDiagnostico.UsersId" required>
-              <mat-option *ngFor="let user of user" [value]="user.id">
-                {{ user.username }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-        </div>
-        
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-          <button type="submit" class="btn btn-primary">{{ newAnimalDiagnostico.id > 0 ? 'Actualizar' : 'Crear' }}</button>
-        </div>
-      </form>
     </div>
   </div>
-</div>
 
-<!---
+  <!---
 
 -->

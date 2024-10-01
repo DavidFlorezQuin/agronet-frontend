@@ -37,25 +37,19 @@ import { CategoryMedicinas } from '../categoria-medicina/categoria-medicina.modu
    MatTableModule,
    MatPaginatorModule,
    MatSortModule],
-  templateUrl: './medicina.component.html',
-  styleUrls: ['./medicina.component.css']
-})
+  templateUrl: './medicina.component.html'})
 export class MedicinaComponent implements OnInit{
 medicina: Medicina[]=[];
 CategoryMedicinas: CategoryMedicinas[]=[];
 NewMedicinas: Medicina={id:0,Name:'',Administration:'',CategoryMedicinesId:0}
   displayedColumns: string[]=['id','Name','Administration','CategoryMedicinasId','actions'];
   dataSource!: MatTableDataSource<Medicina>;
-  dtoptions: Config={};
-  dttrigger: Subject<any>= new Subject<any>();
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private alertService:AlertService, private medicinaService:MedicinaService){}
 ngOnInit(): void {
-    this.dtoptions={
-      pagingType:'ful_numbers',
-      lengthMenu:[5,10,15,20]
-    };
+
     this.listMedicinas();
 
   }
@@ -67,7 +61,6 @@ ngOnInit(): void {
         this.dataSource = new MatTableDataSource(medicinas);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.dttrigger.next(null);
       },
       error: (error)=>{
         console.log(error);

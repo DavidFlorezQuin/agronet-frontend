@@ -7,5 +7,5 @@ export interface Animal {
     purpose: string;//objetivo
     birthDay: Date;
     state:true;
-    LotId?: number;
+    lotId: number;
   }

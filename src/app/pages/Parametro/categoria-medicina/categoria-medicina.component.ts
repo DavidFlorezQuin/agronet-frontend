@@ -30,114 +30,107 @@ import { DataTablesModule } from 'angular-datatables';
     DataTablesModule,
     CommonModule,
     FormsModule,
-   MatIconModule,
-   MatButtonModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatTableModule,
-   MatPaginatorModule,
-   MatSortModule
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
-  templateUrl: './categoria-medicina.component.html',
-  styleUrls: ['./categoria-medicina.component.css']
+  templateUrl: './categoria-medicina.component.html'
 })
-export class CategoriaMedicinaComponent implements OnInit{
-   newCategoryMedicina: CategoryMedicinas={id:0, Name:'',Description:''}
-   displayedColumns: string[] = [ 'id','Name','Description','Acciones']
-  categoriaMedicina: CategoryMedicinas[]= [];
+export class CategoriaMedicinaComponent implements OnInit {
+  newCategoryMedicina: CategoryMedicinas = { id: 0, Name: '', Description: '' }
+  displayedColumns: string[] = ['id', 'Name', 'Description', 'Acciones']
+  categoriaMedicina: CategoryMedicinas[] = [];
   dataSource!: MatTableDataSource<CategoryMedicinas>;
-  dtoptions: Config={};
-  dttrigger: Subject<any>= new Subject<any>();
+
 
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-constructor(private alertService:AlertService, private CategoryMedicinasService:CategoryMedicinasService){}
+  constructor(private alertService: AlertService, private CategoryMedicinasService: CategoryMedicinasService) { }
   ngOnInit(): void {
 
-    this.dtoptions={
-      pagingType:'ful_numbers',
-      lengthMenu:[5,10,15,20]
-    };
     this.listCategoriaMedicina();
   }
   listCategoriaMedicina(): void {
     this.CategoryMedicinasService.getCategoryMedicinas().subscribe({
-      next: (res: CategoryMedicinas[])=>{
-        this.dataSource= new MatTableDataSource(res);
+      next: (res: CategoryMedicinas[]) => {
+        this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.categoriaMedicina = res;
-        this.dttrigger.next(null);
         this.dataSource.data = res;
       },
-      error: ()=>{
-        this.alertService. ErrorAlert('Error al obtener los datos');
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los datos');
       }
     });
   }
 
-  onEdit(CategoryMedicinas:CategoryMedicinas): void {
-    this.newCategoryMedicina = {...CategoryMedicinas};
+  onEdit(CategoryMedicinas: CategoryMedicinas): void {
+    this.newCategoryMedicina = { ...CategoryMedicinas };
 
 
   }
 
-  onDelete(id:number): void {
-    this.alertService.DeleteAlert().then((res)=>{
-      if(res.isConfirmed){
+  onDelete(id: number): void {
+    this.alertService.DeleteAlert().then((res) => {
+      if (res.isConfirmed) {
         this.CategoryMedicinasService.onDeleteCategoryMedicinas(id).subscribe({
-          next: ()=>{
+          next: () => {
             this.alertService.SuccessAlert('Eliminado correctamente');
             this.listCategoriaMedicina();
           },
-          error: ()=>{
+          error: () => {
             this.alertService.ErrorAlert('Error al eliminar');
           }
         });
       }
     });
   }
-  onSubmit(form:NgForm): void{
-    if(form.valid){
-      if(this.newCategoryMedicina.id>0){
-        this.CategoryMedicinasService.updateCategoryMedicinas(this.newCategoryMedicina,this.newCategoryMedicina.id).subscribe({
-          next: ()=>{
+  onSubmit(form: NgForm): void {
+    if (form.valid) {
+      if (this.newCategoryMedicina.id > 0) {
+        this.CategoryMedicinasService.updateCategoryMedicinas(this.newCategoryMedicina, this.newCategoryMedicina.id).subscribe({
+          next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newCategoryMedicina={id:0, Name:'',Description:'' };
-              this.listCategoriaMedicina();
+            this.newCategoryMedicina = { id: 0, Name: '', Description: '' };
+            this.listCategoriaMedicina();
 
           },
-          error: ()=>{
+          error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
           }
         });
-      }else{
+      } else {
         this.CategoryMedicinasService.createCategoryMedicinas(this.newCategoryMedicina).subscribe({
-          next: ()=>{
+          next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.listCategoriaMedicina();
           },
-          error: ()=>{
+          error: () => {
             this.alertService.ErrorAlert('Error al crear');
           }
         });
       }
-    }else{
+    } else {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
 
   }
 
-  aplicarFiltro(event:Event){
+  aplicarFiltro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-  this.dataSource.filter =filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim().toLowerCase();
 
-  if (this.dataSource.paginator) {
-    this.dataSource.paginator.firstPage();
-  }
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }

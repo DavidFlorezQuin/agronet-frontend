@@ -1,7 +1,10 @@
-<div class="container">
-    <section class="d-flex justify-content-between my-3">
-      <h1 class="fw-normal">Categorías de Medicinas</h1>
-      <button type="button" data-bs-toggle="modal" data-bs-target="#categoryMedicinaModal" id="btn-forms" class="btn h-50">
+<div class="container mt-3">
+  <div class="d-flex justify-content-between">
+    
+    <section class="d-flex align-items-center gap-3">
+      <h2 class="fw-normal mb-0">Categorías de Medicinas</h2>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#categoryMedicinaModal" id="btn-forms"
+        class="btn h-50">
         <i class="bi bi-plus-circle mx-2"></i>
         Agregar Categoría
       </button>
@@ -12,6 +15,8 @@
       <mat-label>Buscar</mat-label>
       <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
     </mat-form-field>
+
+</div>
 
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 
@@ -57,7 +62,8 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal fade" id="categoryMedicinaModal" tabindex="-1" aria-labelledby="categoryMedicinaModalLabel" aria-hidden="true">
+  <div class="modal fade" id="categoryMedicinaModal" tabindex="-1" aria-labelledby="categoryMedicinaModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -68,13 +74,16 @@
           <form class="px-5" #categoryMedicinaForm="ngForm" (ngSubmit)="onSubmit(categoryMedicinaForm)">
             <div class="mb-3">
               <label for="Name" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newCategoryMedicina.Name" required>
+              <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newCategoryMedicina.Name"
+                required>
             </div>
             <div class="mb-3">
               <label for="Description" class="form-label">Descripción</label>
-              <input type="text" class="form-control" id="Description" name="Description" [(ngModel)]="newCategoryMedicina.Description" required>
+              <input type="text" class="form-control" id="Description" name="Description"
+                [(ngModel)]="newCategoryMedicina.Description" required>
             </div>
-            <button type="submit" class="btn btn-primary" [disabled]="!categoryMedicinaForm.valid">{{ newCategoryMedicina.id ? 'Actualizar' : 'Guardar' }}</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!categoryMedicinaForm.valid">{{
+              newCategoryMedicina.id ? 'Actualizar' : 'Guardar' }}</button>
           </form>
         </div>
         <div class="modal-footer">

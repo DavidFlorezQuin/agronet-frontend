@@ -32,9 +32,7 @@ import { DataTablesModule } from 'angular-datatables';
    MatTableModule,
    MatPaginatorModule,
    MatSortModule],
-  templateUrl: './vacunacion.component.html',
-  styleUrl: './vacunacion.component.css'
-})
+  templateUrl: './vacunacion-animal.component.html'})
 export class VacunacionComponent implements OnInit {
   newVaccineAnimal: VaccineAnimals = {
     id: 0,
@@ -44,8 +42,7 @@ export class VacunacionComponent implements OnInit {
   };
 
   vaccineAnimals: VaccineAnimals[] = [];
-  dtoptions: Config={};
-  dttrigger: Subject<any>= new Subject<any>();
+
 dataSource!: MatTableDataSource<VaccineAnimals>;
 // referenicas del paginador y sort
 @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -53,23 +50,19 @@ dataSource!: MatTableDataSource<VaccineAnimals>;
   constructor(private vaccineAnimalsService: VaccineAnimalsService, private alertService: AlertService) {}
 
   ngOnInit(): void {
-    this.dtoptions={
-      pagingType:'full_number',
-    lengthMenu:[5,10,15,20]
-  };
+
     this.listVaccineAnimals();
   }
 
   listVaccineAnimals(): void {
     this.vaccineAnimalsService.getVaccineAnimals().subscribe({
       next: (data: VaccineAnimals[]) => {
+        
         this.dataSource=new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
         this.vaccineAnimals = data;
-
-        this.dttrigger.next(null);
         this.dataSource.data = data;
       },
       error: () => {

@@ -15,19 +15,19 @@ export class AlertaService {
   constructor(private http:HttpClient) { }
 
   getAlerta():Observable<Alerta[]>{
-    return this.http.get<Alerta[]>(`${this._baseUrl}/AlertController`);
+    return this.http.get<Alerta[]>(`${this._baseUrl}/Alert/List`);
   }
 
   createAlerta(Alerta:Alerta):Observable<Alerta>{
-    return this.http.post<Alerta>(`${this._baseUrl}/AlertController`,Alerta)
+    return this.http.post<Alerta>(`${this._baseUrl}/Alert`,Alerta)
   }
 
   deleteAlerta(id:number):Observable<void>{
-    return this.http.delete<void>(`${this._baseUrl}/AlertController${id}`)
+    return this.http.delete<void>(`${this._baseUrl}/Alert${id}`)
   }
 
   updateAlerta(Alerta:Alerta, id:number):Observable<Alerta>{
-    const url = `${this._baseUrl}/AlertController/${id}`
+    const url = `${this._baseUrl}/Alert/${id}`
     return this.http.put<Alerta>(url,Alerta);
   }
 }

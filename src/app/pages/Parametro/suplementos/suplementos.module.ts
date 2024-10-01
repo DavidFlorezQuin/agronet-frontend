@@ -1,7 +1,7 @@
 export interface Suplemento{
   id:number,
-  Name:string,
-  Description:string,
+  name:string,
+  description:string,
   CategorySuppliesId:number
 
 

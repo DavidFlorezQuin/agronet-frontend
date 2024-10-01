@@ -1,18 +1,22 @@
-<div class="container">
-  <section class="d-flex justify-content-between my-3">
-    <h1 class="fw-normal">Categorías de Alerta</h1>
-    <button type="button" data-bs-toggle="modal" data-bs-target="#categoriaAlertaModal" id="btn-forms" class="btn h-50">
-      <i class="bi bi-plus-circle mx-2"></i>
-      Agregar Categoría
-    </button>
-  </section>
+<div class="container mt-3">
+  <div class="d-flex justify-content-between">
+    <section class="d-flex align-items-center gap-3">
 
-  <!-- Barra de búsqueda -->
-  <mat-form-field appearance="fill">
-    <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
-  </mat-form-field>
+      <h2 class="fw-normal mb-0 ">Categorías de alertas</h2>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#categoriaAlertaModal" id="btn-forms"
+        class="btn h-50">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Agregar Categoría
+      </button>
+    </section>
 
+    <!-- Barra de búsqueda -->
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+    </mat-form-field>
+
+  </div>
   <!-- Tabla con MatTable -->
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 
@@ -62,7 +66,8 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="categoriaAlertaModal" tabindex="-1" aria-labelledby="categoriaAlertaModalLabel" aria-hidden="true">
+<div class="modal fade" id="categoriaAlertaModal" tabindex="-1" aria-labelledby="categoriaAlertaModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -73,17 +78,21 @@
         <form class="px-5" #categoriaAlertaForm="ngForm" (ngSubmit)="onSubmit(categoriaAlertaForm)">
           <div class="mb-3">
             <label for="Name" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newCategoryaAlerta.Name" required>
+            <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newCategoryaAlerta.Name"
+              required>
           </div>
           <div class="mb-3">
             <label for="Description" class="form-label">Descripción</label>
-            <input type="text" class="form-control" id="Description" name="Description" [(ngModel)]="newCategoryaAlerta.Description" required>
+            <input type="text" class="form-control" id="Description" name="Description"
+              [(ngModel)]="newCategoryaAlerta.Description" required>
           </div>
           <div class="mb-3">
             <label for="Color" class="form-label">Color</label>
-            <input type="text" class="form-control" id="Color" name="Color" [(ngModel)]="newCategoryaAlerta.Color" required>
+            <input type="text" class="form-control" id="Color" name="Color" [(ngModel)]="newCategoryaAlerta.Color"
+              required>
           </div>
-          <button type="submit" class="btn btn-primary" [disabled]="!categoriaAlertaForm.valid">{{ newCategoryaAlerta.id ? 'Actualizar' : 'Guardar' }}</button>
+          <button type="submit" class="btn btn-primary" [disabled]="!categoriaAlertaForm.valid">{{ newCategoryaAlerta.id
+            ? 'Actualizar' : 'Guardar' }}</button>
         </form>
       </div>
       <div class="modal-footer">

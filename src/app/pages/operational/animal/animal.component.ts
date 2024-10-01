@@ -22,6 +22,8 @@ import { AnimalService } from './animal.service';
 import { state } from '@angular/animations';
 import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
+import { LoteService } from '../lote/lote.service';
+import { Lote } from '../lote/lote.module';
 @Component({
   selector: 'app-animal',
   standalone: true,
@@ -36,28 +38,42 @@ import { MatButtonModule } from '@angular/material/button';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './animal.component.html',
-  styleUrl: './animal.component.css'
-})
+  templateUrl: './animal.component.html'})
 export class AnimalComponent implements OnInit {
 
   animales: Animal[] = [];
  
   newAnimales: Animal = {
-    id: 0, name: '', weight: 0, photo: '', raceId: 0, purpose: '', birthDay: new Date(), state: true, LotId: 0
+    id: 0, name: '', weight: 0, photo: '', raceId: 0, purpose: '', birthDay: new Date(), state: true, lotId: 0
   };
-  displayedColumns: string[] = ['id', 'animal', 'weight', 'race', 'purpose', 'birthDay', 'acciones'];
+  displayedColumns: string[] = ['id', 'animal', 'weight', 'race', 'purpose', 'birthDay', 'lotId', 'acciones'];
 
   dataSource!: MatTableDataSource<Animal>;
 
+  lote: Lote[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private animalService: AnimalService, private alertaService: AlertService) { }
+  constructor(private animalService: AnimalService, private alertaService: AlertService, private loteService:LoteService) { }
 
   ngOnInit(): void {  
     this.ListAnimal();
+    this.listLot(); 
+  }
+
+
+  listLot(): void {
+    this.loteService.getLote().subscribe({
+      next: (res: any) => {
+        const data = res.data; 
+        this.lote = data;
+      },
+      error: (err) => {
+        this.alertaService.ErrorAlert('Algo salió mal')
+      }
+    })
+  
   }
 
   ListAnimal(): void {

@@ -33,9 +33,7 @@ import { DataTablesModule } from 'angular-datatables';
    MatTableModule,
    MatPaginatorModule,
    MatSortModule],
-  templateUrl: './tratamiento.component.html',
-  styleUrl: './tratamiento.component.css'
-})
+  templateUrl: './tratamiento.component.html'})
 export class TratamientoComponent implements OnInit {
 
   tratamiento: Treatments[] = [];
@@ -97,7 +95,7 @@ export class TratamientoComponent implements OnInit {
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newTratamiento.id > 0) {
-        this.treatmentsService.updateTreatment(this.newTratamiento).subscribe({
+        this.treatmentsService.updateTreatment(this.newTratamiento, this.newTratamiento.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
@@ -131,6 +129,9 @@ export class TratamientoComponent implements OnInit {
     }
   }
 
+  onDelete(id:number){
+
+  }
   aplicarFiltro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
