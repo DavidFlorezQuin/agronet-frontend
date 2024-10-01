@@ -2,29 +2,31 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Inventories } from './inventories.model';
+import { Inventories } from './Inventories.module';
+import { environment } from '../../../../env/enviroment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InventoriesService {
-  private apiUrl = 'your-api-url/inventories';
+
+  private _baseUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 
   getInventories(): Observable<Inventories[]> {
-    return this.http.get<Inventories[]>(this.apiUrl);
+    return this.http.get<Inventories[]>(`${this._baseUrl}/Inventory/List`);
   }
 
   createInventory(inventory: Inventories): Observable<Inventories> {
-    return this.http.post<Inventories>(this.apiUrl, inventory);
+    return this.http.post<Inventories>(`${this._baseUrl}/Inventory`, inventory);
   }
 
-  updateInventory(inventory: Inventories): Observable<Inventories> {
-    return this.http.put<Inventories>(`${this.apiUrl}/${inventory.id}`, inventory);
+  updateInventory(inventory: Inventories,  id: number): Observable<Inventories> {
+    return this.http.put<Inventories>(`${this._baseUrl}/Inventory/${id}`, inventory);
   }
 
   deleteInventory(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this._baseUrl}/Inventory/${id}`);
   }
 }

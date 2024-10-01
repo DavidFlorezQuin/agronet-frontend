@@ -23,21 +23,21 @@
     </ng-container>
 
     <!-- Animal Column -->
-    <ng-container matColumnDef="animal">
+    <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
 
     <!-- Peso Column -->
-    <ng-container matColumnDef="weight">
+    <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
       <td mat-cell *matCellDef="let element"> {{element.description}} </td>
     </ng-container>
 
     <!-- Raza Column -->
-    <ng-container matColumnDef="race">
+    <ng-container matColumnDef="farmId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Finca </th>
-      <td mat-cell *matCellDef="let element"> {{element.finca.id}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.farmId}} </td>
     </ng-container>
 
    

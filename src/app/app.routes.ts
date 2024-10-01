@@ -25,7 +25,7 @@ import { DepartamentComponent } from './features/Parameter/departament/departame
 import { CityComponent } from './features/Parameter/city/city.component';
 // import { CityComponent } from './features/Parameter/city/city.component';
 import { InseminationComponent } from './pages/operational/inseminacion/inseminacion.component';
-// import { InventarioComponent } from './pages/operational/inventario/inventario.component';
+import { InventarioComponent } from './pages/operational/inventario/inventario.component';
 import { ProduccionComponent } from './pages/operational/produccion/produccion.component';
 import { VentasComponent } from './pages/operational/ventas/ventas.component';
 // import { TratamientoComponent } from './pages/operational/tratamiento/tratamiento.component';
@@ -113,10 +113,10 @@ export const routes: Routes = [
                 path:'inseminacion',
                 component: InseminationComponent
             },
-            // {
-            //     path:'inventario',
-            //     component: InventarioComponent
-            // },  
+            {
+                path:'inventario',
+                component: InventarioComponent
+            },  
             {
                 path:'finca',
                 component: FincaComponent
