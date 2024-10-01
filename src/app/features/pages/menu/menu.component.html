@@ -4,15 +4,9 @@
     <span class="fs-5 fw-bold link-light">AGRONET</span>
   </a>
   <ul class="list-unstyled ps-0">
-    <!-- Itera sobre cada rol en los datos del menú -->
     <li *ngFor="let role of menuData">
-      <!-- Nombre del rol -->
-      <!-- <button class="btn btn-toggle align-items-center rounded collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#role-collapse-' + role.roleId" aria-expanded="false">
-        {{ role.roleName }}
-      </button> -->
-      <!-- <div class="collapse" [id]="'role-collapse-' + role.roleId"> -->
+
         <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-          <!-- Itera sobre cada módulo dentro del rol -->
           <li *ngFor="let modulo of role.modulo">
             <button class="btn btn-toggle fw-medium align-items-center rounded collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#modulo-collapse-' + modulo.id" aria-expanded="false">
               {{ modulo.name }}

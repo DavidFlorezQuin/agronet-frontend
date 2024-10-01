@@ -24,15 +24,14 @@ import { DataTablesModule } from 'angular-datatables';
     DataTablesModule,
     CommonModule,
     FormsModule,
-   MatIconModule,
-   MatButtonModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatTableModule,
-   MatPaginatorModule,
-   MatSortModule],
-  templateUrl: './produccion.component.html',
-  styleUrl: './produccion.component.css'
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
+  templateUrl: './produccion.component.html'
 })
 export class ProduccionComponent implements OnInit {
   newProduction: Productions = {
@@ -48,37 +47,37 @@ export class ProduccionComponent implements OnInit {
   };
 
   productions: Productions[] = [];
-displayColums: string[] =[ 'id',
-  'typeProduction',
-  'stock',
-  'measurement',
-  'description ',
-  'quantityTotal',
-  'expirateDate',
-  'animalId']
+  displayColums: string[] = ['id',
+    'typeProduction',
+    'stock',
+    'measurement',
+    'description ',
+    'quantityTotal',
+    'expirateDate',
+    'animalId']
   dataSource!: MatTableDataSource<Productions>;
-  dtoptions: Config={};
-  dttrigger: Subject<any>= new Subject<any>();
+  dtoptions: Config = {};
+  dttrigger: Subject<any> = new Subject<any>();
 
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private productionsService: ProductionsService, private alertService: AlertService) {}
+  constructor(private productionsService: ProductionsService, private alertService: AlertService) { }
 
   ngOnInit(): void {
-    this.dtoptions={
-      pagingType:'ful_numbers',
-      lengthMenu:[5,10,15,20]
+    this.dtoptions = {
+      pagingType: 'ful_numbers',
+      lengthMenu: [5, 10, 15, 20]
     };
     this.listProductions();
   }
 
   listProductions(): void {
     this.productionsService.getProductions().subscribe({
-      next: (res:Productions[]) => {
-        this.dataSource= new MatTableDataSource(res);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      next: (res: Productions[]) => {
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
         this.productions = res;
         this.dttrigger.next(null);
         this.dataSource.data = res;
@@ -89,34 +88,34 @@ displayColums: string[] =[ 'id',
     });
   }
 
-  onSubmit(form:NgForm): void{
-    if(form.valid){
-      if(this.newProduction.id>0){
+  onSubmit(form: NgForm): void {
+    if (form.valid) {
+      if (this.newProduction.id > 0) {
         this.productionsService.updateProduction(this.newProduction).subscribe({
-          next: ()=>{
+          next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newProduction={id:0,typeProduction:'',stock:0,measurement:'',description:'',quantityTotal:0,expirateDate:'',animalId:0 };
-              this.listProductions();
+            this.newProduction = { id: 0, typeProduction: '', stock: 0, measurement: '', description: '', quantityTotal: 0, expirateDate: '', animalId: 0 };
+            this.listProductions();
 
           },
-          error: ()=>{
+          error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
           }
         });
-      }else{
+      } else {
         this.productionsService.createProduction(this.newProduction).subscribe({
-          next: ()=>{
+          next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.listProductions();
           },
-          error: ()=>{
+          error: () => {
             this.alertService.ErrorAlert('Error al crear');
           }
         });
       }
-    }else{
+    } else {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
 

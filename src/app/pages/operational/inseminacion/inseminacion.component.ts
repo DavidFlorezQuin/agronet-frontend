@@ -5,7 +5,7 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { FormsModule, NgForm } from '@angular/forms';
 import { InseminationService } from './inseminacion.service';
 import { AlertService } from '../../../shared/components/alert.service';
-import { Insemination } from './inseminacion.module';
+import { Insemination } from './Insemination.module';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
 import { CommonModule } from '@angular/common';
@@ -35,26 +35,22 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class InseminationComponent implements OnInit {
   dataSource: MatTableDataSource<Insemination> = new MatTableDataSource<Insemination>();
-  displayedColumns:string[] = ['id', 'description','FatherId','father','MotherId','mother','result' ,'inseminationType' ];
+  displayedColumns:string[] = ['id', 'description', 'semenId', 'motherId', 'result' ,'inseminationType', 'acciones'];
   inseminations: Insemination[] = [];
+ 
   newInsemination: Insemination = {
-    id: 0, description: '',
-    FatherId: 0,
-    MotherId: 0,
+    id: 0, 
+    description: '',
+    semenId: 0,
+    motherId: 0,
     result: '',
     inseminationType: ''
   };
 
-  dtoptions: Config = {};
-  dttrigger: Subject<any> = new Subject<any>();
-
   constructor(private inseminationService: InseminationService, private alertService: AlertService) {}
 
   ngOnInit(): void {
-    this.dtoptions = {
-      pagingType: 'full_numbers',
-      lengthMenu: [5, 10, 15, 20]
-    };
+
     this.listInseminations();
   }
 
@@ -62,7 +58,6 @@ export class InseminationComponent implements OnInit {
     this.inseminationService.getInseminations().subscribe({
       next: (res) => {
         this.inseminations = res;
-        this.dttrigger.next(null);
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
@@ -109,8 +104,8 @@ export class InseminationComponent implements OnInit {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.newInsemination={ id: 0, description: '',
-              FatherId: 0,
-              MotherId: 0,
+              semenId: 0,
+              motherId: 0,
               result: '',
               inseminationType: ''};
             this.listInseminations();

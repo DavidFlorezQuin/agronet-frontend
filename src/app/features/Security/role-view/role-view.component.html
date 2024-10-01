@@ -79,9 +79,9 @@
           <form class="px-5" #roleForm="ngForm" (ngSubmit)="onSubmit(roleForm)">
            
             <div class="my-3">
-              <label for="Modulo"  id="text-green"  class="fw-normal">Vistas</label>
+              <label for="Vista"  id="text-green"  class="fw-normal">Vistas</label>
               <select class="form-select form-select-lg mb-3" [(ngModel)]="newRoleModule.viewId" name="viewId" aria-label="Large select example">
-                <option selected>Selecciona un modulo</option>
+                <option selected disabled>Selecciona una vista</option>
                 <option *ngFor = "let view of views" [value]="view.id">
                   {{ view.name }}
                 </option>

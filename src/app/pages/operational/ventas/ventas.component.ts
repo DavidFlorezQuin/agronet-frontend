@@ -29,13 +29,13 @@ import { VentasService } from './ventas.service';
     DataTablesModule,
     CommonModule,
     FormsModule,
-   MatIconModule,
-   MatButtonModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatTableModule,
-   MatPaginatorModule,
-   MatSortModule],
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
   templateUrl: './ventas.component.html',
   styleUrl: './ventas.component.css'
 })
@@ -50,15 +50,14 @@ export class VentasComponent implements OnInit {
   };
 
   sales: Ventas[] = [];
-displayedColumns: string[] = [ 'id', 'firstName', 'lastName', 'email', 'gender', 'document', 'direction', 'phone', 'birthday','acciones'];
+  displayedColumns: string[] = ['id', 'price', 'quantity', 'currency', 'acciones'];
   dataSource!: MatTableDataSource<Ventas>;
-dtoptions: Config={};
-dttrigger: Subject<any>= new Subject<any>();
 
-// referenicas del paginador y sort
-@ViewChild(MatPaginator) paginator!: MatPaginator;
-@ViewChild(MatSort) sort!: MatSort;
-  constructor(private salesService: VentasService, private alertService: AlertService) {}
+
+  // referenicas del paginador y sort
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  constructor(private salesService: VentasService, private alertService: AlertService) { }
 
   ngOnInit(): void {
     this.listSales();
@@ -66,13 +65,13 @@ dttrigger: Subject<any>= new Subject<any>();
 
   listSales(): void {
     this.salesService.getSales().subscribe({
-      next: (res:Ventas[]) => {
+      next: (res: Ventas[]) => {
 
-        this.dataSource= new MatTableDataSource(res);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-      this.sales = res;
-      this.dataSource.data = res
+        this.dataSource = new MatTableDataSource(res);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.sales = res;
+        this.dataSource.data = res
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los registros de ventas');
@@ -83,11 +82,11 @@ dttrigger: Subject<any>= new Subject<any>();
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newSale.id > 0) {
-        this.salesService.updateSale(this.newSale).subscribe({
+        this.salesService.updateSale(this.newSale, this.newSale.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Venta actualizada correctamente');
             form.reset();
-            this.newSale= {
+            this.newSale = {
               id: 0,
               price: 0,
               quantity: 0,
@@ -137,12 +136,12 @@ dttrigger: Subject<any>= new Subject<any>();
       }
     });
   }
-  aplicarFiltro(event:Event){
+  aplicarFiltro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-  this.dataSource.filter =filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim().toLowerCase();
 
-  if (this.dataSource.paginator) {
-    this.dataSource.paginator.firstPage();
-  }
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }

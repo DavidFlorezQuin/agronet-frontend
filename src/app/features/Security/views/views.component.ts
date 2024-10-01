@@ -116,7 +116,7 @@ export class ViewsComponent implements OnInit {
       if (this.newView.id > 0) {
         this.viewService.updateViews(this.newView, this.newView.id).subscribe({
           next: () => {
-            this.alertService.SuccessAlert('Actualizado correctamente');
+            this.alertService.SuccessAlert('Actualizado ');
             form.reset();
             this.newView = { id: 0, name: '', description: '', route: '', moduleId: 0 };
             this.listViews();

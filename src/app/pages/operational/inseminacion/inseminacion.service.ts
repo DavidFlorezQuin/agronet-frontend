@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Insemination } from './inseminacion.module'; 
 import { environment } from '../../../../env/enviroment'; 
+import { Insemination } from './Insemination.module';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class InseminationService {
   constructor(private http: HttpClient) {}
 
   getInseminations(): Observable<Insemination[]> {
-    return this.http.get<Insemination[]>(`${this._baseUrl}/Insemination`);
+    return this.http.get<Insemination[]>(`${this._baseUrl}/Insemination/List`);
   }
 
   deleteInsemination(id: number): Observable<void> {
