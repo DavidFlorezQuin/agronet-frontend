@@ -2,7 +2,7 @@ export interface CategoriaSuplemento{
   id:number,
   Name:string,
   Description:string,
-  CategorySuppliesId:number
+ 
 
 
 }/** public string Name { get; set; }

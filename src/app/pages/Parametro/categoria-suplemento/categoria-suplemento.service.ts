@@ -16,22 +16,22 @@ export class  CategoriaSuplementoService {
   constructor(private http:HttpClient) { }
 
 
-  getCategoryMedicinas():Observable<CategoriaSuplemento[]>{
+  getCategorySuplemento():Observable<CategoriaSuplemento[]>{
     return this.http.get<CategoriaSuplemento[]>(`${this._baseUrl}/CategorySupplies/list`);
   }
 
-  onDeleteCategoryMedicinas(id:number):Observable<void>{
+  onDeleteCategorySuplemento(id:number):Observable<void>{
      return this.http.delete<void>(`${this._baseUrl}/CategorySupplies/${id}`)
     }
 
-    updateCategoryMedicinas(CategoryMedicinas: CategoriaSuplemento, id: number):Observable<CategoriaSuplemento>
+    updateCategorySuplemento(CategorySuplemento: CategoriaSuplemento, id: number):Observable<CategoriaSuplemento>
     {
 
-      return this.http.put<CategoriaSuplemento>(`${this._baseUrl}/CategorySupplies/${id}`, CategoryMedicinas)
+      return this.http.put<CategoriaSuplemento>(`${this._baseUrl}/CategorySupplies/${id}`, CategorySuplemento)
     }
 
-    createCategoryMedicinas(CategoryMedicinas: CategoriaSuplemento):Observable<CategoriaSuplemento>{
-      return this.http.post<CategoriaSuplemento>(`${this._baseUrl}/CategorySupplies`, CategoryMedicinas);
+    createCategorySuplemento(CategorySuplemento: CategoriaSuplemento):Observable<CategoriaSuplemento>{
+      return this.http.post<CategoriaSuplemento>(`${this._baseUrl}/CategorySupplies`, CategorySuplemento);
     }
     changePerson(role:{id: number, name: string}){
       this.roleSource.next(role)

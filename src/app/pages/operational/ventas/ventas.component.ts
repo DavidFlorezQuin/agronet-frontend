@@ -18,9 +18,9 @@ import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
-import { Ventas } from './Ventas.module';
-import { VentasService } from './ventas.service';
 
+import { VentasService } from './ventas.service';
+import { Ventas } from './Ventas.module';
 @Component({
   selector: 'app-ventas',
   standalone: true,
@@ -50,7 +50,7 @@ export class VentasComponent implements OnInit {
   };
 
   sales: Ventas[] = [];
-  displayedColumns: string[] = ['id', 'price', 'quantity', 'currency', 'acciones'];
+  displayedColumns: string[] = ['id', 'price', 'quantity', 'production','currency', 'acciones'];
   dataSource!: MatTableDataSource<Ventas>;
 
 

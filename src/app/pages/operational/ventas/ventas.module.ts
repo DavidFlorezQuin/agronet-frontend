@@ -1,8 +1,8 @@
-export class Ventas {
-  id: number = 0;
-  price: number = 0;
-  quantity: number = 0;
-  measurement: string = '';
-  productionId: number = 0;
-  currency: string = '';
+export interface Ventas {
+  id: number,
+  price: number,
+  quantity: number,
+  measurement: string,
+  productionId: number,
+  currency: string
 }
