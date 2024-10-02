@@ -25,45 +25,45 @@
     </ng-container>
 
     <!-- Tipo de Producto Column -->
-    <ng-container matColumnDef="typeProduction">
+    <ng-container matColumnDef="TypeProduction">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Producto </th>
       <td mat-cell *matCellDef="let element"> {{element.typeProduction}} </td>
     </ng-container>
 
     <!-- Stock Column -->
-    <ng-container matColumnDef="stock">
+    <ng-container matColumnDef="Stock">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock </th>
-      <td mat-cell *matCellDef="let element"> {{element.stock}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.Stock}} </td>
     </ng-container>
 
     <!-- Medida Column -->
-    <ng-container matColumnDef="measurement">
+    <ng-container matColumnDef="Measurement">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Medida </th>
-      <td mat-cell *matCellDef="let element"> {{element.measurement}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.Measurement}} </td>
     </ng-container>
 
     <!-- Descripción Column -->
-    <ng-container matColumnDef="description">
+    <ng-container matColumnDef="Description">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
-      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
     </ng-container>
 
     <!-- Cantidad Total Column -->
-    <ng-container matColumnDef="quantityTotal">
+    <ng-container matColumnDef="QuantityTotal">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad Total </th>
-      <td mat-cell *matCellDef="let element"> {{element.quantityTotal}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.QuantityTotal}} </td>
     </ng-container>
 
     <!-- Fecha de Expiración Column -->
     <ng-container matColumnDef="expirateDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Expiración </th>
-      <td mat-cell *matCellDef="let element"> {{element.expirateDate | date}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.ExpirateDate | date}} </td>
     </ng-container>
 
     <!-- ID Animal Column -->
-    <ng-container matColumnDef="animalId">
+    <ng-container matColumnDef="AnimalId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Animal </th>
-      <td mat-cell *matCellDef="let element"> {{element.animalId.name}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.AnimalId.name}} </td>
     </ng-container>
 
     <!-- Acciones Column -->
@@ -99,37 +99,37 @@
         <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
           <div class="mb-3">
             <label for="typeProduction" class="form-label">Tipo de Producto</label>
-            <input type="text" class="form-control" id="typeProduction" name="typeProduction" [(ngModel)]="newProduction.typeProduction" required>
+            <input type="text" class="form-control" id="typeProduction" name="typeProduction" [(ngModel)]="newProduction.TypeProduction" required>
           </div>
 
           <div class="mb-3">
             <label for="stock" class="form-label">Stock</label>
-            <input type="number" class="form-control" id="stock" name="stock" [(ngModel)]="newProduction.stock" required>
+            <input type="number" class="form-control" id="stock" name="stock" [(ngModel)]="newProduction.Stock" required>
           </div>
 
           <div class="mb-3">
             <label for="measurement" class="form-label">Medida</label>
-            <input type="text" class="form-control" id="measurement" name="measurement" [(ngModel)]="newProduction.measurement" required>
+            <input type="text" class="form-control" id="measurement" name="measurement" [(ngModel)]="newProduction.Measurement" required>
           </div>
 
           <div class="mb-3">
             <label for="description" class="form-label">Descripción</label>
-            <textarea class="form-control" id="description" name="description" [(ngModel)]="newProduction.description" required></textarea>
+            <textarea class="form-control" id="description" name="description" [(ngModel)]="newProduction.Description" required></textarea>
           </div>
 
           <div class="mb-3">
             <label for="quantityTotal" class="form-label">Cantidad Total</label>
-            <input type="number" class="form-control" id="quantityTotal" name="quantityTotal" [(ngModel)]="newProduction.quantityTotal" required>
+            <input type="number" class="form-control" id="quantityTotal" name="quantityTotal" [(ngModel)]="newProduction.QuantityTotal" required>
           </div>
 
           <div class="mb-3">
             <label for="expirateDate" class="form-label">Fecha de Expiración</label>
-            <input type="date" class="form-control" id="expirateDate" name="expirateDate" [(ngModel)]="newProduction.expirateDate" required>
+            <input type="date" class="form-control" id="expirateDate" name="expirateDate" [(ngModel)]="newProduction.ExpirateDate" required>
           </div>
 
           <div class="mb-3">
             <label for="animalId" class="form-label">ID del Animal</label>
-            <input type="number" class="form-control" id="animalId" name="animalId" [(ngModel)]="newProduction.animalId" required>
+            <input type="number" class="form-control" id="animalId" name="animalId" [(ngModel)]="newProduction.AnimalId" required>
           </div>
 
           <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Guardar</button>

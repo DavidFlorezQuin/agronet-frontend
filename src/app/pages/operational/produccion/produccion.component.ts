@@ -38,25 +38,25 @@ import { AnimalService } from '../animal/animal.service';
 export class ProduccionComponent implements OnInit {
   newProduction: Productions = {
     id: 0,
-    typeProduction: '',
-    stock: 0,
-    measurement: '',
-    description: '',
-    quantityTotal: 0,
-    expirateDate: new Date(),
-    animalId: 0,
+    TypeProduction: '',
+    Stock: 0,
+    Measurement: '',
+    Description: '',
+    QuantityTotal: 0,
+    ExpirateDate: new Date(),
+    AnimalId: 0,
 
   };
 animales: Animal[] = [];
   productions: Productions[] = [];
   displayedColumns: string[] = ['id',
-    'typeProduction',
-    'stock',
-    'measurement',
-    'description ',
-    'quantityTotal',
-    'expirateDate',
-    'animalId']
+    'TypeProduction',
+    'Stock',
+    'Measurement',
+    'Description ',
+    'QuantityTotal',
+    'ExpirateDate',
+    'AnimalId']
   dataSource!: MatTableDataSource<Productions>;
   dtoptions: Config = {};
   dttrigger: Subject<any> = new Subject<any>();
@@ -78,7 +78,9 @@ animales: Animal[] = [];
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-      
+        this.productions = res;
+        this.dttrigger.next(null);
+        this.dataSource.data = res;
       },
       error: (error)=>{
         console.log(error);
@@ -106,7 +108,13 @@ animales: Animal[] = [];
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newProduction = { id: 0, typeProduction: '', stock: 0, measurement: '', description: '', quantityTotal: 0, expirateDate: new Date(), animalId: 0 };
+            this.newProduction = { id: 0, TypeProduction:'',
+              Stock: 0,
+              Measurement: '',
+              Description: '',
+              QuantityTotal: 0,
+              ExpirateDate: new Date(),
+              AnimalId: 0, };
             this.listProductions();
 
           },
