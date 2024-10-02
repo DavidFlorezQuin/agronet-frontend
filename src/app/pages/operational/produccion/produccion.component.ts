@@ -38,13 +38,13 @@ import { AnimalService } from '../animal/animal.service';
 export class ProduccionComponent implements OnInit {
   newProduction: Productions = {
     id: 0,
-    typeProduction: '',
-    stock: 0,
-    measurement: '',
-    description: '',
-    quantityTotal: 0,
-    expirateDate: new Date(),
-    animalId: 0,
+    TypeProduction: '',
+    Stock: 0,
+    Measurement: '',
+    Description: '',
+    QuantityTotal: 0,
+    ExpirateDate: new Date(),
+    AnimalId: 0,
 
   };
   animales: Animal[] = [];
@@ -105,7 +105,13 @@ export class ProduccionComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newProduction = { id: 0, typeProduction: '', stock: 0, measurement: '', description: '', quantityTotal: 0, expirateDate: new Date(), animalId: 0 };
+            this.newProduction = { id: 0, TypeProduction:'',
+              Stock: 0,
+              Measurement: '',
+              Description: '',
+              QuantityTotal: 0,
+              ExpirateDate: new Date(),
+              AnimalId: 0, };
             this.listProductions();
 
           },
