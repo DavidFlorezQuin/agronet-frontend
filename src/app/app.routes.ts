@@ -32,7 +32,6 @@ import { CategoriaAlertaComponent } from './pages/Parametro/categoria-alerta/cat
 import { CategoriaMedicinaComponent } from './pages/Parametro/categoria-medicina/categoria-medicina.component';
 import { CategoriaSuplementoComponent } from './pages/Parametro/categoria-suplemento/categoria-suplemento.component';
 import { MedicinaComponent } from './pages/Parametro/medicina/medicina.component';
-import { SuplementosComponent } from './pages/Parametro/insumos/suplementos.component';
 import { VacunacionComponent } from './pages/operational/vacunacion-animal/vacunacion-animal.component';
 import { AnimalDiagnosticoComponent } from './pages/operational/animal-diagnostico/animal-diagnostico.component';
 import { InventarioSuplementoComponent } from './pages/operational/inventario-suplemento/inventario-suplemento.component';
@@ -40,6 +39,7 @@ import { TratamientoMedecinasComponent } from './pages/operational/tratamiento-m
 import { VacunaComponent } from './pages/Parametro/vacuna/vacuna.component';
 import { CategoriaEnfermedadComponent } from './pages/Parametro/categoria-enfermedad/categoria-enfermedad.component';
 import { EnfermedadComponent } from './pages/Parametro/enfermedad/enfermedad.component';
+import { SuplementosComponent } from './pages/Parametro/insumos/suplementos.component';
 
 export const routes: Routes = [
     {

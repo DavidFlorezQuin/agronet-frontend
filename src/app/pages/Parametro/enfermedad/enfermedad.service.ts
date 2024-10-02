@@ -8,12 +8,12 @@ import { environment } from '../../../../env/enviroment';
   providedIn: 'root',
 })
 export class DiseasesService {
-  private _baseUrl = `${environment.apiBaseUrl}/Diseases`;
+  private _baseUrl = `${environment.apiBaseUrl}/Disiease`;
 
   constructor(private http: HttpClient) {}
 
   getDiseases(): Observable<Diseases[]> {
-    return this.http.get<Diseases[]>(`${this._baseUrl}/List`);
+    return this.http.get<Diseases[]>(`${this._baseUrl}/list`);
   }
 
   createDisease(disease: Diseases): Observable<Diseases> {

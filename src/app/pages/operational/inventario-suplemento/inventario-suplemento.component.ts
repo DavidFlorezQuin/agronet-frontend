@@ -112,8 +112,8 @@ Inventario:Inventories[] = [];
       next: (Suplemento: Suplemento[]) => {
         this.Suplemento=Suplemento;
       },
-      error: (error)=>{
-        console.log(error);
+      error: (err)=>{
+        console.log(err);
         this.alertService.ErrorAlert('Error al cargar los medicamentos');
       }
     });

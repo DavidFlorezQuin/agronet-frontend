@@ -3,8 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgForm } from '@angular/forms';
-import { DiseasesService } from './enfermedad.service'; 
-import { Diseases } from './enfermedad.module'; 
+import { DiseasesService } from './enfermedad.service';
+import { Diseases } from './enfermedad.module';
 import { AlertService } from '../../../shared/components/alert.service';
 
 import { NgModule } from '@angular/core';
@@ -23,7 +23,7 @@ import { CategoryDisiesesService } from '../categoria-enfermedad/categoria-enfer
 @Component({
   selector: 'app-enfermedad',
   standalone: true,
-  imports: [ CommonModule,
+  imports: [CommonModule,
     FormsModule,
     MatTableModule,
     MatPaginatorModule,
@@ -32,14 +32,13 @@ import { CategoryDisiesesService } from '../categoria-enfermedad/categoria-enfer
     MatInputModule,
     MatIconModule,
     MatButtonModule
-    ],
-  templateUrl: './enfermedad.component.html',
-  styleUrl: './enfermedad.component.css'
+  ],
+  templateUrl: './enfermedad.component.html'
 })
 export class EnfermedadComponent implements OnInit {
   diseases: Diseases[] = [];
   categories: any[] = []; // Array para almacenar las categorías
-  newDisease: Diseases = { id: 0, name: '', description: '', categoryDisiesesId: 0, categoryDisieses:0  };
+  newDisease: Diseases = { id: 0, name: '', description: '', categoryDisiesesId: 0, categoryDisieses: 0 };
   displayedColumns: string[] = ['name', 'description', 'category', 'actions'];
   dataSource!: MatTableDataSource<Diseases>;
 
@@ -50,7 +49,7 @@ export class EnfermedadComponent implements OnInit {
     private diseasesService: DiseasesService,
     private alertService: AlertService,
     private categoryDisiesesService: CategoryDisiesesService // Inyectar el servicio de categorías
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.listDiseases();
@@ -111,7 +110,7 @@ export class EnfermedadComponent implements OnInit {
             next: () => {
               this.alertService.SuccessAlert('Actualizado correctamente');
               form.resetForm();
-              this.newDisease = { id: 0, name: '', description: '', categoryDisiesesId: 0, categoryDisieses:0 };
+              this.newDisease = { id: 0, name: '', description: '', categoryDisiesesId: 0, categoryDisieses: 0 };
               this.listDiseases();
             },
             error: () => {
@@ -123,7 +122,7 @@ export class EnfermedadComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.resetForm();
-            this.newDisease = { id: 0, name: '', description: '', categoryDisiesesId: 0, categoryDisieses:0 };
+            this.newDisease = { id: 0, name: '', description: '', categoryDisiesesId: 0, categoryDisieses: 0 };
             this.listDiseases();
           },
           error: () => {
