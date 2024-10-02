@@ -24,9 +24,12 @@ import { CategoriaSuplementoService } from './categoria-suplemento.service';
 @Component({
   selector: 'app-categoria-suplemento',
   standalone: true,
-  imports: [CommonModule, FormsModule, DataTablesModule, CommonModule, FormsModule,
+  imports: [CommonModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
     MatIconModule,
-
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,

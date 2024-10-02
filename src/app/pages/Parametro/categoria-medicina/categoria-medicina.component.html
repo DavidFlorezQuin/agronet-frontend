@@ -9,11 +9,13 @@
         Agregar Categoría
       </button>
     </section>
-
     <!-- Tabla con MatTable -->
     <mat-form-field appearance="fill">
       <mat-label>Buscar</mat-label>
-      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+      <div>
+        <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+      </div>
+      
     </mat-form-field>
 
 </div>
