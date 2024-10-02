@@ -14,18 +14,18 @@ export class AnimalDiagnosticsService {
   constructor(private http: HttpClient) { }
 
   getAnimalDiagnostics(): Observable<AnimalDiagnostics[]> {
-    return this.http.get<AnimalDiagnostics[]>(`${this._baseUrl}/AnimalDiagnostics/List`);
+    return this.http.get<AnimalDiagnostics[]>(`${this._baseUrl}/AnimalDiagnostic/List`);
   }
 
   deleteAnimalDiagnostics(id: number): Observable<void> {
     return this.http.delete<void>(`${this._baseUrl}/AnimalDiagnostics/${id}`);
   }
 
-  updateAnimalDiagnostics(finca: AnimalDiagnostics, id: number): Observable<AnimalDiagnostics> {
-    return this.http.put<AnimalDiagnostics>(`${this._baseUrl}/AnimalDiagnostics/${id}`, finca);
+  updateAnimalDiagnostics(animal: AnimalDiagnostics, id: number): Observable<AnimalDiagnostics> {
+    return this.http.put<AnimalDiagnostics>(`${this._baseUrl}/AnimalDiagnostic/${id}`, animal);
   }
 
-  createAnimalDiagnostics(finca: AnimalDiagnostics): Observable<AnimalDiagnostics> {
-    return this.http.post<AnimalDiagnostics>(`${this._baseUrl}/AnimalDiagnostics`, finca);
+  createAnimalDiagnostics(animal: AnimalDiagnostics): Observable<AnimalDiagnostics> {
+    return this.http.post<AnimalDiagnostics>(`${this._baseUrl}/AnimalDiagnostic`, animal);
   }
 }

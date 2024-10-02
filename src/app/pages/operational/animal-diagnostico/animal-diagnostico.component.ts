@@ -30,9 +30,7 @@ import { MatInputModule } from '@angular/material/input';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './animal-diagnostico.component.html',
-  styleUrl: './animal-diagnostico.component.css'
-})
+  templateUrl: './animal-diagnostico.component.html'})
 export class AnimalDiagnosticoComponent implements OnInit {
 
   diagnostics: AnimalDiagnostics[] = [];

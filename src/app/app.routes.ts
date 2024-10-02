@@ -33,6 +33,9 @@ import { CategoriaMedicinaComponent } from './pages/Parametro/categoria-medicina
 import { CategoriaSuplementoComponent } from './pages/Parametro/categoria-suplemento/categoria-suplemento.component';
 import { MedicinaComponent } from './pages/Parametro/medicina/medicina.component';
 import { SuplementosComponent } from './pages/Parametro/insumos/suplementos.component';
+import { VacunacionComponent } from './pages/operational/vacunacion-animal/vacunacion-animal.component';
+import { AnimalDiagnosticoComponent } from './pages/operational/animal-diagnostico/animal-diagnostico.component';
+import { InventarioSuplementoComponent } from './pages/operational/inventario-suplemento/inventario-suplemento.component';
 
 export const routes: Routes = [
     {
@@ -136,6 +139,18 @@ export const routes: Routes = [
             {
                 path:'tratamientos',
                 component: TratamientoComponent
+            },
+            {
+                path:'vacunas-animales',
+                component: VacunacionComponent
+            },
+            {
+                path:'diagnostico-animal',
+                component: AnimalDiagnosticoComponent
+            },
+            {
+                path:'inventario-suministros',
+                component: InventarioSuplementoComponent
             },
 
             // //LOCALITATION

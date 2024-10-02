@@ -16,9 +16,9 @@ import { DataTablesModule } from 'angular-datatables';
 import { InventarioSuplemento } from './inventario-suplemento.module';
 import { InventarioSuplementoService } from './inventario-suplemento.service';
 import { Inventories } from '../inventario/Inventories.module';
-import { Suplemento } from '../../Parametro/suplementos/suplementos.module';
 import { InventoriesService } from '../inventario/inventario.service';
-import { SuplementoService } from '../../Parametro/suplementos/suplementos.service';
+import { Suplemento } from '../../Parametro/insumos/suplementos.module';
+import { SuplementoService } from '../../Parametro/insumos/suplementos.service';
 @Component({
   selector: 'app-inventario-suplemento',
   standalone: true,
