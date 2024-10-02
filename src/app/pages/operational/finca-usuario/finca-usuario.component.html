@@ -1,0 +1,85 @@
+<div class="container mt-3">
+    <div class="d-flex justify-content-between">
+      <section class="d-flex align-items-center gap-3">
+        <h2 class="fw-normal mb-0">Relaciones Finca-Usuario</h2>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#farmUserModal" id="btn-forms" class="btn h-50">
+          <i class="bi bi-plus-circle mx-2"></i> Agregar Relación
+        </button>
+      </section>
+      <mat-form-field appearance="fill">
+        <mat-label>Buscar</mat-label>
+        <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+      </mat-form-field>
+    </div>
+  
+    <!-- Tabla con MatTable -->
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+      <!-- ID de la Finca -->
+      <ng-container matColumnDef="farmName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Finca </th>
+        <td mat-cell *matCellDef="let element"> {{element.farmName}} </td>
+      </ng-container>
+  
+      <!-- Nombre del Usuario -->
+      <ng-container matColumnDef="userName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
+        <td mat-cell *matCellDef="let element"> {{element.userName}} </td>
+      </ng-container>
+  
+      <!-- Acciones Column -->
+      <ng-container matColumnDef="acciones">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let item">
+          <button mat-icon-button color="primary" (click)="onSubmit(item)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="onDelete(item.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="onView(item.id)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+  
+      <!-- Header and Row Definitions -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  </div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="farmUserModal" tabindex="-1" aria-labelledby="farmUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="farmUserModalLabel">Agregar/Editar Relación Finca-Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #farmUserForm="ngForm" (ngSubmit)="onSubmit(farmUserForm)">
+            <div class="mb-3">
+              <label for="FarmsId" class="form-label">Finca</label>
+              <select class="form-control" id="FarmsId" name="FarmsId" [(ngModel)]="newFarmUser.FarmsId" required>
+                <option *ngFor="let farm of farms" [value]="farm.id">{{ farm.name }}</option>
+              </select>
+            </div>
+  
+            <div class="mb-3">
+              <label for="UsersId" class="form-label">Usuario</label>
+              <select class="form-control" id="UsersId" name="UsersId" [(ngModel)]="newFarmUser.UsersId" required>
+                <option *ngFor="let user of users" [value]="user.id">{{ user.username }}</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="!farmUserForm.valid">{{ newFarmUser.id ? 'Actualizar' : 'Guardar' }}</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  

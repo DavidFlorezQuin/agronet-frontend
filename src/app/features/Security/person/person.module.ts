@@ -1,6 +1,3 @@
-import { DataType } from "datatables.net";
-import { City } from "../../Parameter/city/city.module";
-
 export interface Person{
     id: number, 
     state: true,

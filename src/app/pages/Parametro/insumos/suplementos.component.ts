@@ -26,8 +26,6 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [CommonModule,
     FormsModule,
     DataTablesModule,
-    CommonModule,
-    FormsModule,
    MatIconModule,
    MatButtonModule,
    MatFormFieldModule,
@@ -37,7 +35,7 @@ import { MatButtonModule } from '@angular/material/button';
    MatSortModule],
   templateUrl: './suplementos.component.html'
 })
-export class SuplementosComponent {
+export class SuplementosComponent implements OnInit{
   displayedColumns: string[] = ['id', 'name', 'description', 'CategorySuppliesId', 'acciones'];
   dataSource: MatTableDataSource<Suplemento> = new MatTableDataSource<Suplemento>();
   Suplemento: Suplemento[] = [];

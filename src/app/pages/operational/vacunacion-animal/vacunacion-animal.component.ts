@@ -16,6 +16,15 @@ import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
 import { DataTablesModule } from 'angular-datatables';
 
+import { Animal } from '../animal/animal.module';
+import { Vaccines } from '../../Parametro/vacuna/vacuna.module';
+import { NgModule } from '@angular/core';
+import { VaccinesService } from '../../Parametro/vacuna/vacuna.service';
+import { AnimalService } from '../animal/animal.service';
+import { state } from '@angular/animations';
+import { MatSelectModule } from '@angular/material/select';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @Component({
   selector: 'app-vacunacion',
@@ -31,7 +40,11 @@ import { DataTablesModule } from 'angular-datatables';
    MatInputModule,
    MatTableModule,
    MatPaginatorModule,
-   MatSortModule],
+   MatSortModule,
+   MatSelectModule,
+   MatDatepickerModule,  // Asegúrate de incluir este módulo
+    MatNativeDateModule,
+  ],
   templateUrl: './vacunacion-animal.component.html'})
 export class VacunacionComponent implements OnInit {
   newVaccineAnimal: VaccineAnimals = {
@@ -40,6 +53,10 @@ export class VacunacionComponent implements OnInit {
     vaccineId: 0,
     nextDose: new Date(),
   };
+  displayedColumns: string[] = ['id', 'animalId', 'vaccineId','nextDose','acciones'];
+
+  vacuna: Vaccines [] = [];
+animal: Animal [] = [];
 
   vaccineAnimals: VaccineAnimals[] = [];
 
@@ -47,11 +64,14 @@ dataSource!: MatTableDataSource<VaccineAnimals>;
 // referenicas del paginador y sort
 @ViewChild(MatPaginator) paginator!: MatPaginator;
 @ViewChild(MatSort) sort!: MatSort;
-  constructor(private vaccineAnimalsService: VaccineAnimalsService, private alertService: AlertService) {}
+  constructor(private vaccineAnimalsService: VaccineAnimalsService,
+     private alertService: AlertService
+    , private animalService:AnimalService, private vaccinesService:VaccinesService) {}
 
   ngOnInit(): void {
 
     this.listVaccineAnimals();
+    this.loadAnimal();
   }
 
   listVaccineAnimals(): void {
@@ -69,6 +89,32 @@ dataSource!: MatTableDataSource<VaccineAnimals>;
         this.alertService.ErrorAlert('Error al obtener los registros de vacunas');
       }
     });
+  }
+
+  loadAnimal(): void {
+    this.animalService.getAnimals().subscribe({
+      next: (Animales: Animal[]) => {
+        this.animal=Animales;
+      },
+      error: (error)=>{
+        console.log(error);
+        this.alertService.ErrorAlert('Error al cargar ');
+      }
+    });  
+  
+  }
+
+  loadVacuna(): void {
+    this.vaccinesService.getVaccines().subscribe({
+      next: (Vacuna: Vaccines[]) => {
+        this.vacuna=Vacuna;
+      },
+      error: (error)=>{
+        console.log(error);
+        this.alertService.ErrorAlert('Error al cargar ');
+      }
+    });  
+  
   }
 
   onSubmit(form: NgForm): void {
