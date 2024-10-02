@@ -13,18 +13,18 @@ export class VaccineAnimalsService {
   constructor(private http: HttpClient) {}
 
   getVaccineAnimals(): Observable<VaccineAnimals[]> {
-    return this.http.get<VaccineAnimals[]>(`${this._baseUrl}/VaccineAnimals/list`);
+    return this.http.get<VaccineAnimals[]>(`${this._baseUrl}/VaccineAnimal/list`);
   }
 
   createVaccineAnimal(vaccineAnimal: VaccineAnimals): Observable<VaccineAnimals> {
-    return this.http.post<VaccineAnimals>(`${this._baseUrl}/VaccineAnimals`, vaccineAnimal);
+    return this.http.post<VaccineAnimals>(`${this._baseUrl}/VaccineAnimal`, vaccineAnimal);
   }
 
   updateVaccineAnimal(vaccineAnimal: VaccineAnimals, id: number): Observable<VaccineAnimals> {
-    return this.http.put<VaccineAnimals>(`${this._baseUrl}/VaccineAnimals/${id}`, vaccineAnimal);
+    return this.http.put<VaccineAnimals>(`${this._baseUrl}/VaccineAnimal/${id}`, vaccineAnimal);
   }
 
   deleteVaccineAnimal(id: number): Observable<void> {
-    return this.http.delete<void>(`${this._baseUrl}/VaccineAnimals/${id}`);
+    return this.http.delete<void>(`${this._baseUrl}/VaccineAnimal/${id}`);
   }
 }
