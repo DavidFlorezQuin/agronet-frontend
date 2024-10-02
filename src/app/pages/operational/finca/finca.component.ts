@@ -6,7 +6,6 @@ import { NgForm } from '@angular/forms';
 import { FincaService } from './finca.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import { Finca } from './finca.module';
-import { Subject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
