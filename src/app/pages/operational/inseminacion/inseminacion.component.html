@@ -4,7 +4,7 @@
 
     <section class="d-flex align-items-center gap-3">
       <h2 class="fw-normal mb-0">Inseminaciones</h2>
-      <button type="button" data-bs-toggle="modal" data-bs-target="#inseminationModal" id="btn-forms" class="btn h-50">
+      <button type="button" data-bs-toggle="modal" data-bs-target="#inseminacionModal" id="btn-forms" class="btn h-50">
         <i class="bi bi-plus-circle mx-2"></i>
         Agregar Inseminación
       </button>
@@ -73,3 +73,54 @@
 
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="inseminacionModal" tabindex="-1" aria-labelledby="inseminacionModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="inseminacionModalLabel">
+          {{ newInsemination.id ? 'Editar Inseminación' : 'Agregar Inseminación' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #inseminacionForm="ngForm" (ngSubmit)="onSubmit(inseminacionForm)">
+          <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newInsemination.description" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="semenId" class="form-label">ID de Semen</label>
+            <input type="number" class="form-control" id="semenId" name="semenId" [(ngModel)]="newInsemination.semenId" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="motherId" class="form-label">ID de Madre</label>
+            <input type="number" class="form-control" id="motherId" name="motherId" [(ngModel)]="newInsemination.motherId" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="result" class="form-label">Resultado</label>
+            <input type="text" class="form-control" id="result" name="result" [(ngModel)]="newInsemination.result" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="inseminationType" class="form-label">Tipo de Inseminación</label>
+            <input type="text" class="form-control" id="inseminationType" name="inseminationType" [(ngModel)]="newInsemination.inseminationType" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="!inseminacionForm.valid">
+            {{ newInsemination.id ? 'Actualizar' : 'Guardar' }}
+          </button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+

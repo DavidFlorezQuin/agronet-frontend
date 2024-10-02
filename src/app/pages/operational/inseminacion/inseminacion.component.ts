@@ -52,6 +52,7 @@ export class InseminationComponent implements OnInit {
   ngOnInit(): void {
 
     this.listInseminations();
+    
   }
 
   listInseminations(): void {

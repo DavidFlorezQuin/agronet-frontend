@@ -74,7 +74,7 @@ dataSource!: MatTableDataSource<VaccineAnimals>;
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newVaccineAnimal.id > 0) {
-        this.vaccineAnimalsService.updateVaccineAnimal(this.newVaccineAnimal).subscribe({
+        this.vaccineAnimalsService.updateVaccineAnimal(this.newVaccineAnimal, this.newVaccineAnimal.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Vacuna actualizada correctamente');
             form.reset();

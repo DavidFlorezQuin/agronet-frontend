@@ -5,7 +5,17 @@ export interface Productions {
   measurement: string ,
   description: string ,
   quantityTotal: number ,
-  expirateDate?: string;
+  expirateDate?: Date;
   animalId: number ,
 
 }
+/**
+ * id: numero,
+ *  tipo Producción: cadena,
+ *  stock: numero,
+ *  medida: cadena,
+ *  descripción: cadena,
+ *  cantidad Total: numero,
+ *  expirateDate?: cadena; 
+ * animalId: numero,
+ */

@@ -17,6 +17,7 @@ import { UserService } from '../../../features/Security/users/user.service';
 import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
 import jsPDF from 'jspdf';
+import { City } from '../../../features/Parameter/city/city.module';
 
 @Component({
   selector: 'app-finca',
@@ -34,7 +35,8 @@ import jsPDF from 'jspdf';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './finca.component.html'})
+  templateUrl: './finca.component.html'
+})
 export class FincaComponent implements OnInit {
   fincas: Finca[] = [];
   newFinca: Finca = {
@@ -48,7 +50,7 @@ export class FincaComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'name', 'hectare', 'description', 'cityId', 'userId', 'acciones'];
   dataSource!: MatTableDataSource<Finca>;
-
+  City: City[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private fincaService: FincaService, private alertService: AlertService, private cityService: CityService, private userService: UserService) { }
@@ -61,7 +63,8 @@ export class FincaComponent implements OnInit {
   //llama la lista de ciudades
   loadCities(): void {
     this.cityService.getCity().subscribe({
-      next: (cities) => {
+      next: (cities: City[]) => {
+        this.City = cities;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener las ciudades');
@@ -69,15 +72,16 @@ export class FincaComponent implements OnInit {
     });
   }
 
+
   listFincas(): void {
     this.fincaService.getFincas().subscribe({
       next: (res: any) => {
-        const data = res.data; 
+        const data = res.data;
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.fincas = data;
-        this.dataSource.data = data; 
+        this.dataSource.data = data;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
@@ -85,15 +89,15 @@ export class FincaComponent implements OnInit {
     });
   }
 
-  
+
   downloadPDF(): void {
     const doc = new jsPDF();
-  
+
     // Título del PDF
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
     doc.text('AGRONET', 14, 10); // Título del PDF
-  
+
     // Agregar subtítulo debajo del título
     doc.setFontSize(10); // Tamaño de fuente para el subtítulo
     doc.setTextColor(0, 0, 0); // Color negro para el subtítulo
@@ -102,19 +106,19 @@ export class FincaComponent implements OnInit {
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
     doc.text('Histórico de fincas', 14, 23); // Título del PDF
-  
+
     // Encabezados de la tabla
     const headers = [['id', 'name', 'hectare', 'description', 'cityId']];
-  
+
     // Datos de la tabla
     const data = this.dataSource.data.map(fincas => [
-      fincas.id, 
-      fincas.name, 
-      fincas.hectare, 
+      fincas.id,
+      fincas.name,
+      fincas.hectare,
       fincas.description,
       fincas.cityId
     ]);
-  
+
     // Generar tabla usando autoTable
     (doc as any).autoTable({
       head: headers,
@@ -127,14 +131,14 @@ export class FincaComponent implements OnInit {
         cellPadding: 2, // Espaciado dentro de las celdas
       },
       columnStyles: {
-        0: { cellWidth: 10 },   
-        1: { cellWidth: 50 },   
-        2: { cellWidth: 20 },   
-        3: { cellWidth: 80 },   
-        4: { cellWidth: 20 },      
+        0: { cellWidth: 10 },
+        1: { cellWidth: 50 },
+        2: { cellWidth: 20 },
+        3: { cellWidth: 80 },
+        4: { cellWidth: 20 },
       }
     });
-  
+
     // Guardar el archivo PDF
     doc.save('modulos.pdf');
   }
