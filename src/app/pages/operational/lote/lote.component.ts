@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-lote',
@@ -69,6 +70,59 @@ export class LoteComponent implements OnInit {
     });
 
   }
+
+
+  downloadPDF(): void {
+    const doc = new jsPDF();
+
+    // Título del PDF
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('AGRONET', 14, 10); // Título del PDF
+
+    // Agregar subtítulo debajo del título
+    doc.setFontSize(10); // Tamaño de fuente para el subtítulo
+    doc.setTextColor(0, 0, 0); // Color negro para el subtítulo
+    doc.text('Sistema de gestión de ganadería colombiana', 14, 13); // Subtítulo
+
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('Histórico de lotes', 14, 23); // Título del PDF
+
+    // Encabezados de la tabla
+    const headers = [['id', 'name', 'hectare', 'farmId']];
+
+    // Datos de la tabla
+    const data = this.dataSource.data.map(lote => [
+      lote.id,
+      lote.name,
+      lote.hectare,
+      lote.farmId,
+    ]);
+
+    // Generar tabla usando autoTable
+    (doc as any).autoTable({
+      head: headers,
+      body: data,
+      startY: 30, // Posición donde empieza la tabla
+      theme: 'grid', // Estilo de la tabla
+      headStyles: { fillColor: [56, 161, 15] }, // Estilo de encabezado
+      styles: {
+        fontSize: 10, // Tamaño de fuente en la tabla
+        cellPadding: 2, // Espaciado dentro de las celdas
+      },
+      columnStyles: {
+        0: { cellWidth: 10 },
+        1: { cellWidth: 50 },
+        2: { cellWidth: 20 },
+        3: { cellWidth: 20 }
+      }
+    });
+
+    // Guardar el archivo PDF
+    doc.save('modulos.pdf');
+  }
+
   onEdit(lot: Lote): void {
     this.newLote = { ...lot };
   }

@@ -10,13 +10,14 @@ import { BehaviorSubject } from 'rxjs';
 export class CategoryMedicinasService {
 
   private _baseUrl = environment.apiBaseUrl;
+  
   private roleSource = new BehaviorSubject<{id:number, name:string }>({id:0, name: ''});
   currentRole = this.roleSource.asObservable();
   constructor(private http:HttpClient) { }
 
 
   getCategoryMedicinas():Observable<CategoryMedicinas[]>{
-    return this.http.get<CategoryMedicinas[]>(`${this._baseUrl}/CategoryMedicinas/list`);
+    return this.http.get<CategoryMedicinas[]>(`${this._baseUrl}/CategoryMedicines/list`);
   }
 
   onDeleteCategoryMedicinas(id:number):Observable<void>{

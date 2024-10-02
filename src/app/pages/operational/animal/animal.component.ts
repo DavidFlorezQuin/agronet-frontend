@@ -24,6 +24,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
 import { LoteService } from '../lote/lote.service';
 import { Lote } from '../lote/lote.module';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-animal',
   standalone: true,
@@ -44,9 +45,9 @@ export class AnimalComponent implements OnInit {
   animales: Animal[] = [];
  
   newAnimales: Animal = {
-    id: 0, name: '', weight: 0, photo: '', raceId: 0, purpose: '', birthDay: new Date(), state: true, lotId: 0
+    id: 0, name: '', weight: 0, photo: '', raceId: 0, gender:'', purpose: '', birthDay: new Date(), state: true, lotId: 0
   };
-  displayedColumns: string[] = ['id', 'animal', 'weight', 'race', 'purpose', 'birthDay', 'lotId', 'acciones'];
+  displayedColumns: string[] = ['id', 'animal', 'weight','gender', 'race', 'purpose', 'birthDay', 'lotId', 'acciones'];
 
   dataSource!: MatTableDataSource<Animal>;
 
@@ -75,6 +76,66 @@ export class AnimalComponent implements OnInit {
     })
   
   }
+
+
+  downloadPDF(): void {
+    const doc = new jsPDF();
+  
+    // Título del PDF
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('AGRONET', 14, 10); // Título del PDF
+  
+    // Agregar subtítulo debajo del título
+    doc.setFontSize(10); // Tamaño de fuente para el subtítulo
+    doc.setTextColor(0, 0, 0); // Color negro para el subtítulo
+    doc.text('Sistema de gestión de ganadería colombiana', 14, 13); // Subtítulo
+
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('Histórico de modulos', 14, 23); // Título del PDF
+  
+    // Encabezados de la tabla
+    const headers = [['id', 'animal', 'weight','gender', 'purpose', 'birthDay', 'lotId']];
+  
+    // Datos de la tabla
+    const data = this.dataSource.data.map(animales => [
+      animales.id, 
+      animales.name, 
+      animales.weight, 
+      animales.gender,
+      animales.purpose,
+      animales.birthDay,
+      animales.lotId
+    ]);
+  
+    // Generar tabla usando autoTable
+    (doc as any).autoTable({
+      head: headers,
+      body: data,
+      startY: 30, // Posición donde empieza la tabla
+      theme: 'grid', // Estilo de la tabla
+      headStyles: { fillColor: [56, 161, 15] }, // Estilo de encabezado
+      styles: {
+        fontSize: 10, // Tamaño de fuente en la tabla
+        cellPadding: 2, // Espaciado dentro de las celdas
+      },
+      columnStyles: {
+        0: { cellWidth: 10 },   
+        1: { cellWidth: 20 },   
+        2: { cellWidth: 20 },  
+        3: { cellWidth: 20 },   
+        4: { cellWidth: 20 },   
+        5: { cellWidth: 20 },   
+        6: { cellWidth: 20 },   
+        7: { cellWidth: 20 },   
+      }
+    });
+  
+    // Guardar el archivo PDF
+    doc.save('modulos.pdf');
+  }
+
 
   ListAnimal(): void {
     this.animalService.getAnimals().subscribe({

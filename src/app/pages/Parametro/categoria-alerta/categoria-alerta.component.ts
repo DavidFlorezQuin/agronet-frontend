@@ -28,105 +28,109 @@ import { DataTablesModule } from 'angular-datatables';
     DataTablesModule,
     CommonModule,
     FormsModule,
-   MatIconModule,
-   MatButtonModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatTableModule,
-   MatPaginatorModule,
-   MatSortModule
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
-  templateUrl: './categoria-alerta.component.html'})
-export class CategoriaAlertaComponent implements OnInit{
-  newCategoryaAlerta: CategoriaAlerta={id:0, Name:'',Description:'',Color:''}
-  displayedColumns: string[] = [ 'id','Name','Description','color','Acciones']
-  CategoriaAlerta: CategoriaAlerta[]= [];
- dataSource!: MatTableDataSource<CategoriaAlerta>;
+  templateUrl: './categoria-alerta.component.html'
+})
+export class CategoriaAlertaComponent implements OnInit {
+  newCategoryaAlerta: CategoriaAlerta = { id: 0, Name: '', Description: '', Color: '' }
+  displayedColumns: string[] = ['id', 'Name', 'Description', 'color', 'Acciones']
+  CategoriaAlerta: CategoriaAlerta[] = [];
+  dataSource!: MatTableDataSource<CategoriaAlerta>;
 
- // referenicas del paginador y sort
- @ViewChild(MatPaginator) paginator!: MatPaginator;
- @ViewChild(MatSort) sort!: MatSort;
+  // referenicas del paginador y sort
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
-constructor(private alertService:AlertService, private CategoriaAlertaaService:CategoriaAlertaaService){}
- ngOnInit(): void {
+  constructor(private alertService: AlertService, private CategoriaAlertaaService: CategoriaAlertaaService) { }
+  ngOnInit(): void {
 
-   this.listCategoriaAlerta();
- }
- listCategoriaAlerta(): void {
-   this.CategoriaAlertaaService.getCategoriaAlerta().subscribe({
-     next: (res: CategoriaAlerta[])=>{
-       this.dataSource= new MatTableDataSource(res);
-       this.dataSource.paginator = this.paginator;
-       this.dataSource.sort = this.sort;
-       this.CategoriaAlerta = res;
-       this.dataSource.data = res;
-     },
-     error: ()=>{
-       this.alertService. ErrorAlert('Error al obtener los datos');
-     }
-   });
- }
+    this.listCategoriaAlerta();
+  }
+  listCategoriaAlerta(): void {
+    this.CategoriaAlertaaService.getCategoriaAlerta().subscribe({
+      next: (res: any) => {
 
- onEdit(CategoriaAlerta:CategoriaAlerta): void {
-   this.newCategoryaAlerta  = {...CategoriaAlerta};
+        const data = res.data; 
+
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.CategoriaAlerta = data;
+        this.dataSource.data = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los datos');
+      }
+    });
+  }
+
+  onEdit(CategoriaAlerta: CategoriaAlerta): void {
+    this.newCategoryaAlerta = { ...CategoriaAlerta };
 
 
- }
+  }
 
- onDelete(id:number): void {
-   this.alertService.DeleteAlert().then((res)=>{
-     if(res.isConfirmed){
-       this.CategoriaAlertaaService.deleteCategoriaAlerta(id).subscribe({
-         next: ()=>{
-           this.alertService.SuccessAlert('Eliminado correctamente');
-           this.listCategoriaAlerta();
-         },
-         error: ()=>{
-           this.alertService.ErrorAlert('Error al eliminar');
-         }
-       });
-     }
-   });
- }
- onSubmit(form:NgForm): void{
-   if(form.valid){
-     if(this.newCategoryaAlerta.id>0){
-       this.CategoriaAlertaaService.updateCategoriaAlerta(this.newCategoryaAlerta,this.newCategoryaAlerta.id).subscribe({
-         next: ()=>{
-           this.alertService.SuccessAlert('Actualizado correctamente');
-           form.reset();
-           this.newCategoryaAlerta={id:0, Name:'',Description:'', Color:'' };
-             this.listCategoriaAlerta();
+  onDelete(id: number): void {
+    this.alertService.DeleteAlert().then((res) => {
+      if (res.isConfirmed) {
+        this.CategoriaAlertaaService.deleteCategoriaAlerta(id).subscribe({
+          next: () => {
+            this.alertService.SuccessAlert('Eliminado correctamente');
+            this.listCategoriaAlerta();
+          },
+          error: () => {
+            this.alertService.ErrorAlert('Error al eliminar');
+          }
+        });
+      }
+    });
+  }
+  onSubmit(form: NgForm): void {
+    if (form.valid) {
+      if (this.newCategoryaAlerta.id > 0) {
+        this.CategoriaAlertaaService.updateCategoriaAlerta(this.newCategoryaAlerta, this.newCategoryaAlerta.id).subscribe({
+          next: () => {
+            this.alertService.SuccessAlert('Actualizado correctamente');
+            form.reset();
+            this.newCategoryaAlerta = { id: 0, Name: '', Description: '', Color: '' };
+            this.listCategoriaAlerta();
 
-         },
-         error: ()=>{
-           this.alertService.ErrorAlert('Error al actualizar');
-         }
-       });
-     }else{
-       this.CategoriaAlertaaService.createCategoriaAlerta(this.newCategoryaAlerta).subscribe({
-         next: ()=>{
-           this.alertService.SuccessAlert('Creado correctamente');
-           form.reset();
-           this.listCategoriaAlerta();
-         },
-         error: ()=>{
-           this.alertService.ErrorAlert('Error al crear');
-         }
-       });
-     }
-   }else{
-     this.alertService.ErrorAlert('Por favor complete todos los campos');
-   }
+          },
+          error: () => {
+            this.alertService.ErrorAlert('Error al actualizar');
+          }
+        });
+      } else {
+        this.CategoriaAlertaaService.createCategoriaAlerta(this.newCategoryaAlerta).subscribe({
+          next: () => {
+            this.alertService.SuccessAlert('Creado correctamente');
+            form.reset();
+            this.listCategoriaAlerta();
+          },
+          error: () => {
+            this.alertService.ErrorAlert('Error al crear');
+          }
+        });
+      }
+    } else {
+      this.alertService.ErrorAlert('Por favor complete todos los campos');
+    }
 
- }
+  }
 
- aplicarFiltro(event:Event){
-   const filterValue = (event.target as HTMLInputElement).value;
- this.dataSource.filter =filterValue.trim().toLowerCase();
+  aplicarFiltro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
 
- if (this.dataSource.paginator) {
-   this.dataSource.paginator.firstPage();
- }
- }
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
 }

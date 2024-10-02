@@ -23,7 +23,6 @@ import { ContinentComponent } from './features/Parameter/continent/continent.com
 import { CountryComponent } from './features/Parameter/country/country.component';
 import { DepartamentComponent } from './features/Parameter/departament/departament.component';
 import { CityComponent } from './features/Parameter/city/city.component';
-// import { CityComponent } from './features/Parameter/city/city.component';
 import { InseminationComponent } from './pages/operational/inseminacion/inseminacion.component';
 import { InventarioComponent } from './pages/operational/inventario/inventario.component';
 import { ProduccionComponent } from './pages/operational/produccion/produccion.component';
@@ -33,7 +32,7 @@ import { CategoriaAlertaComponent } from './pages/Parametro/categoria-alerta/cat
 import { CategoriaMedicinaComponent } from './pages/Parametro/categoria-medicina/categoria-medicina.component';
 import { CategoriaSuplementoComponent } from './pages/Parametro/categoria-suplemento/categoria-suplemento.component';
 import { MedicinaComponent } from './pages/Parametro/medicina/medicina.component';
-import { SuplementosComponent } from './pages/Parametro/suplementos/suplementos.component';
+import { SuplementosComponent } from './pages/Parametro/insumos/suplementos.component';
 
 export const routes: Routes = [
     {

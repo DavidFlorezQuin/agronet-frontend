@@ -41,11 +41,11 @@ import { DataTablesModule } from 'angular-datatables';
   templateUrl: './categoria-medicina.component.html'
 })
 export class CategoriaMedicinaComponent implements OnInit {
+
   newCategoryMedicina: CategoryMedicinas = { id: 0, Name: '', Description: '' }
   displayedColumns: string[] = ['id', 'Name', 'Description', 'Acciones']
   categoriaMedicina: CategoryMedicinas[] = [];
   dataSource!: MatTableDataSource<CategoryMedicinas>;
-
 
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -58,12 +58,13 @@ export class CategoriaMedicinaComponent implements OnInit {
   }
   listCategoriaMedicina(): void {
     this.CategoryMedicinasService.getCategoryMedicinas().subscribe({
-      next: (res: CategoryMedicinas[]) => {
-        this.dataSource = new MatTableDataSource(res);
+      next: (res: any) => {
+        const data = res.data; 
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.categoriaMedicina = res;
-        this.dataSource.data = res;
+        this.categoriaMedicina = data;
+        this.dataSource.data = data;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');

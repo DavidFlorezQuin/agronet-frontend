@@ -1,19 +1,21 @@
-<div class="container">
-  <section class="d-flex justify-content-between my-3">
-    <h1 class="fw-normal">Gestión de Países</h1>
-    <!-- Botón para abrir el modal -->
-    <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#paisModal" id="btn-forms">
-      <i class="bi bi-plus-circle mx-2"></i>
-      Registrar País
-    </button>
-  </section>
+<div class="container mt-3">
+  <div class="d-flex justify-content-between">
 
-  <!-- Campo de búsqueda -->
-  <mat-form-field appearance="fill">
-    <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Filtrar">
-  </mat-form-field>
+    <section class="d-flex align-items-center gap-3">
+      <h2 class="fw-normal mb-0">Países</h2>
+      <!-- Botón para abrir el modal -->
+      <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#paisModal" id="btn-forms">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Registrar País
+      </button>
+    </section>
 
+    <!-- Campo de búsqueda -->
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Filtrar">
+    </mat-form-field>
+  </div>
   <!-- Tabla de datos -->
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <!-- ID Column -->

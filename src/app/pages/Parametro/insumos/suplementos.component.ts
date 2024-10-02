@@ -38,7 +38,7 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './suplementos.component.html'
 })
 export class SuplementosComponent {
-  displayedColumns: string[] = ['id', 'name', 'description', 'CategorySuppliesId'];
+  displayedColumns: string[] = ['id', 'name', 'description', 'CategorySuppliesId', 'acciones'];
   dataSource: MatTableDataSource<Suplemento> = new MatTableDataSource<Suplemento>();
   Suplemento: Suplemento[] = [];
   newSuplemento: Suplemento = { id: 0, name: '', CategorySuppliesId: 0, description: '' };
@@ -54,13 +54,15 @@ export class SuplementosComponent {
 
   ListAnimal(): void {
     this.SuplementoService.getSuplemento().subscribe({
-      next: (Suplemento: Suplemento[]) => {
-        this.dataSource = new MatTableDataSource(Suplemento);
+      next: (res: any) => {
+
+        const data = res.data; 
+        this.dataSource = new MatTableDataSource(data);
 
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.Suplemento = Suplemento;
-        this.dataSource.data = Suplemento;
+        this.Suplemento = data;
+        this.dataSource.data = data;
       }
     });
     error: () => {

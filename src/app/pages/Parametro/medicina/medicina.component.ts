@@ -30,58 +30,62 @@ import { CategoryMedicinas } from '../categoria-medicina/categoria-medicina.modu
     DataTablesModule,
     CommonModule,
     FormsModule,
-   MatIconModule,
-   MatButtonModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatTableModule,
-   MatPaginatorModule,
-   MatSortModule],
-  templateUrl: './medicina.component.html'})
-export class MedicinaComponent implements OnInit{
-medicina: Medicina[]=[];
-CategoryMedicinas: CategoryMedicinas[]=[];
-NewMedicinas: Medicina={id:0,Name:'',Administration:'',CategoryMedicinesId:0}
-  displayedColumns: string[]=['id','Name','Administration','CategoryMedicinasId','actions'];
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
+  templateUrl: './medicina.component.html'
+})
+export class MedicinaComponent implements OnInit {
+  medicina: Medicina[] = [];
+  CategoryMedicinas: CategoryMedicinas[] = [];
+  NewMedicinas: Medicina = { id: 0, Name: '', Administration: '', CategoryMedicinesId: 0 }
+  displayedColumns: string[] = ['id', 'Name', 'Administration', 'CategoryMedicinasId', 'acciones'];
   dataSource!: MatTableDataSource<Medicina>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private alertService:AlertService, private medicinaService:MedicinaService){}
-ngOnInit(): void {
+  constructor(private alertService: AlertService, private medicinaService: MedicinaService) { }
+  ngOnInit(): void {
 
     this.listMedicinas();
 
   }
 
-  listMedicinas():void{
+  listMedicinas(): void {
 
     this.medicinaService.getMedicina().subscribe({
-      next: (medicinas: Medicina[])=>{
-        this.dataSource = new MatTableDataSource(medicinas);
+      next: (res: any) => {
+
+        const data = res.data;
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        this.dataSource.data = data; 
       },
-      error: (error)=>{
+      error: (error) => {
         console.log(error);
         this.alertService.ErrorAlert('Error al cargar los medicamentos');
       }
     });
   }
-  onEdit(Medicina:Medicina): void {
-    this.NewMedicinas = {...Medicina};
+  onEdit(Medicina: Medicina): void {
+    this.NewMedicinas = { ...Medicina };
 
 
   }
-  onDelete(id:number): void {
-    this.alertService.DeleteAlert().then((res)=>{
-      if(res.isConfirmed){
+  onDelete(id: number): void {
+    this.alertService.DeleteAlert().then((res) => {
+      if (res.isConfirmed) {
         this.medicinaService.deleteMedicina(id).subscribe({
-          next: ()=>{
+          next: () => {
             this.alertService.SuccessAlert('Eliminado correctamente');
             this.listMedicinas();
           },
-          error: ()=>{
+          error: () => {
             this.alertService.ErrorAlert('Error al eliminar');
           }
         });
@@ -96,46 +100,46 @@ ngOnInit(): void {
    * @param role
    */
 
-  onSubmit(form:NgForm): void{
-    if(form.valid){
-      if(this.NewMedicinas.id>0){
-        this.medicinaService.updateMedicina(this.NewMedicinas,this.NewMedicinas.id).subscribe({
-          next: ()=>{
+  onSubmit(form: NgForm): void {
+    if (form.valid) {
+      if (this.NewMedicinas.id > 0) {
+        this.medicinaService.updateMedicina(this.NewMedicinas, this.NewMedicinas.id).subscribe({
+          next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.NewMedicinas={id:0,Name:'',Administration:'',CategoryMedicinesId:0 };
-              this.listMedicinas();
+            this.NewMedicinas = { id: 0, Name: '', Administration: '', CategoryMedicinesId: 0 };
+            this.listMedicinas();
 
           },
-          error: ()=>{
+          error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
           }
         });
-      }else{
+      } else {
         this.medicinaService.createMedicina(this.NewMedicinas).subscribe({
-          next: ()=>{
+          next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.listMedicinas();
           },
-          error: ()=>{
+          error: () => {
             this.alertService.ErrorAlert('Error al crear');
           }
         });
       }
-    }else{
+    } else {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
 
   }
 
-  aplicarFiltro(event:Event){
+  aplicarFiltro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-  this.dataSource.filter =filterValue.trim().toLowerCase();
+    this.dataSource.filter = filterValue.trim().toLowerCase();
 
-  if (this.dataSource.paginator) {
-    this.dataSource.paginator.firstPage();
-  }
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
 }

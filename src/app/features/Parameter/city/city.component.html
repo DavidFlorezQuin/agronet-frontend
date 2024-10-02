@@ -1,6 +1,9 @@
-<div class="container">
-  <section class="d-flex justify-content-between my-3">
-    <h1 class="fw-normal">Gestión de Ciudades</h1>
+<div class="container mt-3">
+  <div class="d-flex justify-content-between">
+
+    <section class="d-flex align-items-center gap-3">
+
+    <h2 class="fw-normal mb-0">Ciudades</h2>
     <!-- Botón para abrir el modal -->
     <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#cityModal" id="btn-forms">
       <i class="bi bi-plus-circle mx-2"></i>
@@ -13,6 +16,7 @@
     <mat-label>Buscar</mat-label>
     <input matInput (keyup)="aplicarFiltro($event)" placeholder="Filtrar ciudades">
   </mat-form-field>
+</div>
 
   <!-- Tabla de datos -->
   <table mat-table [dataSource]="cities" matSort class="mat-elevation-z8">

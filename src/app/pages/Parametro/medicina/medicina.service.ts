@@ -14,18 +14,18 @@ import { environment } from '../../../../env/enviroment';
     constructor(private http:HttpClient) { }
 
     getMedicina(): Observable<Medicina[]> {
-      return this.http.get<Medicina[]>(`${this._baseUrl}/Medicina/list`);
+      return this.http.get<Medicina[]>(`${this._baseUrl}/Medicines/list`);
     }
     createMedicina(medicina: Medicina): Observable<Medicina> {
-      return this.http.post<Medicina>(`${this._baseUrl}/Medicina`, medicina);
+      return this.http.post<Medicina>(`${this._baseUrl}/Medicines`, medicina);
     }
 
     deleteMedicina(id: number): Observable<void> {
-      return this.http.delete<void>(`${this._baseUrl}/Medicina/${id}`);
+      return this.http.delete<void>(`${this._baseUrl}/Medicines/${id}`);
     }
 
     updateMedicina(medicina: Medicina, id: number): Observable<Medicina> {
-      const url = `${this._baseUrl}/Medicina/${id}`;  // Incluye el id en la URL
+      const url = `${this._baseUrl}/Medicines/${id}`;  // Incluye el id en la URL
       return this.http.put<Medicina>(url, medicina);
     }
 

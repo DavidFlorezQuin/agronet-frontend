@@ -8,15 +8,20 @@
         <i class="bi bi-plus-circle mx-2"></i>
         Agregar Lote
       </button>
+
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        Descargar PDF
+      </button>
+
     </section>
 
     <mat-form-field appearance="fill">
       <mat-label>Buscar</mat-label>
       <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar por nombre o descripción" />
     </mat-form-field>
+
+    
   </div>
-
-
 
   <!-- Tabla de lotes -->
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
