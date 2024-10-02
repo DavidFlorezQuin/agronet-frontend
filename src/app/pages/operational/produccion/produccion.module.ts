@@ -9,13 +9,3 @@ export interface Productions {
   animalId: number ,
 
 }
-/**
- * id: numero,
- *  tipo Producción: cadena,
- *  stock: numero,
- *  medida: cadena,
- *  descripción: cadena,
- *  cantidad Total: numero,
- *  expirateDate?: cadena; 
- * animalId: numero,
- */

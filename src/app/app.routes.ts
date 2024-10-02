@@ -36,6 +36,10 @@ import { SuplementosComponent } from './pages/Parametro/insumos/suplementos.comp
 import { VacunacionComponent } from './pages/operational/vacunacion-animal/vacunacion-animal.component';
 import { AnimalDiagnosticoComponent } from './pages/operational/animal-diagnostico/animal-diagnostico.component';
 import { InventarioSuplementoComponent } from './pages/operational/inventario-suplemento/inventario-suplemento.component';
+import { TratamientoMedecinasComponent } from './pages/operational/tratamiento-medicinas/tratamiento-medecinas.component';
+import { VacunaComponent } from './pages/Parametro/vacuna/vacuna.component';
+import { CategoriaEnfermedadComponent } from './pages/Parametro/categoria-enfermedad/categoria-enfermedad.component';
+import { EnfermedadComponent } from './pages/Parametro/enfermedad/enfermedad.component';
 
 export const routes: Routes = [
     {
@@ -152,6 +156,14 @@ export const routes: Routes = [
                 path:'inventario-suministros',
                 component: InventarioSuplementoComponent
             },
+            {
+                path:'invantario-suministros',
+                component: InventarioSuplementoComponent
+            },
+            {
+                path:'medicamentos-tratamientos',
+                component: TratamientoMedecinasComponent
+            },
 
             // //LOCALITATION
             {
@@ -177,6 +189,14 @@ export const routes: Routes = [
                 component: CategoriaAlertaComponent
             },
             {
+                path:'vacuna',
+                component: VacunaComponent
+            },
+            {
+                path:'categoria-enfermedades',
+                component: CategoriaEnfermedadComponent
+            },
+            {
                 path:'categoria-medicamentos',
                 component: CategoriaMedicinaComponent
             },
@@ -191,6 +211,10 @@ export const routes: Routes = [
             {
                 path:'suministros',
                 component: SuplementosComponent
+            },
+            {
+                path:'enfermedad',
+                component: EnfermedadComponent
             },
 
         ]

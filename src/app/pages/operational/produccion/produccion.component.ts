@@ -26,13 +26,13 @@ import { AnimalService } from '../animal/animal.service';
     DataTablesModule,
     CommonModule,
     FormsModule,
-   MatIconModule,
-   MatButtonModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatTableModule,
-   MatPaginatorModule,
-   MatSortModule],
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
   templateUrl: './produccion.component.html'
 })
 export class ProduccionComponent implements OnInit {
@@ -47,27 +47,26 @@ export class ProduccionComponent implements OnInit {
     animalId: 0,
 
   };
-animales: Animal[] = [];
+  animales: Animal[] = [];
   productions: Productions[] = [];
-  displayedColumns: string[] = ['id',
+  displayedColumns: string[] = [
+    'id',
     'typeProduction',
     'stock',
     'measurement',
-    'description ',
     'quantityTotal',
     'expirateDate',
-    'animalId']
-  dataSource!: MatTableDataSource<Productions>;
-  dtoptions: Config = {};
-  dttrigger: Subject<any> = new Subject<any>();
+    'animalId',
+    'accions']
+    dataSource!: MatTableDataSource<Productions>;
 
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private productionsService: ProductionsService,private animalService:AnimalService ,private alertService: AlertService) { }
+  constructor(private productionsService: ProductionsService, private animalService: AnimalService, private alertService: AlertService) { }
 
   ngOnInit(): void {
-   
+
     this.listProductions();
     this.listAnimales();
   }
@@ -78,9 +77,9 @@ animales: Animal[] = [];
         this.dataSource = new MatTableDataSource(res);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-      
+
       },
-      error: (error)=>{
+      error: (error) => {
         console.log(error);
         this.alertService.ErrorAlert('Error al cargar los medicamentos');
       }
@@ -90,9 +89,9 @@ animales: Animal[] = [];
   listAnimales(): void {
     this.animalService.getAnimals().subscribe({
       next: (Animales: Animal[]) => {
-        this.animales=Animales;
+        this.animales = Animales;
       },
-      error: (error)=>{
+      error: (error) => {
         console.log(error);
         this.alertService.ErrorAlert('Error al cargar los medicamentos');
       }

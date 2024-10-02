@@ -3,8 +3,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgForm } from '@angular/forms';
-import { TreatmentsMedicines } from './tratamiento-medecinas.module'; 
-import { TreatmentsMedicinesService } from './tratamiento-medecinas.service'; 
+import { TreatmentsMedicines } from './tratamiento-medecinas.module';
+import { TreatmentsMedicinesService } from './tratamiento-medecinas.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,7 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 @Component({
   selector: 'app-tratamiento-medecinas',
   standalone: true,
-  imports: [CommonModule,FormsModule,
+  imports: [CommonModule, FormsModule,
     MatIconModule,
 
     MatButtonModule,
@@ -31,10 +31,9 @@ import { MatButtonModule } from '@angular/material/button';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './tratamiento-medecinas.component.html',
-  styleUrl: './tratamiento-medecinas.component.css'
+  templateUrl: './tratamiento-medecinas.component.html'
 })
-export class TratamientoMedecinasComponent implements OnInit{
+export class TratamientoMedecinasComponent implements OnInit {
   treatmentsMedicines: TreatmentsMedicines[] = [];
   newTreatmentMedicine: TreatmentsMedicines = { description: '', periocityDay: 0, medicinesId: 0, medicines: '', treatmentId: 0, treatment: '' };
   displayedColumns: string[] = ['description', 'periocityDay', 'medicines', 'treatment', 'actions'];
@@ -43,7 +42,7 @@ export class TratamientoMedecinasComponent implements OnInit{
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private treatmentMedicineService: TreatmentsMedicinesService, private alertService: AlertService) {}
+  constructor(private treatmentMedicineService: TreatmentsMedicinesService, private alertService: AlertService) { }
 
   ngOnInit(): void {
     this.getTreatmentsMedicines();
