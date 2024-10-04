@@ -24,7 +24,8 @@ import { Ventas } from './Ventas.module';
 @Component({
   selector: 'app-ventas',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     FormsModule,
     DataTablesModule,
     CommonModule,
@@ -36,8 +37,7 @@ import { Ventas } from './Ventas.module';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './ventas.component.html',
-  styleUrl: './ventas.component.css'
+  templateUrl: './ventas.component.html'
 })
 export class VentasComponent implements OnInit {
   newSale: Ventas = {
@@ -50,7 +50,7 @@ export class VentasComponent implements OnInit {
   };
 
   sales: Ventas[] = [];
-  displayedColumns: string[] = ['id', 'price', 'quantity', 'production','currency', 'acciones'];
+  displayedColumns: string[] = ['id', 'price', 'quantity', 'production', 'currency', 'acciones'];
   dataSource!: MatTableDataSource<Ventas>;
 
 
@@ -65,13 +65,14 @@ export class VentasComponent implements OnInit {
 
   listSales(): void {
     this.salesService.getSales().subscribe({
-      next: (res: Ventas[]) => {
+      next: (res: any) => {
 
-        this.dataSource = new MatTableDataSource(res);
+        const data = res.data;
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.sales = res;
-        this.dataSource.data = res
+        this.sales = data;
+        this.dataSource.data = data
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los registros de ventas');

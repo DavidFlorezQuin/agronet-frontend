@@ -39,7 +39,7 @@ export class EnfermedadComponent implements OnInit {
   diseases: Diseases[] = [];
   categories: any[] = []; // Array para almacenar las categorías
   newDisease: Diseases = { id: 0, name: '', description: '', categoryDisiesesId: 0, categoryDisieses: 0 };
-  displayedColumns: string[] = ['name', 'description', 'category', 'actions'];
+  displayedColumns: string[] = ['id', 'name', 'description', 'category', 'actions'];
   dataSource!: MatTableDataSource<Diseases>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -53,34 +53,24 @@ export class EnfermedadComponent implements OnInit {
 
   ngOnInit(): void {
     this.listDiseases();
-    this.listCategories(); // Obtener las categorías al iniciar el componente
+    // this.listCategories(); // Obtener las categorías al iniciar el componente
   }
 
   listDiseases(): void {
     this.diseasesService.getDiseases().subscribe({
-      next: (res: Diseases[]) => {
-        this.dataSource = new MatTableDataSource(res);
+      next: (res: any) => {
+        const data = res.data; 
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.diseases = res;
+        this.dataSource.data = data; 
+        this.diseases = data;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener las enfermedades');
       }
     });
   }
-
-  listCategories(): void {
-    this.categoryDisiesesService.getCategoryDisieses().subscribe({
-      next: (res) => {
-        this.categories = res; // Asignar las categorías a la variable local
-      },
-      error: () => {
-        this.alertService.ErrorAlert('Error al obtener las categorías');
-      }
-    });
-  }
-
   onEdit(disease: Diseases): void {
     this.newDisease = { ...disease };
   }

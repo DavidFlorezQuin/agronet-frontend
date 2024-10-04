@@ -4,11 +4,11 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { FormsModule, NgForm } from '@angular/forms';
 import { AlertService } from '../../../shared/components/alert.service';
-import { AnimalDiagnosticsService } from './animal-diagnostico.service'; 
+import { AnimalDiagnosticsService } from './animal-diagnostico.service';
 import { AnimalService } from '../animal/animal.service';
-import { UserService } from '../../../features/Security/users/user.service'; 
+import { UserService } from '../../../features/Security/users/user.service';
 import { Animal } from '../animal/animal.module';
-import { User } from '../../../features/Security/users/User.module'; 
+import { User } from '../../../features/Security/users/User.module';
 import { AnimalDiagnostics } from './animal-diagnostico.module';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'angular-datatables';
@@ -20,7 +20,8 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-animal-diagnostico',
   standalone: true,
-  imports: [CommonModule, 
+  imports: [
+    CommonModule,
     FormsModule,
     DataTablesModule,
     MatIconModule,
@@ -30,7 +31,8 @@ import { MatInputModule } from '@angular/material/input';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './animal-diagnostico.component.html'})
+  templateUrl: './animal-diagnostico.component.html'
+})
 export class AnimalDiagnosticoComponent implements OnInit {
 
   diagnostics: AnimalDiagnostics[] = [];
@@ -39,11 +41,11 @@ export class AnimalDiagnosticoComponent implements OnInit {
 
   newDiagnostic: AnimalDiagnostics = {
     id: 0, diagnosis: '', animalId: 0, usersId: 0,
-    
+
   };
 
   displayedColumns: string[] = ['diagnosis', 'animal', 'users', 'acciones'];
-  dataSource!: MatTableDataSource<AnimalDiagnostics>;
+  dataSource: MatTableDataSource<AnimalDiagnostics> = new MatTableDataSource<AnimalDiagnostics>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -57,8 +59,8 @@ export class AnimalDiagnosticoComponent implements OnInit {
 
   ngOnInit(): void {
     this.listDiagnostics();
-    this.listAnimals();
-    this.listUsers();
+    // this.listAnimals();
+    // this.listUsers();
   }
 
   listDiagnostics(): void {
@@ -68,6 +70,7 @@ export class AnimalDiagnosticoComponent implements OnInit {
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        this.dataSource.data = data; 
         this.diagnostics = data;
       },
       error: () => {
@@ -76,27 +79,31 @@ export class AnimalDiagnosticoComponent implements OnInit {
     });
   }
 
-  listAnimals(): void {
-    this.animalService.getAnimals().subscribe({
-      next: (res: any) => {
-        this.animales = res.data;
-      },
-      error: () => {
-        this.alertaService.ErrorAlert('Error al obtener los animales');
-      }
-    });
+  // listAnimals(): void {
+  //   this.animalService.getAnimals().subscribe({
+  //     next: (res: any) => {
+  //       this.animales = res.data;
+  //     },
+  //     error: () => {
+  //       this.alertaService.ErrorAlert('Error al obtener los animales');
+  //     }
+  //   });
+  // }
+
+  onEdit(AnimalDiagnostic: AnimalDiagnostics) {
+
   }
 
-  listUsers(): void {
-    this.usersService.getUsers().subscribe({
-      next: (res: any) => {
-        this.usuarios = res.data;
-      },
-      error: () => {
-        this.alertaService.ErrorAlert('Error al obtener los usuarios');
-      }
-    });
-  }
+  // listUsers(): void {
+  //   this.usersService.getUsers().subscribe({
+  //     next: (res: any) => {
+  //       this.usuarios = res.data;
+  //     },
+  //     error: () => {
+  //       this.alertaService.ErrorAlert('Error al obtener los usuarios');
+  //     }
+  //   });
+  // }
 
   aplicarFiltro(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -148,6 +155,6 @@ export class AnimalDiagnosticoComponent implements OnInit {
 
   }
 
-  
+
 
 }

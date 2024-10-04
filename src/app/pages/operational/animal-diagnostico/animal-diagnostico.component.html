@@ -9,54 +9,56 @@
         </button>
       </section>
   
-      <!-- Filtro de búsqueda -->
-      <mat-form-field appearance="fill">
-        <mat-label>Buscar</mat-label>
-        <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
-      </mat-form-field>
-    </div>
-  
-    <!-- Tabla con MatTable -->
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
-  
-      <!-- Columna Diagnosis -->
-      <ng-container matColumnDef="diagnosis">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnóstico </th>
-        <td mat-cell *matCellDef="let element"> {{element.diagnosis}} </td>
-      </ng-container>
-  
-      <!-- Columna Animal -->
-      <ng-container matColumnDef="animal">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Animal </th>
-        <td mat-cell *matCellDef="let element"> {{element.animal.name}} </td>
-      </ng-container>
-  
-      <!-- Columna Usuario -->
-      <ng-container matColumnDef="users">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
-        <td mat-cell *matCellDef="let element"> {{element.users.name}} </td>
-      </ng-container>
-  
-      <!-- Columna Acciones -->
-      <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef> Acciones </th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button color="primary" (click)="onSubmit(element)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="onDelete(element.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
-        </td>
-      </ng-container>
-  
-      <!-- Definiciones de Header y Rows -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-  
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+ 
+    <!-- Filtro de búsqueda -->
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+    </mat-form-field>
   </div>
+
+  <!-- Tabla con MatTable -->
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+
+    <!-- Columna Diagnóstico -->
+    <ng-container matColumnDef="diagnosis">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnóstico </th>
+      <td mat-cell *matCellDef="let element"> {{element.diagnosis}} </td>
+    </ng-container>
+
+    <!-- Columna Animal -->
+    <ng-container matColumnDef="animal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Animal </th>
+      <td mat-cell *matCellDef="let element"> {{element.animalId}} </td>
+    </ng-container>
+
+    <!-- Columna Usuario -->
+    <ng-container matColumnDef="users">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
+      <td mat-cell *matCellDef="let element"> {{element.usersId}} </td>
+    </ng-container>
+
+    <!-- Columna Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button color="primary" (click)="onEdit(element)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="onDelete(element.id)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <!-- Filas de Header y Data -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <!-- Paginador -->
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
   
   <!-- Modal para agregar o editar diagnósticos -->
   <div class="modal fade" id="diagnosticsModal" tabindex="-1" aria-labelledby="diagnosticsModalLabel" aria-hidden="true">

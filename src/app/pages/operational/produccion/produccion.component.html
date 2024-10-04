@@ -37,25 +37,25 @@
     <!-- Stock Column -->
     <ng-container matColumnDef="Stock">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock </th>
-      <td mat-cell *matCellDef="let element"> {{element.Stock}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.stock}} </td>
     </ng-container>
 
     <!-- Medida Column -->
     <ng-container matColumnDef="Measurement">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Medida </th>
-      <td mat-cell *matCellDef="let element"> {{element.Measurement}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.measurement}} </td>
     </ng-container>
 
     <!-- Cantidad Total Column -->
     <ng-container matColumnDef="QuantityTotal">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad Total </th>
-      <td mat-cell *matCellDef="let element"> {{element.QuantityTotal}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.quantityTotal}} </td>
     </ng-container>
 
     <!-- Fecha de Expiración Column -->
     <ng-container matColumnDef="expirateDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Expiración </th>
-      <td mat-cell *matCellDef="let element"> {{element.ExpirateDate | date}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.expirateDate | date}} </td>
     </ng-container>
 
     <!-- ID Animal Column -->

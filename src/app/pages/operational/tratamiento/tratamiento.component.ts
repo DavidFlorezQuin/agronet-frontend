@@ -62,12 +62,13 @@ export class TratamientoComponent implements OnInit {
 
   listTratamiento(): void {
     this.treatmentsService.getTreatments().subscribe({
-      next: (res: Treatments[]) => {
-        this.dataSource = new MatTableDataSource(res);
+      next: (res: any) => {
+        const data = res.data; 
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.tratamiento = res;
-        this.dataSource.data = res;
+        this.tratamiento = data;
+        this.dataSource.data = data;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los tratamientos');

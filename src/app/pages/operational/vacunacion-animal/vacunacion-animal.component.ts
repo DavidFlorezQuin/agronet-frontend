@@ -34,18 +34,19 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     DataTablesModule,
     CommonModule,
     FormsModule,
-   MatIconModule,
-   MatButtonModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatTableModule,
-   MatPaginatorModule,
-   MatSortModule,
-   MatSelectModule,
-   MatDatepickerModule,  // Asegúrate de incluir este módulo
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatSelectModule,
+    MatDatepickerModule,  // Asegúrate de incluir este módulo
     MatNativeDateModule,
   ],
-  templateUrl: './vacunacion-animal.component.html'})
+  templateUrl: './vacunacion-animal.component.html'
+})
 export class VacunacionComponent implements OnInit {
   newVaccineAnimal: VaccineAnimals = {
     id: 0,
@@ -53,20 +54,20 @@ export class VacunacionComponent implements OnInit {
     vaccineId: 0,
     nextDose: new Date(),
   };
-  displayedColumns: string[] = ['id', 'animalId', 'vaccineId','nextDose','acciones'];
+  displayedColumns: string[] = ['id', 'Animal', 'Vacuna', 'nextDose', 'acciones'];
 
-  vacuna: Vaccines [] = [];
-animal: Animal [] = [];
+  vacuna: Vaccines[] = [];
+  animal: Animal[] = [];
 
   vaccineAnimals: VaccineAnimals[] = [];
 
-dataSource!: MatTableDataSource<VaccineAnimals>;
-// referenicas del paginador y sort
-@ViewChild(MatPaginator) paginator!: MatPaginator;
-@ViewChild(MatSort) sort!: MatSort;
+  dataSource!: MatTableDataSource<VaccineAnimals>;
+  // referenicas del paginador y sort
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
   constructor(private vaccineAnimalsService: VaccineAnimalsService,
-     private alertService: AlertService
-    , private animalService:AnimalService, private vaccinesService:VaccinesService) {}
+    private alertService: AlertService
+    , private animalService: AnimalService, private vaccinesService: VaccinesService) { }
 
   ngOnInit(): void {
 
@@ -76,9 +77,9 @@ dataSource!: MatTableDataSource<VaccineAnimals>;
 
   listVaccineAnimals(): void {
     this.vaccineAnimalsService.getVaccineAnimals().subscribe({
-      next: (data: VaccineAnimals[]) => {
-        
-        this.dataSource=new MatTableDataSource(data);
+      next: (res: any) => {
+        const data = res.data;
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
@@ -94,27 +95,27 @@ dataSource!: MatTableDataSource<VaccineAnimals>;
   loadAnimal(): void {
     this.animalService.getAnimals().subscribe({
       next: (Animales: Animal[]) => {
-        this.animal=Animales;
+        this.animal = Animales;
       },
-      error: (error)=>{
+      error: (error) => {
         console.log(error);
         this.alertService.ErrorAlert('Error al cargar ');
       }
-    });  
-  
+    });
+
   }
 
   loadVacuna(): void {
     this.vaccinesService.getVaccines().subscribe({
       next: (Vacuna: Vaccines[]) => {
-        this.vacuna=Vacuna;
+        this.vacuna = Vacuna;
       },
-      error: (error)=>{
+      error: (error) => {
         console.log(error);
         this.alertService.ErrorAlert('Error al cargar ');
       }
-    });  
-  
+    });
+
   }
 
   onSubmit(form: NgForm): void {
@@ -125,10 +126,12 @@ dataSource!: MatTableDataSource<VaccineAnimals>;
             this.alertService.SuccessAlert('Vacuna actualizada correctamente');
             form.reset();
             this.listVaccineAnimals();
-            this.newVaccineAnimal={ id: 0,
+            this.newVaccineAnimal = {
+              id: 0,
               animalId: 0,
               vaccineId: 0,
-              nextDose: new Date(),};
+              nextDose: new Date(),
+            };
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar la vacuna');
@@ -171,12 +174,12 @@ dataSource!: MatTableDataSource<VaccineAnimals>;
     });
   }
 
-aplicarFiltro(event:Event){
-  const filterValue = (event.target as HTMLInputElement).value;
-  this.dataSource.filter = filterValue.trim().toLowerCase();
-  if(this.dataSource.paginator){
-    this.dataSource.paginator.firstPage();
+  aplicarFiltro(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
-}
 
 }

@@ -77,7 +77,6 @@ export class AnimalComponent implements OnInit {
   
   }
 
-
   downloadPDF(): void {
     const doc = new jsPDF();
   

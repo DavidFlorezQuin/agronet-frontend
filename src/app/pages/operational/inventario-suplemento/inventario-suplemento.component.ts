@@ -27,53 +27,52 @@ import { SuplementoService } from '../../Parametro/insumos/suplementos.service';
     DataTablesModule,
     CommonModule,
     FormsModule,
-   MatIconModule,
-   MatButtonModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatTableModule,
-   MatPaginatorModule,
-   MatSortModule],
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
   templateUrl: './inventario-suplemento.component.html',
   styleUrl: './inventario-suplemento.component.css'
 })
-export class InventarioSuplementoComponent implements OnInit{
+export class InventarioSuplementoComponent implements OnInit {
   newInventarioSuplemento: InventarioSuplemento = {
     id: 0,
     amount: 0,
     measure: 0,
     inventoryId: 0,
     suppliesId: 0,
-   
+
 
   };
-  Suplemento: Suplemento [] = [];
-Inventario:Inventories[] = [];
+  Suplemento: Suplemento[] = [];
+  Inventario: Inventories[] = [];
   InventarioSuplemento: InventarioSuplemento[] = [];
-  displayedColumns: string[] = ['id',
+  displayedColumns: string[] = [
+    'id',
     'amount',
-    'stock',
     'measure',
-    'inventoryId ',
-    'suppliesId'];
+    'inventoryId',
+    'suppliesId',
+    'acciones'];
 
   dataSource!: MatTableDataSource<InventarioSuplemento>;
-  dtoptions: Config = {};
-  dttrigger: Subject<any> = new Subject<any>();
 
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private inventarioSuplementoService: InventarioSuplementoService,
-     private alertService: AlertService,
-     private inventarioService:InventoriesService
-    ,private suplementoService:SuplementoService) { }
+    private alertService: AlertService,
+    private inventarioService: InventoriesService,
+    private suplementoService: SuplementoService) { }
 
 
 
-  
+
   ngOnInit(): void {
-   
+
     this.listInventarioSuplemento();
     this.listInventario();
     this.listSuplemento();
@@ -81,26 +80,29 @@ Inventario:Inventories[] = [];
 
   listInventarioSuplemento(): void {
     this.inventarioSuplementoService.getInventarioSuplemento().subscribe({
-      next: (res: InventarioSuplemento[]) => {
-        this.dataSource = new MatTableDataSource(res);
+      next: (res: any) => {
+        const data = res.data
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-      
+        this.InventarioSuplemento = data;
+        this.dataSource.data = data;
+
       },
-      error: (error)=>{
+      error: (error) => {
         console.log(error);
         this.alertService.ErrorAlert('Error al cargar los medicamentos');
       }
     });
   }
 
-  
+
   listInventario(): void {
     this.inventarioService.getInventories().subscribe({
       next: (inventarios: Inventories[]) => {
-        this.Inventario=inventarios;
+        this.Inventario = inventarios;
       },
-      error: (error)=>{
+      error: (error) => {
         console.log(error);
         this.alertService.ErrorAlert('Error al cargar los medicamentos');
       }
@@ -110,15 +112,15 @@ Inventario:Inventories[] = [];
   listSuplemento(): void {
     this.suplementoService.getSuplemento().subscribe({
       next: (Suplemento: Suplemento[]) => {
-        this.Suplemento=Suplemento;
+        this.Suplemento = Suplemento;
       },
-      error: (err)=>{
+      error: (err) => {
         console.log(err);
         this.alertService.ErrorAlert('Error al cargar los medicamentos');
       }
     });
   }
-  
+
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newInventarioSuplemento.id > 0) {
@@ -126,11 +128,13 @@ Inventario:Inventories[] = [];
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newInventarioSuplemento = { id: 0,
+            this.newInventarioSuplemento = {
+              id: 0,
               amount: 0,
               measure: 0,
               inventoryId: 0,
-              suppliesId: 0, };
+              suppliesId: 0,
+            };
             this.listInventarioSuplemento();
 
           },

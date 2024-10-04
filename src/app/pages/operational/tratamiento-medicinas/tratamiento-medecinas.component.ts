@@ -50,10 +50,13 @@ export class TratamientoMedecinasComponent implements OnInit {
 
   getTreatmentsMedicines(): void {
     this.treatmentMedicineService.getAllTreatmentsMedicinesService().subscribe({
-      next: (res: TreatmentsMedicines[]) => {
-        this.dataSource = new MatTableDataSource(res);
+      next: (res: any) => {
+        const data = res.data; 
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        this.treatmentsMedicines = data; 
+        this.dataSource.data = data; 
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');

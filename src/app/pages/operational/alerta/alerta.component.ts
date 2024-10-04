@@ -19,15 +19,16 @@ import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { AlertaService } from './alerta.service';
 import { AlertService } from '../../../shared/components/alert.service';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-alerta',
   standalone: true,
   imports: [CommonModule,
-     FormsModule,
-      DataTablesModule,
-      CommonModule,
-      FormsModule,
+    FormsModule,
+    DataTablesModule,
+    CommonModule,
+    FormsModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -38,47 +39,102 @@ import { AlertService } from '../../../shared/components/alert.service';
   templateUrl: './alerta.component.html',
   styleUrl: './alerta.component.css'
 })
-export class AlertaComponent implements OnInit{
+export class AlertaComponent implements OnInit {
   alerta: Alerta[] = [];
 
 
-  newAlerta: Alerta = { id: 0, Name: '', Description: '', Date: new Date , IsRead: new Boolean, AnimalId:0, CategoryAlertId:0,UsersId:0 };
+  newAlerta: Alerta = { id: 0, name: '', description: '', date: new Date, isRead: new Boolean, animalId: 0, categoryAlertId: 0, usersId: 0 };
 
-  displayedColumns: string[] = ['id', 'Name', 'Description', 'Date', 'IsRead','AnimalId','CategoryAlertId','UsersId', 'acciones'];
+  displayedColumns: string[] = ['id', 'name', 'date', 'isRead', 'animalId', 'categoryAlertId', 'usersId', 'acciones'];
   dataSource!: MatTableDataSource<Alerta>;
-  dtoptions: Config = {};
-  dttrigger: Subject<any> = new Subject<any>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private AlertaService: AlertaService, private alertService: AlertService) {}
+  constructor(private AlertaService: AlertaService, private alertService: AlertService) { }
 
   ngOnInit(): void {
-    this.dtoptions = {
-      pagingType: 'full_numbers',
-      lengthMenu: [5, 10, 15, 20]
-    };
+
     this.listAlerta();
 
   }
 
-
-
+  
+  
   listAlerta(): void {
     this.AlertaService.getAlerta().subscribe({
-      next: (res: Alerta[]) => {
-        this.dataSource = new MatTableDataSource(res);
+      next: (res: any) => {
+        const data = res.data; 
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.alerta = res;
+        this.dataSource.data = data;
+        this.alerta = data;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
       }
     });
   }
+  
+  downloadPDF(): void {
+    const doc = new jsPDF();
+  
+    // Título del PDF
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('AGRONET', 14, 10); // Título del PDF
+  
+    // Agregar subtítulo debajo del título
+    doc.setFontSize(10); // Tamaño de fuente para el subtítulo
+    doc.setTextColor(0, 0, 0); // Color negro para el subtítulo
+    doc.text('Sistema de gestión de ganadería colombiana', 14, 13); // Subtítulo
 
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('Histórico de alertas', 14, 23); // Título del PDF
+  
+    // Encabezados de la tabla
+    const headers = [['id', 'Nombre', 'Description', 'Date', 'IsRead', 'AnimalId', 'CategoryAlertId', 'UsersId']];
+  
+    // Datos de la tabla
+    const data = this.dataSource.data.map(alerta => [
+      alerta.id, 
+      alerta.name, 
+      alerta.description, 
+      alerta.date,
+      alerta.isRead,
+      alerta.animalId,
+      alerta.categoryAlertId
+    ]);
+  
+    // Generar tabla usando autoTable
+    (doc as any).autoTable({
+      head: headers,
+      body: data,
+      startY: 30, // Posición donde empieza la tabla
+      theme: 'grid', // Estilo de la tabla
+      headStyles: { fillColor: [56, 161, 15] }, // Estilo de encabezado
+      styles: {
+        fontSize: 10, // Tamaño de fuente en la tabla
+        cellPadding: 2, // Espaciado dentro de las celdas
+      },
+      columnStyles: {
+        0: { cellWidth: 10 },   
+        1: { cellWidth: 30 },   
+        2: { cellWidth: 50 },  
+        3: { cellWidth: 30 },   
+        4: { cellWidth: 20 },   
+        5: { cellWidth: 20 },   
+        6: { cellWidth: 20 },   
+        7: { cellWidth: 10 }   
+      }
+    });
+  
+    // Guardar el archivo PDF
+    doc.save('alertas.pdf');
+  }
+  
   onEdit(alerta: Alerta): void {
     this.newAlerta = { ...alerta };
   }
@@ -106,7 +162,7 @@ export class AlertaComponent implements OnInit{
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newAlerta = { id: 0, Name: '', Description: '', Date: new Date , IsRead: new Boolean, AnimalId:0, CategoryAlertId:0,UsersId:0};
+            this.newAlerta = { id: 0, name: '', description: '', date: new Date, isRead: new Boolean, animalId: 0, categoryAlertId: 0, usersId: 0 };
             this.listAlerta();
           },
           error: () => {

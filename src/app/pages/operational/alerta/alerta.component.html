@@ -7,6 +7,12 @@
         <i class="bi bi-plus-circle mx-2"></i>
         Agregar Alerta
       </button>
+
+      
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        Descargar PDF
+      </button>
+
     </section>
     <mat-form-field appearance="fill">
       <mat-label>Buscar</mat-label>
@@ -24,45 +30,45 @@
     </ng-container>
 
     <!-- Nombre Column -->
-    <ng-container matColumnDef="Name">
+    <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-      <td mat-cell *matCellDef="let element"> {{element.Name}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
 
     <!-- Descripción Column -->
-    <ng-container matColumnDef="Description">
+    <ng-container matColumnDef="description">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
-      <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
     </ng-container>
 
     <!-- Fecha Column -->
-    <ng-container matColumnDef="Date">
+    <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
-      <td mat-cell *matCellDef="let element"> {{element.Date | date}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.date | date}} </td>
     </ng-container>
 
     <!-- Leída Column -->
-    <ng-container matColumnDef="IsRead">
+    <ng-container matColumnDef="isRead">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Leída </th>
-      <td mat-cell *matCellDef="let element"> {{element.IsRead ? 'Sí' : 'No'}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.isRead ? 'Sí' : 'No'}} </td>
     </ng-container>
 
     <!-- ID Animal Column -->
-    <ng-container matColumnDef="AnimalId">
+    <ng-container matColumnDef="animalId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Animal </th>
-      <td mat-cell *matCellDef="let element"> {{element.AnimalId}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.animalId}} </td>
     </ng-container>
 
     <!-- ID Categoría Alerta Column -->
-    <ng-container matColumnDef="CategoryAlertId">
+    <ng-container matColumnDef="categoryAlertId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Categoría Alerta </th>
-      <td mat-cell *matCellDef="let element"> {{element.CategoryAlertId}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.categoryAlertId}} </td>
     </ng-container>
 
     <!-- ID Usuario Column -->
-    <ng-container matColumnDef="UsersId">
+    <ng-container matColumnDef="usersId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Usuario </th>
-      <td mat-cell *matCellDef="let element"> {{element.UsersId}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.usersId}} </td>
     </ng-container>
 
     <!-- Acciones Column -->
@@ -99,27 +105,27 @@
         <form #alertForm="ngForm" (ngSubmit)="onSubmit(alertForm)">
           <div class="mb-3">
             <label for="Name" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newAlerta.Name" required>
+            <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newAlerta.name" required>
           </div>
           <div class="mb-3">
             <label for="Description" class="form-label">Descripción</label>
-            <input type="text" class="form-control" id="Description" name="Description" [(ngModel)]="newAlerta.Description" required>
+            <input type="text" class="form-control" id="Description" name="Description" [(ngModel)]="newAlerta.description" required>
           </div>
           <div class="mb-3">
             <label for="Date" class="form-label">Fecha</label>
-            <input type="date" class="form-control" id="Date" name="Date" [(ngModel)]="newAlerta.Date" required>
+            <input type="date" class="form-control" id="Date" name="Date" [(ngModel)]="newAlerta.date" required>
           </div>
           <div class="mb-3">
             <label for="AnimalId" class="form-label">ID Animal</label>
-            <input type="number" class="form-control" id="AnimalId" name="AnimalId" [(ngModel)]="newAlerta.AnimalId" required>
+            <input type="number" class="form-control" id="AnimalId" name="AnimalId" [(ngModel)]="newAlerta.animalId" required>
           </div>
           <div class="mb-3">
             <label for="CategoryAlertId" class="form-label">ID Categoría Alerta</label>
-            <input type="number" class="form-control" id="CategoryAlertId" name="CategoryAlertId" [(ngModel)]="newAlerta.CategoryAlertId" required>
+            <input type="number" class="form-control" id="CategoryAlertId" name="CategoryAlertId" [(ngModel)]="newAlerta.categoryAlertId" required>
           </div>
           <div class="mb-3">
             <label for="UsersId" class="form-label">ID Usuario</label>
-            <input type="number" class="form-control" id="UsersId" name="UsersId" [(ngModel)]="newAlerta.UsersId" required>
+            <input type="number" class="form-control" id="UsersId" name="UsersId" [(ngModel)]="newAlerta.usersId" required>
           </div>
           <button type="submit" class="btn btn-primary" [disabled]="!alertForm.valid">{{ newAlerta.id ? 'Actualizar' : 'Guardar' }}</button>
         </form>

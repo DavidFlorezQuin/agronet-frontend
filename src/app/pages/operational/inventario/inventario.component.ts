@@ -35,7 +35,8 @@ import { DataTablesModule } from 'angular-datatables';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './inventario.component.html'})
+  templateUrl: './inventario.component.html'
+})
 export class InventarioComponent implements OnInit {
   newInventory: Inventories = {
     id: 0,
@@ -61,14 +62,15 @@ export class InventarioComponent implements OnInit {
   listInventories(): void {
     this.inventoriesService.getInventories().subscribe({
       next: (res: any) => {
-        const data = res.data; 
+        const data = res.data;
         this.dataSource = new MatTableDataSource(data);
 
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        
-        this.inventories = data; 
-        this.dataSource.data = data;       },
+
+        this.inventories = data;
+        this.dataSource.data = data;
+      },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener inventarios');
       }

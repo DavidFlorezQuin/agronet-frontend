@@ -51,12 +51,12 @@ export class ProduccionComponent implements OnInit {
   productions: Productions[] = [];
   displayedColumns: string[] = [
     'id',
-    'typeProduction',
-    'stock',
-    'measurement',
-    'quantityTotal',
+    'TypeProduction',
+    'Stock',
+    'Measurement',
+    'QuantityTotal',
     'expirateDate',
-    'animalId',
+    'AnimalId',
     'accions']
     dataSource!: MatTableDataSource<Productions>;
 
@@ -73,10 +73,13 @@ export class ProduccionComponent implements OnInit {
 
   listProductions(): void {
     this.productionsService.getProductions().subscribe({
-      next: (res: Productions[]) => {
-        this.dataSource = new MatTableDataSource(res);
+      next: (res: any) => {
+        const data = res.data;
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
+        this.productions = data; 
+        this.dataSource.data = data;
 
       },
       error: (error) => {

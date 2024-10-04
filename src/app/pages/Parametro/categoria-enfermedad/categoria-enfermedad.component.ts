@@ -58,11 +58,13 @@ export class CategoriaEnfermedadComponent implements OnInit{
 
   listCategoryDisieses(): void {
     this.categoryDisiesesService.getCategoryDisieses().subscribe({
-      next: (res: CategoryDisieses[]) => {
-        this.dataSource = new MatTableDataSource(res);
+      next: (res: any) => {
+        const data = res.data
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.categoryDisieses = res;
+        this.dataSource.data = data; 
+        this.categoryDisieses = data;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener las categorías');

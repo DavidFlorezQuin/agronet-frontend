@@ -56,11 +56,13 @@ export class VacunaComponent implements OnInit {
 
   listVaccines(): void {
     this.vaccinesService.getVaccines().subscribe({
-      next: (res: Vaccines[]) => {
-        this.dataSource = new MatTableDataSource(res);
+      next: (res: any) => {
+        const data = res.data; 
+        this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.vaccines = res;
+        this.dataSource.data = data;
+        this.vaccines = data;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener las vacunas');

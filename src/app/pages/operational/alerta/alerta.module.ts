@@ -1,11 +1,11 @@
 export interface Alerta{
   id:number
-  Name:string,
-  Description:string,
-  Date:Date,
-  IsRead:Boolean,
-  AnimalId:number,
-  CategoryAlertId:number,
-  UsersId:number
+  name:string,
+  description:string,
+  date:Date,
+  isRead:Boolean,
+  animalId:number,
+  categoryAlertId:number,
+  usersId:number
 }
 

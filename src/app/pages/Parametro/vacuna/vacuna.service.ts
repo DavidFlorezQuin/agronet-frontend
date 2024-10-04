@@ -10,7 +10,7 @@ import { environment } from '../../../../env/enviroment';
 })
 export class VaccinesService {
     
-  private _baseUrl = `${environment.apiBaseUrl}/Vaccines`;
+  private _baseUrl = `${environment.apiBaseUrl}/Vaccine`;
 
   constructor(private http: HttpClient) {}
 

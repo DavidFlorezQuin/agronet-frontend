@@ -35,6 +35,12 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
       <td mat-cell *matCellDef="let sale"> {{ sale.quantity }} </td>
     </ng-container>
+    
+    <!-- production Column -->
+    <ng-container matColumnDef="production">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
+      <td mat-cell *matCellDef="let sale"> {{ sale.quantity }} </td>
+    </ng-container>
 
     <!-- Moneda Column -->
     <ng-container matColumnDef="currency">
