@@ -1,12 +1,16 @@
-<div class="container mt-3">
+<div class="container mt-3 border p-3 shadow-sm">
   <div class="d-flex justify-content-between">
 
     <section class="d-flex align-items-center gap-3">
       <h2 class="fw-normal mb-0">Producción</h2>
-        <button type="button" data-bs-toggle="modal" data-bs-target="#productoModal" id="btn-forms" class="btn h-50">
-          <i class="bi bi-plus-circle mx-2"></i>
-          Agregar Producto
-        </button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#productoModal" id="btn-forms" class="btn h-50">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Agregar Producto
+      </button>
+
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        Descargar PDF
+      </button>
     </section>
 
     <!-- Campo de búsqueda -->
@@ -14,7 +18,7 @@
       <mat-label>Buscar</mat-label>
       <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
     </mat-form-field>
-  
+
   </div>
 
 
@@ -39,6 +43,10 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock </th>
       <td mat-cell *matCellDef="let element"> {{element.stock}} </td>
     </ng-container>
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+    </ng-container>
 
     <!-- Medida Column -->
     <ng-container matColumnDef="Measurement">
@@ -60,8 +68,8 @@
 
     <!-- ID Animal Column -->
     <ng-container matColumnDef="AnimalId">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID Animal </th>
-      <td mat-cell *matCellDef="let element"> {{element.animalId}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Animal </th>
+      <td mat-cell *matCellDef="let element"> {{element.animal}} </td>
     </ng-container>
 
     <!-- Acciones Column -->
@@ -85,57 +93,64 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 
 
-<!-- Modal -->
-<div class="modal fade" id="productoModal" tabindex="-1" aria-labelledby="productoModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="productoModalLabel">Agregar Producto</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
-          <div class="mb-3">
-            <label for="typeProduction" class="form-label">Tipo de Producto</label>
-            <input type="text" class="form-control" id="typeProduction" name="typeProduction" [(ngModel)]="newProduction.TypeProduction" required>
-          </div>
+  <!-- Modal -->
+  <div class="modal fade" id="productoModal" tabindex="-1" aria-labelledby="productoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productoModalLabel">Agregar Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
+            <div class="mb-3">
+              <label for="typeProduction" class="form-label">Tipo de Producto</label>
+              <input type="text" class="form-control" id="typeProduction" name="typeProduction"
+                [(ngModel)]="newProduction.typeProduction" required>
+            </div>
 
-          <div class="mb-3">
-            <label for="stock" class="form-label">Stock</label>
-            <input type="number" class="form-control" id="stock" name="stock" [(ngModel)]="newProduction.Stock" required>
-          </div>
+            <div class="mb-3">
+              <label for="stock" class="form-label">Stock</label>
+              <input type="number" class="form-control" id="stock" name="stock" [(ngModel)]="newProduction.stock"
+                required>
+            </div>
 
-          <div class="mb-3">
-            <label for="measurement" class="form-label">Medida</label>
-            <input type="text" class="form-control" id="measurement" name="measurement" [(ngModel)]="newProduction.Measurement" required>
-          </div>
+            <div class="mb-3">
+              <label for="measurement" class="form-label">Medida</label>
+              <input type="text" class="form-control" id="measurement" name="measurement"
+                [(ngModel)]="newProduction.measurement" required>
+            </div>
 
-          <div class="mb-3">
-            <label for="description" class="form-label">Descripción</label>
-            <textarea class="form-control" id="description" name="description" [(ngModel)]="newProduction.Description" required></textarea>
-          </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <textarea class="form-control" id="description" name="description" [(ngModel)]="newProduction.description"
+                required></textarea>
+            </div>
 
-          <div class="mb-3">
-            <label for="quantityTotal" class="form-label">Cantidad Total</label>
-            <input type="number" class="form-control" id="quantityTotal" name="quantityTotal" [(ngModel)]="newProduction.QuantityTotal" required>
-          </div>
+            <div class="mb-3">
+              <label for="quantityTotal" class="form-label">Cantidad Total</label>
+              <input type="number" class="form-control" id="quantityTotal" name="quantityTotal"
+                [(ngModel)]="newProduction.quantityTotal" required>
+            </div>
 
-          <div class="mb-3">
-            <label for="expirateDate" class="form-label">Fecha de Expiración</label>
-            <input type="date" class="form-control" id="expirateDate" name="expirateDate" [(ngModel)]="newProduction.ExpirateDate" required>
-          </div>
+            <div class="mb-3">
+              <label for="expirateDate" class="form-label">Fecha de Expiración</label>
+              <input type="date" class="form-control" id="expirateDate" name="expirateDate"
+                [(ngModel)]="newProduction.expirateDate" required>
+            </div>
 
-          <div class="mb-3">
-            <label for="animalId" class="form-label">ID del Animal</label>
-            <input type="number" class="form-control" id="animalId" name="animalId" [(ngModel)]="newProduction.AnimalId" required>
-          </div>
+            <div class="mb-3">
+              <label for="animalId" class="form-label">ID del Animal</label>
+              <input type="number" class="form-control" id="animalId" name="animalId"
+                [(ngModel)]="newProduction.animalId" required>
+            </div>
 
-          <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Guardar</button>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Guardar</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
       </div>
     </div>
   </div>
-</div>

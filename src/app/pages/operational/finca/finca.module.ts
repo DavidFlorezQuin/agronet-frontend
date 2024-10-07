@@ -4,7 +4,7 @@ export interface Finca {
   name: string;
   hectare: number;
   description: string;
-  userId: number;
+  City:string, 
   cityId: number; // Propiedad opcional
 }
 

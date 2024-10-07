@@ -1,0 +1,26 @@
+<main class="d-flex h-100 justify-content-center align-items-center shadow-sm"> 
+    <div class="card w-50 border text-center">
+      <form #emailForm="ngForm" (ngSubmit)="onSubmit(emailForm)">
+        <div class="tittle-card">
+          <h4 class="tittle-card-text">Restablecer contraseña</h4>
+          <p>Introduce tu correo electrónico y te enviaremos instrucciones para restablecer tu contraseña</p>
+        </div>
+        <div class="body-card">
+          <input 
+            [(ngModel)]="newEmail.email"
+            name="email"  
+            type="email" 
+            placeholder="Correo electrónico" 
+            class="form-control my-4" 
+            id="email" 
+            required
+          >
+          <button type="submit" class="btn btn-form w-100 mb-5" id="btn-forms">Enviar</button>
+        </div>
+        <div class="footer-card">
+          <p><a href="/login" class="fw-bold">Iniciar sesión</a> con tus credenciales</p>
+        </div>
+      </form>
+    </div>
+  </main>
+  

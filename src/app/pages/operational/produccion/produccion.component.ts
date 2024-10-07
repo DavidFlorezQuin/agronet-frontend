@@ -17,6 +17,7 @@ import { Subject } from 'rxjs';
 import { DataTablesModule } from 'angular-datatables';
 import { Animal } from '../animal/animal.module';
 import { AnimalService } from '../animal/animal.service';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-produccion',
@@ -36,15 +37,18 @@ import { AnimalService } from '../animal/animal.service';
   templateUrl: './produccion.component.html'
 })
 export class ProduccionComponent implements OnInit {
+
+  farmId:number = 2; 
   newProduction: Productions = {
     id: 0,
-    TypeProduction: '',
-    Stock: 0,
-    Measurement: '',
-    Description: '',
-    QuantityTotal: 0,
-    ExpirateDate: new Date(),
-    AnimalId: 0,
+    typeProduction: '',
+    stock: 0,
+    measurement: '',
+    description: '',
+    quantityTotal: 0,
+    expirateDate: new Date(),
+    animal:'',
+    animalId: 0,
 
   };
   animales: Animal[] = [];
@@ -54,10 +58,12 @@ export class ProduccionComponent implements OnInit {
     'TypeProduction',
     'Stock',
     'Measurement',
+    'description',
     'QuantityTotal',
     'expirateDate',
     'AnimalId',
     'accions']
+
     dataSource!: MatTableDataSource<Productions>;
 
   // referenicas del paginador y sort
@@ -67,12 +73,12 @@ export class ProduccionComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.listProductions();
-    this.listAnimales();
+    this.listProductions(this.farmId);
+    // this.listAnimales();
   }
 
-  listProductions(): void {
-    this.productionsService.getProductions().subscribe({
+  listProductions(farmId:number): void {
+    this.productionsService.getProductions(farmId).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.dataSource = new MatTableDataSource(data);
@@ -89,17 +95,77 @@ export class ProduccionComponent implements OnInit {
     });
   }
 
-  listAnimales(): void {
-    this.animalService.getAnimals().subscribe({
-      next: (Animales: Animal[]) => {
-        this.animales = Animales;
+  downloadPDF(){
+    const doc = new jsPDF();
+
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('AGRONET', 14, 10); // Título del PDF
+
+    // Agregar subtítulo debajo del título
+    doc.setFontSize(10); // Tamaño de fuente para el subtítulo
+    doc.setTextColor(0, 0, 0); // Color negro para el subtítulo
+    doc.text('Sistema de gestión de ganadería colombiana', 14, 13); // Subtítulo
+
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('Histórico de producción', 14, 23); // Título del PDF
+
+    // Encabezados de la tabla
+    const headers = [['id', 'Tipo producción', 'Stock', 'Medida', 'Descripción', 'Cantidad total', 'animal', 'fecha expiración']];
+
+    // Datos de la tabla
+    const data = this.dataSource.data.map(productions => [
+      productions.id,
+      productions.typeProduction,
+      productions.stock,
+      productions.measurement,
+      productions.description,
+      productions.quantityTotal,
+      productions.expirateDate,
+      productions.animal
+
+
+    ]);
+
+    // Generar tabla usando autoTable
+    (doc as any).autoTable({
+      head: headers,
+      body: data,
+      startY: 30, // Posición donde empieza la tabla
+      theme: 'grid', // Estilo de la tabla
+      headStyles: { fillColor: [56, 161, 15] }, // Estilo de encabezado
+      styles: {
+        fontSize: 10, // Tamaño de fuente en la tabla
+        cellPadding: 2, // Espaciado dentro de las celdas
       },
-      error: (error) => {
-        console.log(error);
-        this.alertService.ErrorAlert('Error al cargar los medicamentos');
+      columnStyles: {
+        0: { cellWidth: 10 },
+        1: { cellWidth: 30 },
+        2: { cellWidth: 20 },
+        3: { cellWidth: 20 },
+        4: { cellWidth: 30 },
+        5: { cellWidth: 20 },
+        6: { cellWidth: 20 },
+        7: { cellWidth: 20 }
       }
     });
+
+    // Guardar el archivo PDF
+    doc.save('Produccion.pdf');
   }
+
+  // listAnimales(): void {
+  //   this.animalService.getAnimals().subscribe({
+  //     next: (Animales: Animal[]) => {
+  //       this.animales = Animales;
+  //     },
+  //     error: (error) => {
+  //       console.log(error);
+  //       this.alertService.ErrorAlert('Error al cargar los medicamentos');
+  //     }
+  //   });
+  // }
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -108,14 +174,15 @@ export class ProduccionComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newProduction = { id: 0, TypeProduction:'',
-              Stock: 0,
-              Measurement: '',
-              Description: '',
-              QuantityTotal: 0,
-              ExpirateDate: new Date(),
-              AnimalId: 0, };
-            this.listProductions();
+            this.newProduction = { id: 0, typeProduction:'',
+              stock: 0,
+              animal:'',
+              measurement: '',
+              description: '',
+              quantityTotal: 0,
+              expirateDate: new Date(),
+              animalId: 0, };
+            this.listProductions(this.farmId);
 
           },
           error: () => {
@@ -127,7 +194,7 @@ export class ProduccionComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
-            this.listProductions();
+            this.listProductions(this.farmId);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');
@@ -152,7 +219,7 @@ export class ProduccionComponent implements OnInit {
         this.productionsService.deleteProduction(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Producción eliminada correctamente');
-            this.listProductions();
+            this.listProductions(this.farmId);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar producción');

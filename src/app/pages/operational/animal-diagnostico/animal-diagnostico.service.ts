@@ -13,8 +13,8 @@ export class AnimalDiagnosticsService {
 
   constructor(private http: HttpClient) { }
 
-  getAnimalDiagnostics(): Observable<AnimalDiagnostics[]> {
-    return this.http.get<AnimalDiagnostics[]>(`${this._baseUrl}/AnimalDiagnostic/List`);
+  getAnimalDiagnostics(IdFarm:number): Observable<AnimalDiagnostics[]> {
+    return this.http.get<AnimalDiagnostics[]>(`${this._baseUrl}/AnimalDiagnostic/datatable/${IdFarm}`);
   }
 
   deleteAnimalDiagnostics(id: number): Observable<void> {

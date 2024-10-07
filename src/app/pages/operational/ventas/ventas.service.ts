@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Ventas } from './Ventas.module';
 import { environment } from '../../../../env/enviroment';
-
+import { Ventas } from './ventass.module';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,8 +12,8 @@ export class VentasService {
 
   constructor(private http: HttpClient) {}
 
-  getSales(): Observable<Ventas[]> {
-    return this.http.get<Ventas[]>(`${this._baseUrl}/Sale/List`);
+  getSales(IdFarm:number): Observable<Ventas[]> {
+    return this.http.get<Ventas[]>(`${this._baseUrl}/Sale/datatable/${IdFarm}`);
   }
 
   createSale(sale: Ventas): Observable<Ventas> {

@@ -1,4 +1,4 @@
-<div class="container mt-3">
+<div class="container mt-3 border p-3 shadow-sm">
   <div class="d-flex justify-content-between">
 
     <section class="d-flex align-items-center gap-3">
@@ -8,6 +8,10 @@
       class="btn h-50" data-bs-target="#modalNacimiento">
         <i class="bi bi-plus-circle mx-2"></i>
         Agregar Nacimiento
+      </button>
+
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        Descargar PDF
       </button>
     </section>
 
@@ -27,32 +31,32 @@
 
   <ng-container matColumnDef="Assistence">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Asistencia</th>
-    <td mat-cell *matCellDef="let row">{{ row.Assistence }}</td>
+    <td mat-cell *matCellDef="let row">{{ row.assistence }}</td>
   </ng-container>
 
   <ng-container matColumnDef="Result">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Resultado</th>
-    <td mat-cell *matCellDef="let row">{{ row.Result }}</td>
+    <td mat-cell *matCellDef="let row">{{ row.result }}</td>
   </ng-container>
 
   <ng-container matColumnDef="Description">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripción</th>
-    <td mat-cell *matCellDef="let row">{{ row.Description }}</td>
+    <td mat-cell *matCellDef="let row">{{ row.description }}</td>
   </ng-container>
 
   <ng-container matColumnDef="BirthWeight">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Peso al Nacer</th>
-    <td mat-cell *matCellDef="let row">{{ row.BirthWeight }}</td>
+    <td mat-cell *matCellDef="let row">{{ row.birthWeight }}</td>
   </ng-container>
 
   <ng-container matColumnDef="Inseminacionid">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>ID Inseminación</th>
-    <td mat-cell *matCellDef="let row">{{ row.Inseminacionid }}</td>
+    <td mat-cell *matCellDef="let row">{{ row.inseminationId }}</td>
   </ng-container>
 
   <ng-container matColumnDef="AnimalId">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>ID Animal</th>
-    <td mat-cell *matCellDef="let row">{{ row.AnimalId }}</td>
+    <td mat-cell *matCellDef="let row">{{ row.animalId }}</td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

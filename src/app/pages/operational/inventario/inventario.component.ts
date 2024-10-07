@@ -20,6 +20,7 @@ import { InventoriesService } from './inventario.service';
 import { Finca } from '../finca/finca.module';
 import { FincaService } from '../finca/finca.service';
 import { DataTablesModule } from 'angular-datatables';
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-inventario',
   standalone: true,
@@ -40,6 +41,7 @@ import { DataTablesModule } from 'angular-datatables';
 export class InventarioComponent implements OnInit {
   newInventory: Inventories = {
     id: 0,
+    farm:'',
     name: '',
     description: '',
     farmId: 0,
@@ -56,7 +58,7 @@ export class InventarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.listInventories();
-    this.listFinca();
+    // this.listFinca();
   }
 
   listInventories(): void {
@@ -77,19 +79,70 @@ export class InventarioComponent implements OnInit {
     });
   }
 
-  listFinca(): void {
-    this.fincaService.getFincas().subscribe({
-      next: (res: Finca[]) => {
+  downloadPDF(){
+    const doc = new jsPDF();
 
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('AGRONET', 14, 10); // Título del PDF
 
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
+    // Agregar subtítulo debajo del título
+    doc.setFontSize(10); // Tamaño de fuente para el subtítulo
+    doc.setTextColor(0, 0, 0); // Color negro para el subtítulo
+    doc.text('Sistema de gestión de ganadería colombiana', 14, 13); // Subtítulo
+
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('Histórico de inventario', 14, 23); // Título del PDF
+
+    // Encabezados de la tabla
+    const headers = [['id', 'Nombre', 'Descripción', 'Farm']];
+
+    // Datos de la tabla
+    const data = this.dataSource.data.map(inseminations => [
+      inseminations.id,
+      inseminations.name,
+      inseminations.description,
+      inseminations.farm,
+    ]);
+
+    // Generar tabla usando autoTable
+    (doc as any).autoTable({
+      head: headers,
+      body: data,
+      startY: 30, // Posición donde empieza la tabla
+      theme: 'grid', // Estilo de la tabla
+      headStyles: { fillColor: [56, 161, 15] }, // Estilo de encabezado
+      styles: {
+        fontSize: 10, // Tamaño de fuente en la tabla
+        cellPadding: 2, // Espaciado dentro de las celdas
       },
-      error: () => {
-        this.alertService.ErrorAlert('Error al obtener los datos de las fincas');
+      columnStyles: {
+        0: { cellWidth: 10 },
+        1: { cellWidth: 30 },
+        2: { cellWidth: 30 },
+        3: { cellWidth: 30 },
+
       }
     });
+
+    // Guardar el archivo PDF
+    doc.save('inventario.pdf');
   }
+
+  // listFinca(): void {
+  //   this.fincaService.getFincas(this.).subscribe({
+  //     next: (res: Finca[]) => {
+
+
+  //       this.dataSource.paginator = this.paginator;
+  //       this.dataSource.sort = this.sort;
+  //     },
+  //     error: () => {
+  //       this.alertService.ErrorAlert('Error al obtener los datos de las fincas');
+  //     }
+  //   });
+  // }
 
   onSubmit(form: NgForm): void {
     if (form.valid) {

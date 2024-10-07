@@ -9,12 +9,13 @@ import { Insemination } from './Insemination.module';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
 import { CommonModule } from '@angular/common';
-import { MatIconModule } from '@angular/material/icon';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
 import jsPDF from 'jspdf';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-insemination',
@@ -35,18 +36,23 @@ import jsPDF from 'jspdf';
   styles: []
 })
 export class InseminationComponent implements OnInit {
+
+  IdFarm:number = 4; 
   dataSource: MatTableDataSource<Insemination> = new MatTableDataSource<Insemination>();
 
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['id', 'description', 'semenId', 'motherId', 'result', 'inseminationType', 'acciones'];
+  displayedColumns: string[] = ['id', 'description', 'semen', 'mother', 'result', 'inseminationType', 'state', 'acciones'];
   
   inseminations: Insemination[] = [];
 
   newInsemination: Insemination = {
     id: 0,
+    mother: '',
+    state:'',
+    semen: '',
     description: '',
     semenId: 0,
     motherId: 0,
@@ -58,12 +64,12 @@ export class InseminationComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.listInseminations();
+    this.listInseminations(this.IdFarm);
 
   }
 
-  listInseminations(): void {
-    this.inseminationService.getInseminations().subscribe({
+  listInseminations(IdFarm:number): void {
+    this.inseminationService.getInseminations(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.dataSource = new MatTableDataSource(data);
@@ -96,15 +102,17 @@ export class InseminationComponent implements OnInit {
     doc.text('Histórico de inseminaciones', 14, 23); // Título del PDF
 
     // Encabezados de la tabla
-    const headers = [['id', 'Tipo Inseminación', 'Madre', 'Padre', 'Resultado']];
+    const headers = [['id', 'Descripción', 'Madre', 'Padre', 'Resultado', 'Tipo Inseminación', 'Estado']];
 
     // Datos de la tabla
     const data = this.dataSource.data.map(inseminations => [
       inseminations.id,
-      inseminations.inseminationType,
-      inseminations.motherId,
-      inseminations.semenId,
+      inseminations.description,
+      inseminations.mother,
+      inseminations.semen,
       inseminations.result,
+      inseminations.inseminationType,
+      inseminations.state
     ]);
 
     // Generar tabla usando autoTable
@@ -123,7 +131,9 @@ export class InseminationComponent implements OnInit {
         1: { cellWidth: 30 },
         2: { cellWidth: 20 },
         3: { cellWidth: 20 },
-        4: { cellWidth: 30 },
+        4: { cellWidth: 20 },
+        5: { cellWidth: 20 },
+        6: { cellWidth: 20 }
       }
     });
 
@@ -142,7 +152,7 @@ export class InseminationComponent implements OnInit {
         this.inseminationService.deleteInsemination(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Eliminado correctamente');
-            this.listInseminations();
+            this.listInseminations(this.IdFarm);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar');
@@ -159,7 +169,7 @@ export class InseminationComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.listInseminations();
+            this.listInseminations(this.IdFarm);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -173,11 +183,14 @@ export class InseminationComponent implements OnInit {
             this.newInsemination = {
               id: 0, description: '',
               semenId: 0,
+              semen: '',
+              state:'',
+              mother:'',
               motherId: 0,
               result: '',
               inseminationType: ''
             };
-            this.listInseminations();
+            this.listInseminations(this.IdFarm);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

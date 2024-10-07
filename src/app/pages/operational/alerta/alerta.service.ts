@@ -14,8 +14,8 @@ export class AlertaService {
 
   constructor(private http:HttpClient) { }
 
-  getAlerta():Observable<Alerta[]>{
-    return this.http.get<Alerta[]>(`${this._baseUrl}/Alert/List`);
+  getAlerta(IdFarm:number):Observable<Alerta[]>{
+    return this.http.get<Alerta[]>(`${this._baseUrl}/Alert/datatable/${IdFarm}`);
   }
 
   createAlerta(Alerta:Alerta):Observable<Alerta>{

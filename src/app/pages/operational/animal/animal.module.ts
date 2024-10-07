@@ -4,6 +4,8 @@ export interface Animal {
     gender: string
     weight: number;//peso
     photo: string;
+    race: string, 
+    lot:string,
     raceId?: number;
     purpose: string;//objetivo
     birthDay: Date;

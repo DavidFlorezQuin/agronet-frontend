@@ -13,8 +13,8 @@ export class FincaService {
 
   constructor(private http: HttpClient) { }
 
-  getFincas(): Observable<Finca[]> {
-    return this.http.get<Finca[]>(`${this._baseUrl}/Farm/List`);
+  getFincas(farmId:number): Observable<Finca[]> {
+    return this.http.get<Finca[]>(`${this._baseUrl}/Farm/datatable/${farmId}`);
   }
 
   deleteFinca(id: number): Observable<void> {

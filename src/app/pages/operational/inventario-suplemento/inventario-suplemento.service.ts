@@ -13,8 +13,8 @@ export class InventarioSuplementoService {
   currentRole = this.roleSource.asObservable();
   constructor(private http: HttpClient) {}
 
-  getInventarioSuplemento(): Observable<InventarioSuplemento[]> {
-    return this.http.get<InventarioSuplemento[]>(`${this._baseUrl}/InventorySupplies/list`);
+  getInventarioSuplemento(IdFarm: number): Observable<InventarioSuplemento[]> {
+    return this.http.get<InventarioSuplemento[]>(`${this._baseUrl}/InventorySupplies/datatable/${IdFarm}`);
   }
 
   createInventarioSuplemento(inventarioSuplemento: InventarioSuplemento): Observable<InventarioSuplemento> {

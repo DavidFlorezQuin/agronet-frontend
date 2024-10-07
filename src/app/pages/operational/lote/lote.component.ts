@@ -41,7 +41,7 @@ export class LoteComponent implements OnInit {
   lote: Lote[] = [];
   newLote: Lote = {
     id: 0, name: '', hectare: 0,
-    farmId: 0,
+    farmId: 0, farm: ''
 
   }
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -90,14 +90,14 @@ export class LoteComponent implements OnInit {
     doc.text('Histórico de lotes', 14, 23); // Título del PDF
 
     // Encabezados de la tabla
-    const headers = [['id', 'name', 'hectare', 'farmId']];
+    const headers = [['id', 'Nombre', 'Hectareas', 'Finca']];
 
     // Datos de la tabla
     const data = this.dataSource.data.map(lote => [
       lote.id,
       lote.name,
       lote.hectare,
-      lote.farmId,
+      lote.farm,
     ]);
 
     // Generar tabla usando autoTable
@@ -152,7 +152,7 @@ export class LoteComponent implements OnInit {
             form.reset();
             this.newLote = {
               id: 0, name: '', hectare: 0,
-              farmId: 0,
+              farmId: 0, farm: ''
             };
             this.listLot();
           },

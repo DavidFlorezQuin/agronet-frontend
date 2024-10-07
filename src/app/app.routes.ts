@@ -40,11 +40,21 @@ import { VacunaComponent } from './pages/Parametro/vacuna/vacuna.component';
 import { CategoriaEnfermedadComponent } from './pages/Parametro/categoria-enfermedad/categoria-enfermedad.component';
 import { EnfermedadComponent } from './pages/Parametro/enfermedad/enfermedad.component';
 import { SuplementosComponent } from './pages/Parametro/insumos/suplementos.component';
+import { SendEmailComponent } from './features/restar-password/send-email/send-email.component';
+import { NewPasswordComponent } from './features/restar-password/update-password/new-password.component';
 
 export const routes: Routes = [
     {
         path: 'login',
         component: LoginComponent,
+    },
+    {   
+        path: 'reset-email',
+        component: SendEmailComponent,
+    },
+    {   
+        path: 'reset-password',
+        component: NewPasswordComponent,
     },
     {
         path: 'about',
@@ -112,56 +122,56 @@ export const routes: Routes = [
                 component: AnimalComponent
             },
             {
-                path:'nacimientos',
-                component:NacimientoComponent
+                path: 'nacimientos',
+                component: NacimientoComponent
             },
             {
-                path:'inseminacion',
+                path: 'inseminacion',
                 component: InseminationComponent
             },
             {
-                path:'inventario',
+                path: 'inventario',
                 component: InventarioComponent
-            },  
+            },
             {
-                path:'finca',
+                path: 'finca',
                 component: FincaComponent
             },
             {
-                path:'lote',
-                component:LoteComponent
+                path: 'lote',
+                component: LoteComponent
             },
             {
-                path:'produccion',
-                component:ProduccionComponent
+                path: 'produccion',
+                component: ProduccionComponent
             },
             {
-                path:'venta',
+                path: 'venta',
                 component: VentasComponent
             },
 
             {
-                path:'tratamientos',
+                path: 'tratamientos',
                 component: TratamientoComponent
             },
             {
-                path:'vacunas-animales',
+                path: 'vacunas-animales',
                 component: VacunacionComponent
             },
             {
-                path:'diagnostico-animal',
+                path: 'diagnostico-animal',
                 component: AnimalDiagnosticoComponent
             },
             {
-                path:'inventario-suministros',
+                path: 'inventario-suministros',
                 component: InventarioSuplementoComponent
             },
             {
-                path:'invantario-suministros',
+                path: 'invantario-suministros',
                 component: InventarioSuplementoComponent
             },
             {
-                path:'medicamentos-tratamientos',
+                path: 'medicamentos-tratamientos',
                 component: TratamientoMedecinasComponent
             },
 
@@ -179,41 +189,41 @@ export const routes: Routes = [
                 component: DepartamentComponent
             },
             {
-                path:'ciudad',
+                path: 'ciudad',
                 component: CityComponent
             },
 
             // //PARAMETER
             {
-                path:'categoria-alerta',
+                path: 'categoria-alerta',
                 component: CategoriaAlertaComponent
             },
             {
-                path:'vacuna',
+                path: 'vacuna',
                 component: VacunaComponent
             },
             {
-                path:'categoria-enfermedades',
+                path: 'categoria-enfermedades',
                 component: CategoriaEnfermedadComponent
             },
             {
-                path:'categoria-medicamentos',
+                path: 'categoria-medicamentos',
                 component: CategoriaMedicinaComponent
             },
             {
-                path:'categoria-suministros',
+                path: 'categoria-suministros',
                 component: CategoriaSuplementoComponent
             },
             {
-                path:'medicamentos',
+                path: 'medicamentos',
                 component: MedicinaComponent
             },
             {
-                path:'suministros',
+                path: 'suministros',
                 component: SuplementosComponent
             },
             {
-                path:'enfermedad',
+                path: 'enfermedad',
                 component: EnfermedadComponent
             },
 

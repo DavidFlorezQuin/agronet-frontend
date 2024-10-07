@@ -1,0 +1,12 @@
+.card-farms{
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.card-farms:hover{
+    transform: scale(1.04);
+}
+
+.opacity {
+    opacity: 0.5; /* Cambia este valor según lo que necesites */
+}

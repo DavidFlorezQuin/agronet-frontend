@@ -38,6 +38,9 @@ import { SuplementoService } from '../../Parametro/insumos/suplementos.service';
   styleUrl: './inventario-suplemento.component.css'
 })
 export class InventarioSuplementoComponent implements OnInit {
+
+  IdFarm: number = 1; // Define this.IdFarm aquí
+
   newInventarioSuplemento: InventarioSuplemento = {
     id: 0,
     amount: 0,
@@ -73,13 +76,17 @@ export class InventarioSuplementoComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.listInventarioSuplemento();
+    this.listInventarioSuplemento(this.IdFarm);
     this.listInventario();
     this.listSuplemento();
   }
 
-  listInventarioSuplemento(): void {
-    this.inventarioSuplementoService.getInventarioSuplemento().subscribe({
+
+  downloadPDF(){
+    
+  }
+  listInventarioSuplemento(IdFarm:number): void {
+    this.inventarioSuplementoService.getInventarioSuplemento(this.IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data
         this.dataSource = new MatTableDataSource(data);
@@ -135,7 +142,7 @@ export class InventarioSuplementoComponent implements OnInit {
               inventoryId: 0,
               suppliesId: 0,
             };
-            this.listInventarioSuplemento();
+            this.listInventarioSuplemento(this.IdFarm);
 
           },
           error: () => {
@@ -147,7 +154,7 @@ export class InventarioSuplementoComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
-            this.listInventarioSuplemento();
+            this.listInventarioSuplemento(this.IdFarm);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');
@@ -172,7 +179,7 @@ export class InventarioSuplementoComponent implements OnInit {
         this.inventarioSuplementoService.deleteInventarioSuplemento(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Producción eliminada correctamente');
-            this.listInventarioSuplemento();
+            this.listInventarioSuplemento(this.IdFarm);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar producción');

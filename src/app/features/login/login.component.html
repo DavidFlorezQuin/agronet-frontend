@@ -1,20 +1,34 @@
 <main class="d-flex h-100">
-    <section class="col-6 bg-green">
+    <section class="col-6 bg-green d-flex justify-content-center align-items-center">
+        <img src="/assets/bg.png" width="400px" alt="">
 
     </section>
     <section class="col-6 d-flex justify-content-center align-items-center btn-seccion">
-        <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
-            <div class="mb-3">
-                <label for="name" id="text-green" class="fw-normal text-white">Usuario</label>
-                <input type="text" [(ngModel)]="newAuth.username" class="form-control" id="username" name="username" required>
-            </div>
-            <div class="mb-3 justify-content-center h-100 align-content-center">
-                <label for="name" id="text-green" class="fw-norma text-white">Contraseña</label>
-                <input type="text" [(ngModel)]="newAuth.password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="button"  type="submit" id="btn-forms" class="btn btn-form">Guardar</button>
-            
-        </form>
+
+        <div class="container-form text-center">
+
+            <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+                <h3 class="title text-white mb-0">Bienvenido a AgroNet</h3>
+                <img class="imagen my-4" src="/assets/logo-vaca.png" width="130px" alt="">
+                <div class="body-form ">
+
+                    <div class="mb-3">
+                        <input type="text" [(ngModel)]="newAuth.username" placeholder="Usuario" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3 justify-content-center h-100 align-content-center">
+                        <input type="password" placeholder="Contraseña" [(ngModel)]="newAuth.password" class="form-control" id="password" name="password" required>
+                    </div>
+                </div>
+
+                <button type="button"  type="submit" id="btn-forms" class="btn btn-form w-100">Iniciar Sesión</button>
+                <div class="footer d-flex justify-content-end  mb-5">
+                    <a href="reset-email">Olvidé contraseña</a>
+                </div>
+            </form>
+            <hr class="text-white">
+
+            <p class="text-white">¿No tienes una cuenta? <span class="fw-bold">Registrate</span> </p>
+        </div>
 
     </section>
 </main>

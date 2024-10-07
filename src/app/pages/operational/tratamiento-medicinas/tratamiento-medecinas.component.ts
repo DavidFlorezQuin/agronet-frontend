@@ -68,6 +68,10 @@ export class TratamientoMedecinasComponent implements OnInit {
     this.newTreatmentMedicine = { ...treatmentMedicine };
   }
 
+  downloadPDF(){
+    
+  }
+
   onDelete(id: number): void {
     this.alertService.DeleteAlert().then(res => {
       if (res.isConfirmed) {

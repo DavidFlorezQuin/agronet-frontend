@@ -1,4 +1,4 @@
-<div class="container mt-3">
+<div class="container mt-3 border p-3 shadow-sm">
   <div class="d-flex justify-content-between">
 
     <section class="d-flex align-items-center gap-3">
@@ -9,6 +9,10 @@
         id="btn-forms">
         <i class="bi bi-plus-circle mx-2"></i>
         Registrar Tratamiento
+      </button>
+
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        Descargar PDF
       </button>
     </section>
 

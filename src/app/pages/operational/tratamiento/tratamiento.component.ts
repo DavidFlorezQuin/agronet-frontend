@@ -76,6 +76,10 @@ export class TratamientoComponent implements OnInit {
     })
   }
 
+  downloadPDF(){
+    
+  }
+
   eliminar(id: number): void {
     this.alertService.DeleteAlert().then((res) => {
       if (res.isConfirmed) {

@@ -1,0 +1,13 @@
+main{
+    background-color: #fffafa; /* Beige claro */
+}
+.card{
+    padding: 100px;
+}
+a{
+    color: var(--color-green-600);
+}
+
+.tittle-card-text{
+    color: var(--color-green-600);
+}

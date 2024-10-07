@@ -43,25 +43,42 @@ import jsPDF from 'jspdf';
 export class AnimalComponent implements OnInit {
 
   animales: Animal[] = [];
- 
+  IdFarm: number | null = null; // Propiedad para almacenar el ID
+
   newAnimales: Animal = {
-    id: 0, name: '', weight: 0, photo: '', raceId: 0, gender:'', purpose: '', birthDay: new Date(), state: true, lotId: 0
+    id: 0, name: '', weight: 0, photo: '', raceId: 0, gender:'', purpose: '', birthDay: new Date(), state: true, lotId: 0, lot:'', race:''
   };
   displayedColumns: string[] = ['id', 'animal', 'weight','gender', 'race', 'purpose', 'birthDay', 'lotId', 'acciones'];
 
   dataSource!: MatTableDataSource<Animal>;
 
   lote: Lote[] = [];
-
+  
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  
   constructor(private animalService: AnimalService, private alertaService: AlertService, private loteService:LoteService) { }
-
+  
   ngOnInit(): void {  
-    this.ListAnimal();
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
+    
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString); // Convertir a number
+    } else {
+      console.error('ID de la finca no válido o no presente en localStorage');
+      this.IdFarm = null; // Si no hay ID, establecer a null
+    }
+    
+    if (this.IdFarm !== null) {
+      this.ListAnimal(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
+
     this.listLot(); 
+
   }
+  
 
 
   listLot(): void {
@@ -95,17 +112,18 @@ export class AnimalComponent implements OnInit {
     doc.text('Histórico de modulos', 14, 23); // Título del PDF
   
     // Encabezados de la tabla
-    const headers = [['id', 'animal', 'weight','gender', 'purpose', 'birthDay', 'lotId']];
+    const headers = [['id', 'Animal', 'Raza', 'Peso','Género', 'Propósito', 'Nacimiento', 'Lote']];
   
     // Datos de la tabla
     const data = this.dataSource.data.map(animales => [
       animales.id, 
       animales.name, 
+      animales.race, 
       animales.weight, 
       animales.gender,
       animales.purpose,
       animales.birthDay,
-      animales.lotId
+      animales.lot
     ]);
   
     // Generar tabla usando autoTable
@@ -132,12 +150,12 @@ export class AnimalComponent implements OnInit {
     });
   
     // Guardar el archivo PDF
-    doc.save('modulos.pdf');
+    doc.save('animal.pdf');
   }
 
 
-  ListAnimal(): void {
-    this.animalService.getAnimals().subscribe({
+  ListAnimal(farmId: number): void {
+    this.animalService.getAnimals(farmId).subscribe({
       next: (res: any) => {
         const data = res.data; 
         this.dataSource = new MatTableDataSource(data);
@@ -170,7 +188,6 @@ export class AnimalComponent implements OnInit {
         this.animalService.deleteAnimal(id).subscribe({
           next: (res) => {
             this.alertaService.SuccessAlert('Eliminado con éxito');
-            this.ListAnimal();
           },
           error: () => {
             this.alertaService.ErrorAlert('Error al eliminar el animal');
@@ -187,7 +204,6 @@ export class AnimalComponent implements OnInit {
           next: () => {
             this.alertaService.SuccessAlert('Actualizado con éxito');
             form.reset();
-            this.ListAnimal();
           },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar el animal');
@@ -206,7 +222,6 @@ export class AnimalComponent implements OnInit {
           next: () => {
             this.alertaService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.ListAnimal();
           },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar');
@@ -217,7 +232,6 @@ export class AnimalComponent implements OnInit {
           next: () => {
             this.alertaService.SuccessAlert('Creado correctamente');
             form.reset();
-            this.ListAnimal();
           },
           error: () => {
             this.alertaService.ErrorAlert('Error al crear');

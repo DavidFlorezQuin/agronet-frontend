@@ -1,11 +1,12 @@
 export interface Productions {
   id: number,
-  TypeProduction: string,
-  Stock: number,
-  Measurement: string ,
-  Description: string ,
-  QuantityTotal: number ,
-  ExpirateDate?: Date;
-  AnimalId: number ,
+  typeProduction: string,
+  stock: number,
+  measurement: string ,
+  description: string ,
+  quantityTotal: number ,
+  expirateDate?: Date;
+  animalId: number ,
+  animal: string
 
 }

@@ -1,11 +1,31 @@
+
+
 .btn-seccion{
     background-color: var(--color-green-600);
+    font-family: system;
 }
 
-
 .bg-green {
-    background-image: url('/assets/bg-cow.png'); /* Reemplaza con la ruta correcta de tu imagen */
-    background-size: cover; /* Ajusta el tamaño de la imagen para cubrir completamente el contenedor */
-    background-position: center; /* Centra la imagen dentro del contenedor */
-    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-color: azure;
+}
+
+.title{
+    font-weight: 600;
+}
+
+.container-form{
+    width: 300px;
+}
+
+span{
+    color: var(--color-green-900);
+}
+
+.imagen{
+    border-radius: 100%;    /* Redondea los bordes */
+
+}
+
+.footer a{
+    color: var(--color-green-900);
 }

@@ -20,6 +20,8 @@ import { Subject } from 'rxjs';
 import { AlertaService } from './alerta.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import jsPDF from 'jspdf';
+import { AnimalService } from '../animal/animal.service';
+import { Animal } from '../animal/animal.module';
 
 @Component({
   selector: 'app-alerta',
@@ -41,28 +43,51 @@ import jsPDF from 'jspdf';
 })
 export class AlertaComponent implements OnInit {
   alerta: Alerta[] = [];
+  IdFarm: number | null = null; // Propiedad para almacenar el ID
+  animals: Animal[] = [];
 
+  newAlerta: Alerta = { id: 0, name: '', description: '', date: new Date, isRead: new Boolean, animalId: 0, categoryAlertId: 0, usersId: 0, animal:'', categoryAlert:'', users:'' };
 
-  newAlerta: Alerta = { id: 0, name: '', description: '', date: new Date, isRead: new Boolean, animalId: 0, categoryAlertId: 0, usersId: 0 };
-
-  displayedColumns: string[] = ['id', 'name', 'date', 'isRead', 'animalId', 'categoryAlertId', 'usersId', 'acciones'];
+  displayedColumns: string[] = ['id', 'name', 'date', 'isRead', 'animal', 'categoryAlert', 'users', 'acciones'];
   dataSource!: MatTableDataSource<Alerta>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private AlertaService: AlertaService, private alertService: AlertService) { }
+  constructor(private AlertaService: AlertaService, private alertService: AlertService, private animalService: AnimalService) { }
 
   ngOnInit(): void {
-
-    this.listAlerta();
-
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
+    
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString); // Convertir a number
+    } else {
+      this.IdFarm = null; // Si no hay ID, establecer a null
+    }
+    
+    if (this.IdFarm !== null) {
+      this.listAlerta(this.IdFarm);
+      this.ListAnimal(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
   }
 
-  
-  
-  listAlerta(): void {
-    this.AlertaService.getAlerta().subscribe({
+  ListAnimal(farmId: number): void {
+    this.animalService.getAnimals(farmId).subscribe({
+      next: (res: any) => {
+        const data = res.data; 
+        this.animals = data; 
+        this.dataSource.data = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los animales');
+      }
+    });
+  }
+    
+  listAlerta(IdFarm:number): void {
+    this.AlertaService.getAlerta(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data; 
         this.dataSource = new MatTableDataSource(data);
@@ -95,7 +120,7 @@ export class AlertaComponent implements OnInit {
     doc.text('Histórico de alertas', 14, 23); // Título del PDF
   
     // Encabezados de la tabla
-    const headers = [['id', 'Nombre', 'Description', 'Date', 'IsRead', 'AnimalId', 'CategoryAlertId', 'UsersId']];
+    const headers = [['id', 'Nombre', 'Description', 'Date', 'IsRead', 'animal', 'categoryAlert', 'users']];
   
     // Datos de la tabla
     const data = this.dataSource.data.map(alerta => [
@@ -104,8 +129,9 @@ export class AlertaComponent implements OnInit {
       alerta.description, 
       alerta.date,
       alerta.isRead,
-      alerta.animalId,
-      alerta.categoryAlertId
+      alerta.animal,
+      alerta.categoryAlert,
+      alerta.users
     ]);
   
     // Generar tabla usando autoTable
@@ -145,8 +171,11 @@ export class AlertaComponent implements OnInit {
         this.AlertaService.deleteAlerta(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Eliminado correctamente');
-            this.listAlerta();
-          },
+            if (this.IdFarm !== null) {
+              this.listAlerta(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar');
           }
@@ -162,9 +191,12 @@ export class AlertaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newAlerta = { id: 0, name: '', description: '', date: new Date, isRead: new Boolean, animalId: 0, categoryAlertId: 0, usersId: 0 };
-            this.listAlerta();
-          },
+            this.newAlerta = { id: 0, name: '', description: '', date: new Date, isRead: new Boolean, animalId: 0, categoryAlertId: 0, usersId: 0, animal:'', categoryAlert:'', users:'' };
+            if (this.IdFarm !== null) {
+              this.listAlerta(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
           }
@@ -174,8 +206,11 @@ export class AlertaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
-            this.listAlerta();
-          },
+            if (this.IdFarm !== null) {
+              this.listAlerta(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }             },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');
           }

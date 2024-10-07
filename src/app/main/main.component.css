@@ -3,11 +3,8 @@
     display: flex;
     height: 100vh; /* Ocupa todo el alto de la ventana */
     margin: 0;
-    
-  background-image: url('/assets/bg-dashboard.jpg'); /* Reemplaza con la ruta correcta de tu imagen */
-  background-size: cover; /* Ajusta el tamaño de la imagen para cubrir completamente el contenedor */
-  background-position: bottom; /* Centra la imagen dentro del contenedor */
-  background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-color: #fffafa; /* Beige claro */
+
   } 
   
   .app-menu {
@@ -20,7 +17,28 @@
     left: 0;
     overflow-y: auto; /* Permite el scroll si el contenido es grande */
   }
-  
+
+.app-menu::-webkit-scrollbar {
+  width: 5px; /* Ancho de la barra de desplazamiento */
+}
+
+/* Estilo para el "track" (parte de la barra que se mueve) */
+.app-menu::-webkit-scrollbar-track {
+  background: #e0e0e0; /* Color del track */
+  border-radius: 10px; /* Esquinas redondeadas */
+}
+
+/* Estilo para el "thumb" (la parte que se arrastra) */
+.app-menu::-webkit-scrollbar-thumb {
+  background: var(--color-green-500); /* Color del thumb */
+  border-radius: 20px; /* Esquinas redondeadas */
+}
+
+/* Estilo para el "thumb" cuando se está usando */
+.app-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--color-green-600); /* Color del thumb al pasar el mouse */
+}
+
   .content {
     margin-left: 16.6667%; /* Ajusta el contenido para que no quede debajo del menú */
     width: 83.3333%; /* Ocupa el espacio restante (10 de 12 columnas) */
@@ -29,3 +47,4 @@
     height: 100vh; /* Ocupa toda la altura de la ventana */
   }
   
+    /* Ocultar la barra de desplazamiento en todos los navegadores */

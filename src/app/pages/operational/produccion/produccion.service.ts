@@ -12,8 +12,8 @@ export class ProductionsService {
 
   constructor(private http: HttpClient) { }
 
-  getProductions(): Observable<Productions[]> {
-    return this.http.get<Productions[]>(`${this._baseUrl}/Production/list`);
+  getProductions(farmId:number): Observable<Productions[]> {
+    return this.http.get<Productions[]>(`${this._baseUrl}/Production/datatable/${farmId}`);
   }
 
   createProduction(production: Productions): Observable<Productions> {

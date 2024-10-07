@@ -13,8 +13,8 @@ export class InseminationService {
 
   constructor(private http: HttpClient) {}
 
-  getInseminations(): Observable<Insemination[]> {
-    return this.http.get<Insemination[]>(`${this._baseUrl}/Insemination/List`);
+  getInseminations(IdFarm:number): Observable<Insemination[]> {
+    return this.http.get<Insemination[]>(`${this._baseUrl}/Insemination/datatable/${IdFarm}`);
   }
 
   deleteInsemination(id: number): Observable<void> {

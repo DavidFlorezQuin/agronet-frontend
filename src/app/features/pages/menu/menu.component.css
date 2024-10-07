@@ -67,6 +67,8 @@
   .logo {
     width: 50px; /* Ajusta el tamaño de ancho según sea necesario */
     height: auto; /* Mantiene la proporción original de la imagen */
+    border-radius: 100%;
     /* O usa height si prefieres definir la altura */
     /* height: 100px; */
   }
+

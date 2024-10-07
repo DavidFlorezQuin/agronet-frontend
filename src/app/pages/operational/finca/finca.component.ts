@@ -37,17 +37,19 @@ import { City } from '../../../features/Parameter/city/city.module';
   templateUrl: './finca.component.html'
 })
 export class FincaComponent implements OnInit {
+
+  IdFarm:number = 1; 
   fincas: Finca[] = [];
   newFinca: Finca = {
     id: 0,
+    City: '',
     name: '',
     hectare: 0,
     description: '',
-    userId: 0,
     cityId: 0
   }
 
-  displayedColumns: string[] = ['id', 'name', 'hectare', 'description', 'cityId', 'userId', 'acciones'];
+  displayedColumns: string[] = ['id', 'name', 'hectare', 'description', 'cityId', 'acciones'];
   dataSource!: MatTableDataSource<Finca>;
   City: City[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -55,7 +57,7 @@ export class FincaComponent implements OnInit {
   constructor(private fincaService: FincaService, private alertService: AlertService, private cityService: CityService, private userService: UserService) { }
 
   ngOnInit(): void {
-    this.listFincas();
+    this.listFincas(this.IdFarm);
     this.loadCities();
   }
 
@@ -72,8 +74,8 @@ export class FincaComponent implements OnInit {
   }
 
 
-  listFincas(): void {
-    this.fincaService.getFincas().subscribe({
+  listFincas(IdFarm:number): void {
+    this.fincaService.getFincas(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.dataSource = new MatTableDataSource(data);
@@ -152,7 +154,7 @@ export class FincaComponent implements OnInit {
         this.fincaService.deleteFinca(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Eliminado correctamente');
-            this.listFincas();
+            this.listFincas(this.IdFarm);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar');
@@ -169,7 +171,7 @@ export class FincaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.listFincas();
+            this.listFincas(this.IdFarm);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -180,7 +182,7 @@ export class FincaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
-            this.listFincas();
+            this.listFincas(this.IdFarm);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

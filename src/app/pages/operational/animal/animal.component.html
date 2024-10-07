@@ -1,4 +1,4 @@
-<div class="container mt-3">
+<div class="container mt-3 border p-3 shadow-sm">
   <div class="d-flex justify-content-between">
 
     <section class="d-flex align-items-center gap-3">
@@ -64,7 +64,7 @@
 
     <!-- Fecha Nacimiento Column -->
     <ng-container matColumnDef="birthDay">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Cumpleaños </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nacimientos </th>
       <td mat-cell *matCellDef="let element"> {{element.birthDay | date}} </td>
     </ng-container>
     <!-- Lote Column -->
@@ -77,7 +77,7 @@
     <!-- Fecha Registro Column -->
     <ng-container matColumnDef="lotId">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Lote </th>
-      <td mat-cell *matCellDef="let element"> {{element.lotId.name }} </td>
+      <td mat-cell *matCellDef="let element"> {{element.lot }} </td>
     </ng-container>
 
     <!-- Acciones Column -->
@@ -128,11 +128,15 @@
           </div>
           <div class="mb-3">
             <label for="purpose" class="form-label">Propósito</label>
-            <textarea class="form-control" id="purpose" name="purpose" [(ngModel)]="newAnimales.purpose"
-              required></textarea>
+            <select class="form-control" id="purpose" name="purpose" [(ngModel)]="newAnimales.purpose" required>
+              <option value="" disabled selected>Selecciona un propósito</option>
+              <option value="leche">Leche</option>
+              <option value="carne">Carne</option>
+            </select>
           </div>
+          
           <div class="mb-3">
-            <label for="birthDay" class="form-label">Cumpleaños</label>
+            <label for="birthDay" class="form-label">Nacimiento</label>
             <input type="date" class="form-control" id="birthDay" name="birthDay" [(ngModel)]="newAnimales.birthDay"
               required>
           </div>

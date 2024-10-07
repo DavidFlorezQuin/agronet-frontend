@@ -48,13 +48,17 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
   templateUrl: './vacunacion-animal.component.html'
 })
 export class VacunacionComponent implements OnInit {
+  
+  IdFarm: number = 2; // Define IdFarm aquí
+
+  
   newVaccineAnimal: VaccineAnimals = {
     id: 0,
     animalId: 0,
     vaccineId: 0,
     nextDose: new Date(),
   };
-  displayedColumns: string[] = ['id', 'Animal', 'Vacuna', 'nextDose', 'acciones'];
+  displayedColumns: string[] = ['id', 'Animal', 'Vacuna', 'dateApplied', 'nextDose', 'acciones'];
 
   vacuna: Vaccines[] = [];
   animal: Animal[] = [];
@@ -71,12 +75,15 @@ export class VacunacionComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.listVaccineAnimals();
-    this.loadAnimal();
+    this.listVaccineAnimals(this.IdFarm);
+    // this.loadAnimal();
   }
 
-  listVaccineAnimals(): void {
-    this.vaccineAnimalsService.getVaccineAnimals().subscribe({
+  downloadPDF(){
+    
+  }
+  listVaccineAnimals(IdFarm: number): void {
+    this.vaccineAnimalsService.getVaccineAnimals(this.IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.dataSource = new MatTableDataSource(data);
@@ -92,18 +99,18 @@ export class VacunacionComponent implements OnInit {
     });
   }
 
-  loadAnimal(): void {
-    this.animalService.getAnimals().subscribe({
-      next: (Animales: Animal[]) => {
-        this.animal = Animales;
-      },
-      error: (error) => {
-        console.log(error);
-        this.alertService.ErrorAlert('Error al cargar ');
-      }
-    });
+  // loadAnimal(): void {
+  //   this.animalService.getAnimals().subscribe({
+  //     next: (Animales: Animal[]) => {
+  //       this.animal = Animales;
+  //     },
+  //     error: (error) => {
+  //       console.log(error);
+  //       this.alertService.ErrorAlert('Error al cargar ');
+  //     }
+  //   });
 
-  }
+  // }
 
   loadVacuna(): void {
     this.vaccinesService.getVaccines().subscribe({
@@ -125,7 +132,7 @@ export class VacunacionComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Vacuna actualizada correctamente');
             form.reset();
-            this.listVaccineAnimals();
+            this.listVaccineAnimals(this.IdFarm);
             this.newVaccineAnimal = {
               id: 0,
               animalId: 0,
@@ -142,7 +149,7 @@ export class VacunacionComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Vacuna registrada correctamente');
             form.reset();
-            this.listVaccineAnimals();
+            this.listVaccineAnimals(this.IdFarm);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al registrar la vacuna');
@@ -164,7 +171,7 @@ export class VacunacionComponent implements OnInit {
         this.vaccineAnimalsService.deleteVaccineAnimal(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Registro eliminado correctamente');
-            this.listVaccineAnimals();
+            this.listVaccineAnimals(this.IdFarm);
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar el registro');

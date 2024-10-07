@@ -1,3 +1,38 @@
-<div class="d-flex justify-content-center align-items-center">
-    <img class="mt-5" src="/assets/sample-dashboard.png" alt="" width="900px" height="500px">
+<div class="container mt-5">
+
+  <h2>Bienvenido !</h2>
+
+  <section class="d-flex gap-3">
+    <div class="card text-bg-primary mb-3" style="max-width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">N° Animales</h5>
+        <h3 class="card-text">{{ animales.length}}</h3>
+      </div>
+    </div>
+    <div class="card text-bg-success mb-3" style="max-width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">N° Producciones</h5>
+        <h3 class="card-text">{{productions.length}}</h3>
+      </div>
+    </div>
+    <div class="card text-bg-warning mb-3" style="max-width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">N° Ventas</h5>
+        <h3 class="card-text">{{sales.length}}</h3>
+      </div>
+    </div>
+  </section>
+  <h5 class="mt-5">Selecciona finca de auditoría: </h5>
+  <section class="d-flex gap-3">
+    <div *ngIf="fincas.length === 0">No hay fincas disponibles.</div>
+    <div *ngFor="let finca of fincas" [class.opacity]="finca.id === idFincaSeleccionada"
+      class="card card-farms text-bg-primary mb-3" style="max-width: 18rem;" (click)="guardarIdFinca(finca.id)">
+      <div class="card-body card-farms">
+        <h5 class="card-title">{{ finca.name }}</h5>
+        <p class="card-text">{{ finca.description }}</p>
+      </div>
+    </div>
+  </section>
+
+
 </div>

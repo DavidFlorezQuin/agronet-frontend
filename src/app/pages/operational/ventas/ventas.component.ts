@@ -20,7 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
 
 import { VentasService } from './ventas.service';
-import { Ventas } from './Ventas.module';
+import { Ventas } from './ventass.module';
 @Component({
   selector: 'app-ventas',
   standalone: true,
@@ -40,6 +40,9 @@ import { Ventas } from './Ventas.module';
   templateUrl: './ventas.component.html'
 })
 export class VentasComponent implements OnInit {
+
+  IdFarm: number | null = null; // Propiedad para almacenar el ID
+
   newSale: Ventas = {
     id: 0,
     price: 0,
@@ -60,11 +63,25 @@ export class VentasComponent implements OnInit {
   constructor(private salesService: VentasService, private alertService: AlertService) { }
 
   ngOnInit(): void {
-    this.listSales();
+
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
+    
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString); // Convertir a number
+    } else {
+      console.error('ID de la finca no válido o no presente en localStorage');
+      this.IdFarm = null; // Si no hay ID, establecer a null
+    }
+    
+    if (this.IdFarm !== null) {
+      this.listSales(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
   }
 
-  listSales(): void {
-    this.salesService.getSales().subscribe({
+  listSales(IdFarm:number): void {
+    this.salesService.getSales(IdFarm).subscribe({
       next: (res: any) => {
 
         const data = res.data;
@@ -78,6 +95,9 @@ export class VentasComponent implements OnInit {
         this.alertService.ErrorAlert('Error al obtener los registros de ventas');
       }
     });
+  }
+  downloadPDF(){
+    
   }
 
   onSubmit(form: NgForm): void {
@@ -95,8 +115,11 @@ export class VentasComponent implements OnInit {
               productionId: 0,
               currency: ''
             };
-            this.listSales();
-          },
+            if (this.IdFarm !== null) {
+              this.listSales(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar la venta');
           }
@@ -106,8 +129,11 @@ export class VentasComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Venta registrada correctamente');
             form.reset();
-            this.listSales();
-          },
+            if (this.IdFarm !== null) {
+              this.listSales(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertService.ErrorAlert('Error al registrar la venta');
           }
@@ -128,8 +154,11 @@ export class VentasComponent implements OnInit {
         this.salesService.deleteSale(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Registro eliminado correctamente');
-            this.listSales();
-          },
+            if (this.IdFarm !== null) {
+              this.listSales(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar el registro');
           }

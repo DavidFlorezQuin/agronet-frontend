@@ -1,11 +1,15 @@
-<div class="container mt-3">
-    <div class="d-flex justify-content-between">
+<div class="container mt-3 border p-3 shadow-sm">
+  <div class="d-flex justify-content-between">
   
-      <section class="d-flex align-items-center gap-3">
-        <h2 class="fw-normal mb-0">Diagnósticos de Animales</h2>
+      <section class="d-flex align-items-center justify-content-start gap-3">
+        <h2 class="fw-normal mb-0 w-50">Diagnósticos de Animales</h2>
         <button type="button" data-bs-toggle="modal" data-bs-target="#diagnosticsModal" id="btn-forms" class="btn h-50">
           <i class="bi bi-plus-circle mx-2"></i>
           Agregar Diagnóstico
+        </button>
+
+        <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+          Descargar PDF
         </button>
       </section>
   
@@ -18,9 +22,13 @@
   </div>
 
   <!-- Tabla con MatTable -->
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-4" matSort>
 
     <!-- Columna Diagnóstico -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+      <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
     <ng-container matColumnDef="diagnosis">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnóstico </th>
       <td mat-cell *matCellDef="let element"> {{element.diagnosis}} </td>
@@ -29,13 +37,13 @@
     <!-- Columna Animal -->
     <ng-container matColumnDef="animal">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Animal </th>
-      <td mat-cell *matCellDef="let element"> {{element.animalId}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.animal}} </td>
     </ng-container>
 
     <!-- Columna Usuario -->
     <ng-container matColumnDef="users">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
-      <td mat-cell *matCellDef="let element"> {{element.usersId}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.users}} </td>
     </ng-container>
 
     <!-- Columna Acciones -->

@@ -5,6 +5,9 @@ export interface Alerta{
   date:Date,
   isRead:Boolean,
   animalId:number,
+  animal:string,
+  categoryAlert:string,
+  users:string,
   categoryAlertId:number,
   usersId:number
 }

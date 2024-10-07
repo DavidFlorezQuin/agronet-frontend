@@ -12,8 +12,8 @@ export class VaccineAnimalsService {
 
   constructor(private http: HttpClient) {}
 
-  getVaccineAnimals(): Observable<VaccineAnimals[]> {
-    return this.http.get<VaccineAnimals[]>(`${this._baseUrl}/VaccineAnimal/list`);
+  getVaccineAnimals(IdFarm:number): Observable<VaccineAnimals[]> {
+    return this.http.get<VaccineAnimals[]>(`${this._baseUrl}/VaccineAnimal/datatable/${IdFarm}`);
   }
 
   createVaccineAnimal(vaccineAnimal: VaccineAnimals): Observable<VaccineAnimals> {

@@ -13,19 +13,19 @@ export class NacimetoService{
 
     constructor(private http: HttpClient){}
 
-    getNacimiento(): Observable<Nacimiento[]> {
-        return this.http.get<Nacimiento[]>(`${this._baseUrl}/Nacimiento`);
+    getNacimiento(idFarm: number): Observable<Nacimiento[]> {
+        return this.http.get<Nacimiento[]>(`${this._baseUrl}/Birth/datatable/${idFarm}`);
       }
     
       deleteNacimiento(id: number): Observable<void> {
-        return this.http.delete<void>(`${this._baseUrl}/Nacimiento/${id}`);
+        return this.http.delete<void>(`${this._baseUrl}/Birth/${id}`);
       }
     
       updateNacimiento(nacimiento: Nacimiento, id: number): Observable<Nacimiento> {
-        return this.http.put<Nacimiento>(`${this._baseUrl}/Nacimiento/${id}`, nacimiento);
+        return this.http.put<Nacimiento>(`${this._baseUrl}/Birth/${id}`, nacimiento);
       }
     
       createNacimiento(nacimiento: Nacimiento): Observable<Nacimiento> {
-        return this.http.post<Nacimiento>(`${this._baseUrl}/Nacimiento`, nacimiento);
+        return this.http.post<Nacimiento>(`${this._baseUrl}/Birth`, nacimiento);
       }
 }

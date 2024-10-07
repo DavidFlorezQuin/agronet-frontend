@@ -55,7 +55,7 @@ export class ViewsComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private viewService: ViewService, private alertService: AlertService,private moduleService: ModuleService,) {}
-
+  
   ngOnInit(): void {
 
     this.listViews();
