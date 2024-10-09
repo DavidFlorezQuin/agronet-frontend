@@ -3,22 +3,25 @@
 
     <section class="d-flex align-items-center gap-3">
       <h2 class="fw-normal mb-0">Inventarios</h2>
-    <button type="button" data-bs-toggle="modal" data-bs-target="#modalInventory" id="btn-forms" class="btn h-50">
-      <i class="bi bi-plus-circle mx-2"></i>
-      Agregar Inventario
-    </button>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#modalInventory" id="btn-forms" class="btn h-50">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Agregar Inventario
+      </button>
 
-    <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-      Descargar PDF
-    </button>
-  </section>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        Descargar PDF
+      </button>
+    </section>
 
-  <!-- Tabla con MatTable -->
-  <mat-form-field appearance="fill">
-    <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
-  </mat-form-field>
+    <!-- Tabla con MatTable -->
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+    </mat-form-field>
   </div>
+
+  <div *ngIf="inventories.length === 0">No hay inventarios activos.</div>
+
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 
     <!-- ID Column -->
@@ -45,18 +48,16 @@
       <td mat-cell *matCellDef="let element"> {{element.farm}} </td>
     </ng-container>
 
-   
+
 
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-icon-button color="primary" (click)="onSubmit(element)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="onDelete(element)">
-          <mat-icon>delete</mat-icon>
-        </button>
+        <div class="d-flex gap-2 justify-content-center" id="icons-section">
+          <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
+          <i class="bi bi-trash" (click)="onDelete(element)"></i>
+        </div>
       </td>
     </ng-container>
 
@@ -67,42 +68,37 @@
 
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
-  <!-- Modal -->
-  <div class="modal fade" id="modalInventory" tabindex="-1" aria-labelledby="modalInventoryLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalInventoryLabel">{{ newInventory.id ? 'Editar Inventario' : 'Agregar Inventario' }}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form #inventoryForm="ngForm" (ngSubmit)="onSubmit(inventoryForm)">
-            <div class="mb-3">
-              <label for="name" class="form-label">Nombre</label>
-              <input type="text" id="name" class="form-control" name="name" [(ngModel)]="newInventory.name" required />
-            </div>
-            <div class="mb-3">
-              <label for="description" class="form-label">Descripción</label>
-              <textarea id="description" class="form-control" name="description" [(ngModel)]="newInventory.description" required></textarea>
-            </div>
+<!-- Modal -->
+<div class="modal fade" id="modalInventory" tabindex="-1" aria-labelledby="modalInventoryLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalInventoryLabel">{{ newInventory.id ? 'Editar Inventario' : 'Agregar Inventario'
+          }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #inventoryForm="ngForm" (ngSubmit)="onSubmit(inventoryForm)">
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input type="text" id="name" class="form-control" name="name" [(ngModel)]="newInventory.name" required />
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <textarea id="description" class="form-control" name="description" [(ngModel)]="newInventory.description"
+              required></textarea>
+          </div>
 
-            <div class="mb-3">
-              <label for="farmId" class="form-label">Finca ID</label>
-              <select class="form-control" id="farmId" name="farmId" [(ngModel)]="newInventory.farmId" required>
-                <option *ngFor="let finca of finca" [value]="finca.id">{{ finca.name }}</option>
-              </select>
-            </div>
-                  <!--
-            <div class="mb-3">
-              <label for="farm" class="form-label">Granja</label>
-              <input type="text" id="farm" class="form-control" name="farm" [(ngModel)]="newInventory.farmId" required />
-            </div>
-                  -->
-            
-            <button type="submit" class="btn btn-success">{{ newInventory.id ? 'Actualizar' : 'Agregar' }}</button>
-          </form>
-        </div>
+          <div class="mb-3">
+            <label for="farmId" class="form-label">Finca</label>
+            <select class="form-control" id="farmId" name="farmId" [(ngModel)]="newInventory.farmId" required>
+              <option *ngFor="let finca of fincas" [value]="finca.id">{{ finca.name }}</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-success">{{ newInventory.id ? 'Actualizar' : 'Agregar' }}</button>
+        </form>
       </div>
     </div>
   </div>
-
+</div>

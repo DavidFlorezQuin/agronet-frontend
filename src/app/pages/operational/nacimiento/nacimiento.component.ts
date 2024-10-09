@@ -17,6 +17,8 @@ import { FormsModule } from '@angular/forms';
 import { error } from 'jquery';
 import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
+import { InseminationService } from '../inseminacion/inseminacion.service';
+import { Insemination } from '../inseminacion/Insemination.module';
 
 @Component({
   selector: 'app-nacimiento',
@@ -37,13 +39,13 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './nacimiento.component.css'
 })
 export class NacimientoComponent implements OnInit {
-  IdFarm: number = 2; // Define IdFarm aquí
+  IdFarm: number | null = null; 
 
-
+  inseminations: Insemination[] = [];
   nacimiento: Nacimiento[] = [];
   newNacimiento: Nacimiento = {
     id: 0,
-    Assistence: '', Result: 0,
+    assistence: '', Result: 0,
     Description: '',
     BirthWeight: 0,
     Inseminacionid: '', AnimalId: 0,
@@ -56,13 +58,39 @@ export class NacimientoComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private nacimientoService: NacimetoService, private alertaService: AlertService) { }
+  constructor(private nacimientoService: NacimetoService, private alertaService: AlertService, private inseminationService:InseminationService) { }
 
   ngOnInit(): void {
-    const IdFarm: number = 2;
-    this.ListNacimiento(IdFarm);
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
 
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString); // Convertir a number
+    } else {
+      console.error('ID de la finca no válido o no presente en localStorage');
+      this.IdFarm = null; // Si no hay ID, establecer a null
+    }
+
+    if (this.IdFarm !== null) {
+      this.ListNacimiento(this.IdFarm);
+      this.listInseminations(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
   }
+
+  listInseminations(IdFarm:number): void {
+    this.inseminationService.getInseminations(IdFarm).subscribe({
+      next: (res: any) => {
+        const data = res.data;
+
+        this.inseminations = data;
+      },
+      error: () => {
+        this.alertaService.ErrorAlert('Error al obtener los datos');
+      }
+    });
+  }
+
 
   ListNacimiento(IdFarm: number): void {
     this.nacimientoService.getNacimiento(IdFarm).subscribe({
@@ -73,13 +101,11 @@ export class NacimientoComponent implements OnInit {
         this.nacimiento = data;
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
       }
     });
     error: () => {
       this.alertaService.ErrorAlert('Error al obtener los datos de nacimiento')
     }
-
   }
 
   downloadPDF() {
@@ -115,8 +141,11 @@ export class NacimientoComponent implements OnInit {
         this.nacimientoService.deleteNacimiento(id).subscribe({
           next: (res) => {
             this.alertaService.SuccessAlert('Eliminado con éxito');
-            this.ListNacimiento(this.IdFarm);
-          },
+            if (this.IdFarm !== null) {
+              this.ListNacimiento(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertaService.ErrorAlert('Error al eliminar el animal');
           }
@@ -154,14 +183,17 @@ export class NacimientoComponent implements OnInit {
             form.reset();
             this.newNacimiento = {
               id: 0,
-              Assistence: '', Result: 0,
+              assistence: '', Result: 0,
               Description: '',
               BirthWeight: 0,
               Inseminacionid: '', AnimalId: 0,
 
             }
-            this.ListNacimiento(this.IdFarm);
-          },
+            if (this.IdFarm !== null) {
+              this.ListNacimiento(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }                },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar');
           }

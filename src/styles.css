@@ -65,3 +65,15 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+#icons-section i{
+  color: var(--color-green-600);
+  cursor: pointer;
+  transition: all 0.4s;
+  font-size: 20px; /* Cambia este valor según lo necesites */
+
+}
+
+#icons-section i:hover{
+  transform: scale(1.2);
+}

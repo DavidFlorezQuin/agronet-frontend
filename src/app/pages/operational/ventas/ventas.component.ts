@@ -21,6 +21,9 @@ import { DataTablesModule } from 'angular-datatables';
 
 import { VentasService } from './ventas.service';
 import { Ventas } from './ventass.module';
+import { EnumService } from '../../../shared/components/enum.service';
+import { ProductionsService } from '../produccion/produccion.service';
+import { Productions } from '../produccion/produccion.module';
 @Component({
   selector: 'app-ventas',
   standalone: true,
@@ -41,6 +44,7 @@ import { Ventas } from './ventass.module';
 })
 export class VentasComponent implements OnInit {
 
+  measurements: [] = [];
   IdFarm: number | null = null; // Propiedad para almacenar el ID
 
   newSale: Ventas = {
@@ -51,7 +55,7 @@ export class VentasComponent implements OnInit {
     productionId: 0,
     currency: ''
   };
-
+  productions: Productions[] = [];
   sales: Ventas[] = [];
   displayedColumns: string[] = ['id', 'price', 'quantity', 'production', 'currency', 'acciones'];
   dataSource!: MatTableDataSource<Ventas>;
@@ -60,7 +64,7 @@ export class VentasComponent implements OnInit {
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private salesService: VentasService, private alertService: AlertService) { }
+  constructor(private salesService: VentasService, private alertService: AlertService, private enumController:EnumService, private productionsService:ProductionsService) { }
 
   ngOnInit(): void {
 
@@ -75,9 +79,12 @@ export class VentasComponent implements OnInit {
     
     if (this.IdFarm !== null) {
       this.listSales(this.IdFarm);
+      this.listProductions(this.IdFarm);
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
+
+    this.listMeasurement();
   }
 
   listSales(IdFarm:number): void {
@@ -97,7 +104,29 @@ export class VentasComponent implements OnInit {
     });
   }
   downloadPDF(){
-    
+  }
+
+  listProductions(farmId: number): void {
+    this.productionsService.getProductions(farmId).subscribe({
+      next: (res: any) => {
+        const data = res.data;
+        this.productions = data;
+      },
+      error: (error) => {
+        this.alertService.ErrorAlert('Error al cargar los medicamentos');
+      }
+    });
+  }
+
+  listMeasurement(): void {
+    this.enumController.getMeasurement().subscribe({
+      next: (res: any) => {
+        this.measurements = res;
+      },
+      error: (error) => {
+        this.alertService.ErrorAlert('Error al cargar los medicamentos');
+      }
+    });
   }
 
   onSubmit(form: NgForm): void {

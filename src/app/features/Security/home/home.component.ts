@@ -22,15 +22,20 @@ import { Ventas } from '../../../pages/operational/ventas/ventass.module';
 export class HomeComponentD implements OnInit {
 
   constructor(private fincaService: FincaService, private alertService: AlertService, private animalService: AnimalService, private productionsService: ProductionsService, private salesService: VentasService) { }
+ 
   animales: Animal[] = [];
   productions: Productions[] = [];
   sales: Ventas[] = [];
 
-  fincas: any[] = []; // Asegúrate de inicializar el array
-  idFincaSeleccionada: number | null = null; // Inicializa la propiedad
+  fincas: any[] = []; 
+  idFincaSeleccionada: number | null = null; 
 
   ngOnInit(): void {
-    this.listFincas(1);
+    const StorageId: string | null = localStorage.getItem('Usuario');
+    const IdUser: number = StorageId ? Number(StorageId) : 0; 
+    
+    this.listFincas(IdUser);
+
   }
 
   guardarIdFinca(id: number): void {

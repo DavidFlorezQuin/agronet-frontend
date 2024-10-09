@@ -17,7 +17,7 @@ export class VaccineAnimalsService {
   }
 
   createVaccineAnimal(vaccineAnimal: VaccineAnimals): Observable<VaccineAnimals> {
-    return this.http.post<VaccineAnimals>(`${this._baseUrl}/VaccineAnimal`, vaccineAnimal);
+    return this.http.post<VaccineAnimals>(`${this._baseUrl}/VaccineAnimal/save`, vaccineAnimal);
   }
 
   updateVaccineAnimal(vaccineAnimal: VaccineAnimals, id: number): Observable<VaccineAnimals> {

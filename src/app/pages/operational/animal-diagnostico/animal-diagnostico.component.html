@@ -21,6 +21,8 @@
     </mat-form-field>
   </div>
 
+  <div *ngIf="diagnostics.length === 0">No hay diagnosticos activos.</div>
+
   <!-- Tabla con MatTable -->
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-4" matSort>
 
@@ -28,6 +30,10 @@
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
       <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+    </ng-container>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
     <ng-container matColumnDef="diagnosis">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnóstico </th>
@@ -50,12 +56,10 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-icon-button color="primary" (click)="onEdit(element)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="onDelete(element.id)">
-          <mat-icon>delete</mat-icon>
-        </button>
+        <div class="d-flex gap-2 justify-content-center" id="icons-section">
+          <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
+          <i class="bi bi-trash" (click)="onDelete(element)"></i>
+        </div>
       </td>
     </ng-container>
 
@@ -78,6 +82,11 @@
         </div>
         <div class="modal-body">
           <form #diagnosticsForm="ngForm" (ngSubmit)="onSubmit(diagnosticsForm)">
+          <input type="hidden" id="usersId" name="usersId" [(ngModel)]="newDiagnostic.usersId">
+            <div class="mb-3">
+              <label for="diagnosis" class="form-label">Nombre</label>
+              <input class="form-control" id="name" name="name" [(ngModel)]="newDiagnostic.name" required>
+            </div>
             <div class="mb-3">
               <label for="diagnosis" class="form-label">Diagnóstico</label>
               <textarea class="form-control" id="diagnosis" name="diagnosis" [(ngModel)]="newDiagnostic.diagnosis" required></textarea>
@@ -88,14 +97,6 @@
               <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newDiagnostic.animalId" required>
                 <option value="" disabled selected>Seleccione un animal</option>
                 <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
-              </select>
-            </div>
-  
-            <div class="mb-3">
-              <label for="usersId" class="form-label">Usuario</label>
-              <select class="form-control" id="usersId" name="usersId" [(ngModel)]="newDiagnostic.usersId" required>
-                <option value="" disabled selected>Seleccione un usuario</option>
-                <option *ngFor="let user of usuarios" [value]="user.id">{{ user.username }}</option>
               </select>
             </div>
   

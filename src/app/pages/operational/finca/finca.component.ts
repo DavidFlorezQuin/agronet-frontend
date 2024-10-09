@@ -38,7 +38,7 @@ import { City } from '../../../features/Parameter/city/city.module';
 })
 export class FincaComponent implements OnInit {
 
-  IdFarm:number = 1; 
+  IdUser: number | null = null;
   fincas: Finca[] = [];
   newFinca: Finca = {
     id: 0,
@@ -57,7 +57,17 @@ export class FincaComponent implements OnInit {
   constructor(private fincaService: FincaService, private alertService: AlertService, private cityService: CityService, private userService: UserService) { }
 
   ngOnInit(): void {
-    this.listFincas(this.IdFarm);
+    const StorageId: string | null = localStorage.getItem('Usuario');
+
+    if (StorageId && !isNaN(Number(StorageId))) {
+      this.IdUser = Number(StorageId);
+    }
+
+    if (this.IdUser !== null) {
+      this.listFincas(this.IdUser);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
     this.loadCities();
   }
 
@@ -73,8 +83,7 @@ export class FincaComponent implements OnInit {
     });
   }
 
-
-  listFincas(IdFarm:number): void {
+  listFincas(IdFarm: number): void {
     this.fincaService.getFincas(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
@@ -89,7 +98,6 @@ export class FincaComponent implements OnInit {
       }
     });
   }
-
 
   downloadPDF(): void {
     const doc = new jsPDF();
@@ -154,7 +162,10 @@ export class FincaComponent implements OnInit {
         this.fincaService.deleteFinca(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Eliminado correctamente');
-            this.listFincas(this.IdFarm);
+
+            if (this.IdUser !== null) {
+              this.listFincas(this.IdUser);
+            } 
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar');
@@ -171,7 +182,10 @@ export class FincaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.listFincas(this.IdFarm);
+
+            if (this.IdUser !== null) {
+              this.listFincas(this.IdUser);
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -182,7 +196,12 @@ export class FincaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
-            this.listFincas(this.IdFarm);
+
+            if (this.IdUser !== null) {
+              this.listFincas(this.IdUser);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

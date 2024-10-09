@@ -39,7 +39,7 @@ import { SuplementoService } from '../../Parametro/insumos/suplementos.service';
 })
 export class InventarioSuplementoComponent implements OnInit {
 
-  IdFarm: number = 1; // Define this.IdFarm aquí
+  IdFarm: number | null = null;
 
   newInventarioSuplemento: InventarioSuplemento = {
     id: 0,
@@ -47,9 +47,8 @@ export class InventarioSuplementoComponent implements OnInit {
     measure: 0,
     inventoryId: 0,
     suppliesId: 0,
-
-
   };
+
   Suplemento: Suplemento[] = [];
   Inventario: Inventories[] = [];
   InventarioSuplemento: InventarioSuplemento[] = [];
@@ -71,13 +70,18 @@ export class InventarioSuplementoComponent implements OnInit {
     private inventarioService: InventoriesService,
     private suplementoService: SuplementoService) { }
 
-
-
-
   ngOnInit(): void {
+    const idFarmString = localStorage.getItem('idFincaSeleccionada'); 
 
-    this.listInventarioSuplemento(this.IdFarm);
-    this.listInventario();
+    if(idFarmString && !isNaN(Number(idFarmString))){
+      this.IdFarm = Number(idFarmString);
+    }
+
+    if(this.IdFarm != null){
+
+      this.listInventario(this.IdFarm);
+    }
+    this.listInventarioSuplemento();
     this.listSuplemento();
   }
 
@@ -85,8 +89,8 @@ export class InventarioSuplementoComponent implements OnInit {
   downloadPDF(){
     
   }
-  listInventarioSuplemento(IdFarm:number): void {
-    this.inventarioSuplementoService.getInventarioSuplemento(this.IdFarm).subscribe({
+  listInventarioSuplemento(): void {
+    this.inventarioSuplementoService.getInventarioSuplemento().subscribe({
       next: (res: any) => {
         const data = res.data
         this.dataSource = new MatTableDataSource(data);
@@ -103,9 +107,8 @@ export class InventarioSuplementoComponent implements OnInit {
     });
   }
 
-
-  listInventario(): void {
-    this.inventarioService.getInventories().subscribe({
+  listInventario(IdFarm:number): void {
+    this.inventarioService.getInventories(IdFarm).subscribe({
       next: (inventarios: Inventories[]) => {
         this.Inventario = inventarios;
       },
@@ -142,7 +145,7 @@ export class InventarioSuplementoComponent implements OnInit {
               inventoryId: 0,
               suppliesId: 0,
             };
-            this.listInventarioSuplemento(this.IdFarm);
+            this.listInventarioSuplemento();
 
           },
           error: () => {
@@ -154,7 +157,7 @@ export class InventarioSuplementoComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
-            this.listInventarioSuplemento(this.IdFarm);
+            this.listInventarioSuplemento();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');
@@ -179,7 +182,7 @@ export class InventarioSuplementoComponent implements OnInit {
         this.inventarioSuplementoService.deleteInventarioSuplemento(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Producción eliminada correctamente');
-            this.listInventarioSuplemento(this.IdFarm);
+            this.listInventarioSuplemento();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar producción');

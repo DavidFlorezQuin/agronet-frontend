@@ -17,7 +17,7 @@ export class ProductionsService {
   }
 
   createProduction(production: Productions): Observable<Productions> {
-    return this.http.post<Productions>(`${this._baseUrl}/Production`, production);
+    return this.http.post<Productions>(`${this._baseUrl}/Production/save`, production);
   }
 
   updateProduction(production: Productions, id: number): Observable<Productions> {

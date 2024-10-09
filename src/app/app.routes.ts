@@ -42,6 +42,8 @@ import { EnfermedadComponent } from './pages/Parametro/enfermedad/enfermedad.com
 import { SuplementosComponent } from './pages/Parametro/insumos/suplementos.component';
 import { SendEmailComponent } from './features/restar-password/send-email/send-email.component';
 import { NewPasswordComponent } from './features/restar-password/update-password/new-password.component';
+import { FormRegisterComponent } from './features/register/form-register/form-register.component';
+import { FormUserComponent } from './features/register/form-user/form-user.component';
 
 export const routes: Routes = [
     {
@@ -51,6 +53,14 @@ export const routes: Routes = [
     {   
         path: 'reset-email',
         component: SendEmailComponent,
+    },
+    {   
+        path: 'register-user',
+        component: FormUserComponent,
+    },
+    {   
+        path: 'register',
+        component: FormRegisterComponent,
     },
     {   
         path: 'reset-password',
@@ -84,7 +94,7 @@ export const routes: Routes = [
             },
 
             {
-                path: 'role',
+                path: 'rol',
                 component: RoleComponent
             },
             {

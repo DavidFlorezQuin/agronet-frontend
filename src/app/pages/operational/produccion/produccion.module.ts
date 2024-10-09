@@ -6,7 +6,5 @@ export interface Productions {
   description: string ,
   quantityTotal: number ,
   expirateDate?: Date;
-  animalId: number ,
-  animal: string
-
+  animalId: number 
 }

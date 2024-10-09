@@ -18,6 +18,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { Animal } from '../animal/animal.module';
 import { AnimalService } from '../animal/animal.service';
 import jsPDF from 'jspdf';
+import { EnumService } from '../../../shared/components/enum.service';
 
 @Component({
   selector: 'app-produccion',
@@ -38,7 +39,7 @@ import jsPDF from 'jspdf';
 })
 export class ProduccionComponent implements OnInit {
 
-  farmId:number = 2; 
+  IdFarm: number | null = null;
   newProduction: Productions = {
     id: 0,
     typeProduction: '',
@@ -47,10 +48,11 @@ export class ProduccionComponent implements OnInit {
     description: '',
     quantityTotal: 0,
     expirateDate: new Date(),
-    animal:'',
     animalId: 0,
 
   };
+
+  measurements: [] = [];
   animales: Animal[] = [];
   productions: Productions[] = [];
   displayedColumns: string[] = [
@@ -64,29 +66,53 @@ export class ProduccionComponent implements OnInit {
     'AnimalId',
     'accions']
 
-    dataSource!: MatTableDataSource<Productions>;
+  dataSource!: MatTableDataSource<Productions>;
 
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private productionsService: ProductionsService, private animalService: AnimalService, private alertService: AlertService) { }
+  constructor(private productionsService: ProductionsService, private animalService: AnimalService, private alertService: AlertService, private enumController: EnumService) { }
 
   ngOnInit(): void {
 
-    this.listProductions(this.farmId);
-    // this.listAnimales();
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
+
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString); // Convertir a number
+    } else {
+      this.IdFarm = null; // Si no hay ID, establecer a null
+    }
+
+    if (this.IdFarm !== null) {
+      this.listProductions(this.IdFarm);
+      this.ListAnimal(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
+    this.listMeasurement();
   }
 
-  listProductions(farmId:number): void {
+  ListAnimal(farmId: number): void {
+    this.animalService.getAnimals(farmId).subscribe({
+      next: (res: any) => {
+        const data = res.data;
+        this.animales = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los animales');
+      }
+    });
+  }
+
+  listProductions(farmId: number): void {
     this.productionsService.getProductions(farmId).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.productions = data; 
+        this.productions = data;
         this.dataSource.data = data;
-
       },
       error: (error) => {
         console.log(error);
@@ -95,7 +121,7 @@ export class ProduccionComponent implements OnInit {
     });
   }
 
-  downloadPDF(){
+  downloadPDF() {
     const doc = new jsPDF();
 
     doc.setFontSize(16); // Tamaño de fuente para el título
@@ -123,7 +149,6 @@ export class ProduccionComponent implements OnInit {
       productions.description,
       productions.quantityTotal,
       productions.expirateDate,
-      productions.animal
 
 
     ]);
@@ -155,17 +180,16 @@ export class ProduccionComponent implements OnInit {
     doc.save('Produccion.pdf');
   }
 
-  // listAnimales(): void {
-  //   this.animalService.getAnimals().subscribe({
-  //     next: (Animales: Animal[]) => {
-  //       this.animales = Animales;
-  //     },
-  //     error: (error) => {
-  //       console.log(error);
-  //       this.alertService.ErrorAlert('Error al cargar los medicamentos');
-  //     }
-  //   });
-  // }
+  listMeasurement(): void {
+    this.enumController.getMeasurement().subscribe({
+      next: (res: any) => {
+        this.measurements = res;
+      },
+      error: (error) => {
+        this.alertService.ErrorAlert('Error al cargar los medicamentos');
+      }
+    });
+  }
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -174,16 +198,18 @@ export class ProduccionComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newProduction = { id: 0, typeProduction:'',
+            this.newProduction = {
+              id: 0, typeProduction: '',
               stock: 0,
-              animal:'',
               measurement: '',
               description: '',
               quantityTotal: 0,
               expirateDate: new Date(),
-              animalId: 0, };
-            this.listProductions(this.farmId);
-
+              animalId: 0,
+            };
+            if (this.IdFarm !== null) {
+              this.listProductions(this.IdFarm);
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -192,9 +218,11 @@ export class ProduccionComponent implements OnInit {
       } else {
         this.productionsService.createProduction(this.newProduction).subscribe({
           next: () => {
-            this.alertService.SuccessAlert('Creado correctamente');
+            this.alertService.SuccessAlert('Creado correctamente ');
             form.reset();
-            this.listProductions(this.farmId);
+            if (this.IdFarm !== null) {
+              this.listProductions(this.IdFarm);
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');
@@ -204,13 +232,10 @@ export class ProduccionComponent implements OnInit {
     } else {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
-
   }
 
   onEdit(production: Productions): void {
     this.newProduction = { ...production };
-
-
   }
 
   onDelete(id: number): void {
@@ -219,7 +244,9 @@ export class ProduccionComponent implements OnInit {
         this.productionsService.deleteProduction(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Producción eliminada correctamente');
-            this.listProductions(this.farmId);
+            if (this.IdFarm !== null) {
+              this.listProductions(this.IdFarm);
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar producción');

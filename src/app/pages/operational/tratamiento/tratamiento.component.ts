@@ -16,6 +16,8 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
 import { DataTablesModule } from 'angular-datatables';
+import { AnimalDiagnosticsService } from '../animal-diagnostico/animal-diagnostico.service';
+import { AnimalDiagnostics } from '../animal-diagnostico/AnimalDiagnostics.module';
 
 
 @Component({
@@ -26,26 +28,30 @@ import { DataTablesModule } from 'angular-datatables';
     DataTablesModule,
     CommonModule,
     FormsModule,
-   MatIconModule,
-   MatButtonModule,
-   MatFormFieldModule,
-   MatInputModule,
-   MatTableModule,
-   MatPaginatorModule,
-   MatSortModule],
-  templateUrl: './tratamiento.component.html'})
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule],
+  templateUrl: './tratamiento.component.html'
+})
 export class TratamientoComponent implements OnInit {
 
+  IdFarm: number | null = null;
+  diagnostics: AnimalDiagnostics[] = [];
   tratamiento: Treatments[] = [];
   newTratamiento: Treatments = {
     id: 0,
+    name:'',
     description: '',
     finishiedDate: new Date(),
     startDate: new Date(),
     animalDiagnosticsId: 0
   }
 
-  displayedColumns: string[] = ['id', 'description', 'finishiedDate', 'startDate', 'animalDiagnosticsId'];
+  displayedColumns: string[] = ['id', 'diagnostico', 'description', 'finishiedDate', 'startDate', 'state', 'acciones'];
 
 
   dataSource!: MatTableDataSource<Treatments>;
@@ -53,17 +59,41 @@ export class TratamientoComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private treatmentsService: TreatmentsService, private alertService: AlertService) { }
+  constructor(private treatmentsService: TreatmentsService, private alertService: AlertService, private animalDiagnosticService: AnimalDiagnosticsService) { }
   ngOnInit(): void {
 
-    this.listTratamiento();
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
 
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString); 
+    } else {
+      this.IdFarm = null; 
+    }
+
+    if (this.IdFarm !== null) {
+      this.listTratamiento(this.IdFarm);
+      this.listDiagnostics(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
   }
 
-  listTratamiento(): void {
-    this.treatmentsService.getTreatments().subscribe({
+  listDiagnostics(IdFarm: number): void {
+    this.animalDiagnosticService.getAnimalDiagnostics(IdFarm).subscribe({
       next: (res: any) => {
-        const data = res.data; 
+        const data = res.data;
+        this.diagnostics = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los diagnósticos');
+      }
+    });
+  }
+
+  listTratamiento(IdFarm: number): void {
+    this.treatmentsService.getTreatments(IdFarm).subscribe({
+      next: (res: any) => {
+        const data = res.data;
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -76,8 +106,12 @@ export class TratamientoComponent implements OnInit {
     })
   }
 
-  downloadPDF(){
-    
+  downloadPDF() {
+
+  }
+
+  onEdit(tratamiento:Treatments){
+
   }
 
   eliminar(id: number): void {
@@ -86,7 +120,11 @@ export class TratamientoComponent implements OnInit {
         this.treatmentsService.deleteTreatment(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Eliminado correctamente');
-            this.listTratamiento();
+            if (this.IdFarm !== null) {
+              this.listTratamiento(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar el tratamiento');
@@ -104,9 +142,13 @@ export class TratamientoComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.listTratamiento();
-            this.newTratamiento = {
+            if (this.IdFarm !== null) {
+              this.listTratamiento(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            } this.newTratamiento = {
               id: 0,
+              name: '',
               description: '',
               finishiedDate: new Date(),
               startDate: new Date(),
@@ -121,8 +163,11 @@ export class TratamientoComponent implements OnInit {
         this.treatmentsService.createTreatment(this.newTratamiento).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Agregado correctamente');
-            this.listTratamiento();
-            form.reset();
+            if (this.IdFarm !== null) {
+              this.listTratamiento(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            } form.reset();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al agregar el tratamiento');
@@ -134,7 +179,7 @@ export class TratamientoComponent implements OnInit {
     }
   }
 
-  onDelete(id:number){
+  onDelete(id: number) {
 
   }
   aplicarFiltro(event: Event) {

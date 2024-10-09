@@ -48,14 +48,14 @@ export class UsersComponent implements OnInit {
   user: User[]= [];
   newUser: User = {
     id: 0,
+    password: '',
     username: '',
-    PersonId: 0,
+    personId: 0,
   }
   displayedColumns: string[] = ['id', 'userName', 'acciones'];
 
   dataSource!: MatTableDataSource<User>;
-dtoptions: Config={};
-dttrigger: Subject<any>= new Subject<any>();
+
 
 // referenicas del paginador y sort
 @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -63,13 +63,8 @@ dttrigger: Subject<any>= new Subject<any>();
 constructor(private userService: UserService,private alertService: AlertService, private  router: Router){}
 
   ngOnInit(): void {
-    this.dtoptions = {
-      pagingType: 'full_numbers',
-      lengthMenu: [5, 10, 15, 20]
-    };
+
     this.listUsers();
-
-
   }
 
   // Obtener la lista de usuarios

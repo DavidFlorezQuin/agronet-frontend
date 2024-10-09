@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AnimalDiagnostics } from './animal-diagnostico.module';
+import { AnimalDiagnostics } from './AnimalDiagnostics.module';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../env/enviroment'; 
 
@@ -26,6 +26,6 @@ export class AnimalDiagnosticsService {
   }
 
   createAnimalDiagnostics(animal: AnimalDiagnostics): Observable<AnimalDiagnostics> {
-    return this.http.post<AnimalDiagnostics>(`${this._baseUrl}/AnimalDiagnostic`, animal);
+    return this.http.post<AnimalDiagnostics>(`${this._baseUrl}/AnimalDiagnostic/save`, animal);
   }
 }

@@ -39,30 +39,52 @@ import jsPDF from 'jspdf';
   templateUrl: './inventario.component.html'
 })
 export class InventarioComponent implements OnInit {
+
+  IdFarm: number | null = null;
   newInventory: Inventories = {
     id: 0,
-    farm:'',
     name: '',
     description: '',
     farmId: 0,
-
   };
 
   inventories: Inventories[] = [];
+
   displayedColumns: string[] = ['id', 'name', 'description', 'farmId', 'acciones'];
   dataSource!: MatTableDataSource<Inventories>;
-  finca: Finca[] = [];
+  fincas: Finca[] = [];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+
   constructor(private inventoriesService: InventoriesService, private alertService: AlertService, private fincaService: FincaService) { }
 
   ngOnInit(): void {
-    this.listInventories();
-    // this.listFinca();
+
+    const StorageId: string | null = localStorage.getItem('Usuario');
+    const IdUser: number = StorageId ? Number(StorageId) : 0; 
+    
+    
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
+
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString);
+    } else {
+      this.IdFarm = null;
+    }
+
+    if (this.IdFarm !== null) {
+
+      this.listInventories(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
+
+    this.listFinca(IdUser);
   }
 
-  listInventories(): void {
-    this.inventoriesService.getInventories().subscribe({
+  listInventories(IdFarm: number): void {
+    this.inventoriesService.getInventories(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.dataSource = new MatTableDataSource(data);
@@ -79,7 +101,7 @@ export class InventarioComponent implements OnInit {
     });
   }
 
-  downloadPDF(){
+  downloadPDF() {
     const doc = new jsPDF();
 
     doc.setFontSize(16); // Tamaño de fuente para el título
@@ -103,7 +125,6 @@ export class InventarioComponent implements OnInit {
       inseminations.id,
       inseminations.name,
       inseminations.description,
-      inseminations.farm,
     ]);
 
     // Generar tabla usando autoTable
@@ -130,19 +151,17 @@ export class InventarioComponent implements OnInit {
     doc.save('inventario.pdf');
   }
 
-  // listFinca(): void {
-  //   this.fincaService.getFincas(this.).subscribe({
-  //     next: (res: Finca[]) => {
-
-
-  //       this.dataSource.paginator = this.paginator;
-  //       this.dataSource.sort = this.sort;
-  //     },
-  //     error: () => {
-  //       this.alertService.ErrorAlert('Error al obtener los datos de las fincas');
-  //     }
-  //   });
-  // }
+  listFinca(IdUser:number): void {
+    this.fincaService.getFincas(IdUser).subscribe({
+      next: (res: any) => {
+        const data = res.data; 
+        this.fincas = data; 
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los datos de las fincas');
+      }
+    });
+  }
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -151,7 +170,12 @@ export class InventarioComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Inventario actualizado correctamente');
             form.reset();
-            this.listInventories();
+            if (this.IdFarm !== null) {
+
+              this.listInventories(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar inventario');
@@ -162,7 +186,13 @@ export class InventarioComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Inventario creado correctamente');
             form.reset();
-            this.listInventories();
+
+            if (this.IdFarm !== null) {
+              this.listInventories(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }
+            
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear inventario');
@@ -184,7 +214,12 @@ export class InventarioComponent implements OnInit {
         this.inventoriesService.deleteInventory(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Inventario eliminado correctamente');
-            this.listInventories();
+            if (this.IdFarm !== null) {
+
+              this.listInventories(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar inventario');

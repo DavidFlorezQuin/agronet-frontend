@@ -28,6 +28,6 @@ export class AnimalService {
   }
 
   createAnimal(animal: Animal): Observable<Animal> {
-    return this.http.post<Animal>(`${this._baseUrl}/Animal`, animal);
+    return this.http.post<Animal>(`${this._baseUrl}/Animal/save`, animal);
   }
 }

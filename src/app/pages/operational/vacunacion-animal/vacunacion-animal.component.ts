@@ -48,20 +48,21 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
   templateUrl: './vacunacion-animal.component.html'
 })
 export class VacunacionComponent implements OnInit {
-  
-  IdFarm: number = 2; // Define IdFarm aquí
 
-  
+  IdFarm: number | null = null; // Propiedad para almacenar el ID
+
+
   newVaccineAnimal: VaccineAnimals = {
     id: 0,
     animalId: 0,
-    vaccineId: 0,
-    nextDose: new Date(),
+    vaccinesId: 0,
+    dateApplied: new Date(),
+    nextDose: null
   };
   displayedColumns: string[] = ['id', 'Animal', 'Vacuna', 'dateApplied', 'nextDose', 'acciones'];
 
-  vacuna: Vaccines[] = [];
-  animal: Animal[] = [];
+  vacunas: Vaccines[] = [];
+  animales: Animal[] = [];
 
   vaccineAnimals: VaccineAnimals[] = [];
 
@@ -75,15 +76,29 @@ export class VacunacionComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.listVaccineAnimals(this.IdFarm);
-    // this.loadAnimal();
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
+
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString); // Convertir a number
+    } else {
+      console.error('ID de la finca no válido o no presente en localStorage');
+      this.IdFarm = null; // Si no hay ID, establecer a null
+    }
+
+    if (this.IdFarm !== null) {
+      this.listVaccineAnimals(this.IdFarm);
+      this.ListAnimal(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
+    this.loadVacuna();
   }
 
-  downloadPDF(){
-    
+  downloadPDF() {
+
   }
   listVaccineAnimals(IdFarm: number): void {
-    this.vaccineAnimalsService.getVaccineAnimals(this.IdFarm).subscribe({
+    this.vaccineAnimalsService.getVaccineAnimals(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.dataSource = new MatTableDataSource(data);
@@ -111,11 +126,23 @@ export class VacunacionComponent implements OnInit {
   //   });
 
   // }
+  ListAnimal(farmId: number): void {
+    this.animalService.getAnimals(farmId).subscribe({
+      next: (res: any) => {
+        const data = res.data;
+        this.animales = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los animales');
+      }
+    });
+  }
 
   loadVacuna(): void {
     this.vaccinesService.getVaccines().subscribe({
-      next: (Vacuna: Vaccines[]) => {
-        this.vacuna = Vacuna;
+      next: (res: any) => {
+        const data = res.data;
+        this.vacunas = data;
       },
       error: (error) => {
         console.log(error);
@@ -132,12 +159,15 @@ export class VacunacionComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Vacuna actualizada correctamente');
             form.reset();
-            this.listVaccineAnimals(this.IdFarm);
+            if (this.IdFarm !== null) {
+              this.listVaccineAnimals(this.IdFarm);
+            }
             this.newVaccineAnimal = {
               id: 0,
               animalId: 0,
-              vaccineId: 0,
-              nextDose: new Date(),
+              vaccinesId: 0,
+              dateApplied: new Date(),
+              nextDose: null
             };
           },
           error: () => {
@@ -149,7 +179,9 @@ export class VacunacionComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Vacuna registrada correctamente');
             form.reset();
-            this.listVaccineAnimals(this.IdFarm);
+            if (this.IdFarm !== null) {
+              this.listVaccineAnimals(this.IdFarm);
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al registrar la vacuna');
@@ -171,7 +203,9 @@ export class VacunacionComponent implements OnInit {
         this.vaccineAnimalsService.deleteVaccineAnimal(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Registro eliminado correctamente');
-            this.listVaccineAnimals(this.IdFarm);
+            if (this.IdFarm !== null) {
+              this.listVaccineAnimals(this.IdFarm);
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar el registro');

@@ -4,15 +4,15 @@
 
     <section class="d-flex align-items-center gap-3">
       <h2 class="fw-normal mb-0">Personas</h2>
-    <button type="button" data-bs-toggle="modal" data-bs-target="#personModal" id="btn-forms" class="btn h-50">
-      <i class="bi bi-plus-circle mx-2"></i>
-      Agregar Persona
-    </button>
-  </section>
-  <mat-form-field appearance="fill">
-    <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
-  </mat-form-field>
+      <button type="button" data-bs-toggle="modal" data-bs-target="#personModal" id="btn-forms" class="btn h-50">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Agregar Persona
+      </button>
+    </section>
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+    </mat-form-field>
   </div>
 
   <!-- Tabla con MatTable -->
@@ -80,7 +80,7 @@
     </ng-container>
 
     <!-- Acciones Column -->
-   
+
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef>Acciones</th>
       <td mat-cell *matCellDef="let item">
@@ -109,41 +109,45 @@
 <!-- Modal -->
 
 
-  <div class="modal fade" id="personModal" tabindex="-1" aria-labelledby="personModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="personModalLabel">Agregar/Editar Persona</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form #personForm="ngForm" (ngSubmit)="onSubmit(personForm)">
-            <div class="mb-3">
-              <label for="firstName" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="newPerson.firstName" required>
-            </div>
+<div class="modal fade" id="personModal" tabindex="-1" aria-labelledby="personModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="personModalLabel">Agregar/Editar Persona</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #personForm="ngForm" (ngSubmit)="onSubmit(personForm)">
+          <div class="mb-3">
+            <label for="firstName" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="newPerson.firstName"
+              required>
+          </div>
 
-            <div class="mb-3">
-              <label for="lastName" class="form-label">Apellido</label>
-              <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="newPerson.lastName" required>
-            </div>
-            <div class="mb-3">
-              <label for="email" class="form-label">Correo Electrónico</label>
-              <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newPerson.email" required>
-            </div>
-            <div class="mb-3">
-              <label for="phone" class="form-label">Teléfono</label>
-              <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="newPerson.phone" required>
-            </div>
-            <div class="mb-3">
-              <label for="birthday" class="form-label">Fecha de Nacimiento</label>
-              <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday" required>
-            </div>
-            <button type="submit" class="btn btn-primary" [disabled]="!personForm.valid">{{ newPerson.id ? 'Actualizar' : 'Guardar' }}</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
+          <div class="mb-3">
+            <label for="lastName" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="newPerson.lastName"
+              required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newPerson.email" required>
+          </div>
+          <div class="mb-3">
+            <label for="phone" class="form-label">Teléfono</label>
+            <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="newPerson.phone" required>
+          </div>
+          <div class="mb-3">
+            <label for="birthday" class="form-label">Fecha de Nacimiento</label>
+            <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday"
+              required>
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="!personForm.valid">{{ newPerson.id ? 'Actualizar' :
+            'Guardar' }}</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
       </div>
     </div>
+  </div>

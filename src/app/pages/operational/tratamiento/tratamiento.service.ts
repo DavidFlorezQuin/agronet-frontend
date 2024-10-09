@@ -12,12 +12,12 @@ export class TreatmentsService {
 
   constructor(private http: HttpClient) {}
 
-  getTreatments(): Observable<Treatments[]> {
-    return this.http.get<Treatments[]>(`${this._baseUrl}/Treatment/List`);
+  getTreatments(IdFarm:number): Observable<Treatments[]> {
+    return this.http.get<Treatments[]>(`${this._baseUrl}/Treatment/datatable/${IdFarm}`);
   }
 
   createTreatment(treatment: Treatments): Observable<Treatments> {
-    return this.http.post<Treatments>(`${this._baseUrl}/Treatment`,treatment)
+    return this.http.post<Treatments>(`${this._baseUrl}/Treatment/save`,treatment)
   }
 
   updateTreatment(treatment: Treatments, id:number): Observable<Treatments> {

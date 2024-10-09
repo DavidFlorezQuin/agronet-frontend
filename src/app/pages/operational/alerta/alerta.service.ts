@@ -19,7 +19,7 @@ export class AlertaService {
   }
 
   createAlerta(Alerta:Alerta):Observable<Alerta>{
-    return this.http.post<Alerta>(`${this._baseUrl}/Alert`,Alerta)
+    return this.http.post<Alerta>(`${this._baseUrl}/Alert/save`,Alerta)
   }
 
   deleteAlerta(id:number):Observable<void>{

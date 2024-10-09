@@ -26,6 +26,6 @@ export class NacimetoService{
       }
     
       createNacimiento(nacimiento: Nacimiento): Observable<Nacimiento> {
-        return this.http.post<Nacimiento>(`${this._baseUrl}/Birth`, nacimiento);
+        return this.http.post<Nacimiento>(`${this._baseUrl}/Birth/save`, nacimiento);
       }
 }

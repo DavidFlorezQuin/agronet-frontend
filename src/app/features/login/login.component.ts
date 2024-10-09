@@ -27,7 +27,8 @@ export class LoginComponent {
     this.serviceAuth.login(this.newAuth).subscribe({
       next: (res) => {
         const id = res.id;
-
+        localStorage.setItem('Usuario', id.toString());
+        console.log(res);
         this.serviceAuth.setRoleMenu(id)
 
         this.serviceAuth.setLoggedIn(true)
@@ -39,9 +40,9 @@ export class LoginComponent {
 
       }
     })
-
-
   }
+
+
 
 
 

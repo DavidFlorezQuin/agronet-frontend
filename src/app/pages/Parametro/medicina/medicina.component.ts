@@ -42,7 +42,7 @@ import { CategoryMedicinas } from '../categoria-medicina/categoria-medicina.modu
 export class MedicinaComponent implements OnInit {
   medicina: Medicina[] = [];
   CategoryMedicinas: CategoryMedicinas[] = [];
-  NewMedicinas: Medicina = { id: 0, Name: '', Administration: '', CategoryMedicinesId: 0 }
+  NewMedicinas: Medicina = { id: 0, name: '', Administration: '', CategoryMedicinesId: 0 }
   displayedColumns: string[] = ['id', 'Name', 'Administration', 'CategoryMedicinasId', 'acciones'];
   dataSource!: MatTableDataSource<Medicina>;
 
@@ -107,7 +107,7 @@ export class MedicinaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.NewMedicinas = { id: 0, Name: '', Administration: '', CategoryMedicinesId: 0 };
+            this.NewMedicinas = { id: 0, name: '', Administration: '', CategoryMedicinesId: 0 };
             this.listMedicinas();
 
           },

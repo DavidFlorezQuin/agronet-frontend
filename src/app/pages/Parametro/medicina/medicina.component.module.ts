@@ -1,6 +1,6 @@
 export interface Medicina{
   id: number,
-  Name: string,
+  name: string,
   Administration: string,
   CategoryMedicinesId: number,
 

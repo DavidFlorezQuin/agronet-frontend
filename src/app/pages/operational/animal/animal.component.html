@@ -22,6 +22,7 @@
 
 
   </div>
+  <div *ngIf="animales.length === 0">No hay animales agregados.</div>
 
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
@@ -84,12 +85,10 @@
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
-        <button mat-icon-button color="primary" (click)="editar(element)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="eliminar(element)">
-          <mat-icon>delete</mat-icon>
-        </button>
+        <div class="d-flex gap-2 justify-content-center" id="icons-section">
+          <i class="bi bi-pencil-square" (click)="editar(element)"></i>
+          <i class="bi bi-trash" (click)="eliminar(element)"></i>
+        </div>
       </td>
     </ng-container>
 
@@ -123,8 +122,11 @@
               required>
           </div>
           <div class="mb-3">
-            <label for="race" class="form-label">Raza</label>
-            <input type="text" class="form-control" id="race" name="race" [(ngModel)]="newAnimales.raceId" required>
+            <label for="raceId" class="form-label">Raza</label>
+            <select class="form-control" id="race" name="race" [(ngModel)]="newAnimales.race" required>
+              <option value="" disabled selected>Seleccione una raza</option>
+              <option *ngFor="let race of races" [value]="race">{{ race }}</option>
+            </select>
           </div>
           <div class="mb-3">
             <label for="purpose" class="form-label">Propósito</label>
@@ -132,6 +134,15 @@
               <option value="" disabled selected>Selecciona un propósito</option>
               <option value="leche">Leche</option>
               <option value="carne">Carne</option>
+            </select>
+          </div>
+          
+          <div class="mb-3">
+            <label for="purpose" class="form-label">Sexo</label>
+            <select class="form-control" id="gender" name="gender" [(ngModel)]="newAnimales.gender" required>
+              <option value="" disabled selected>Selecciona un propósito</option>
+              <option value="Male">Macho</option>
+              <option value="Female">Hembra</option>
             </select>
           </div>
           
@@ -145,7 +156,6 @@
             <input type="file" class="form-control" id="file-upload" name="file-upload" accept="image/*, .pdf">
           </div>
 
-
           <div class="mb-3">
             <label for="lotId" class="form-label">Lote</label>
             <select class="form-control" id="lotId" name="lotId" [(ngModel)]="newAnimales.lotId" required>
@@ -153,6 +163,7 @@
               <option *ngFor="let lot of lote" [value]="lot.id">{{ lot.name }}</option>
             </select>
           </div>
+          
           <button type="submit" class="btn btn-primary" [disabled]="!animalForm.valid">Guardar</button>
         </form>
       </div>

@@ -3,5 +3,6 @@ export interface Treatments {
   description: string ,
   finishiedDate: Date ,
   startDate: Date ,
-  animalDiagnosticsId: number 
+  animalDiagnosticsId: number,
+  name: string
 }

@@ -17,7 +17,7 @@ export class VentasService {
   }
 
   createSale(sale: Ventas): Observable<Ventas> {
-    return this.http.post<Ventas>(`${this._baseUrl}/Sale`, sale);
+    return this.http.post<Ventas>(`${this._baseUrl}/Sale/save`, sale);
   }
 
   updateSale(sale: Ventas, id:number): Observable<Ventas> {

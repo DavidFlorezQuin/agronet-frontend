@@ -39,8 +39,8 @@ import { DataTablesModule } from 'angular-datatables';
   templateUrl: './categoria-alerta.component.html'
 })
 export class CategoriaAlertaComponent implements OnInit {
-  newCategoryaAlerta: CategoriaAlerta = { id: 0, Name: '', Description: '', Color: '' }
-  displayedColumns: string[] = ['id', 'Name', 'Description', 'color', 'Acciones']
+  newCategoryaAlerta: CategoriaAlerta = { id: 0, name: '', Description: '', Color: '' }
+  displayedColumns: string[] = ['id', 'name', 'Description', 'color', 'Acciones']
   CategoriaAlerta: CategoriaAlerta[] = [];
   dataSource!: MatTableDataSource<CategoriaAlerta>;
 
@@ -99,7 +99,7 @@ export class CategoriaAlertaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newCategoryaAlerta = { id: 0, Name: '', Description: '', Color: '' };
+            this.newCategoryaAlerta = { id: 0, name: '', Description: '', Color: '' };
             this.listCategoriaAlerta();
 
           },

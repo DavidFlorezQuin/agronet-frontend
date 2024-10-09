@@ -18,6 +18,10 @@ import { Subject } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
+import { Treatments } from '../tratamiento/tratamiento.module';
+import { TreatmentsService } from '../tratamiento/tratamiento.service';
+import { Medicina } from '../../Parametro/medicina/medicina.component.module';
+import { MedicinaService } from '../../Parametro/medicina/medicina.service';
 
 @Component({
   selector: 'app-tratamiento-medecinas',
@@ -34,22 +38,43 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './tratamiento-medecinas.component.html'
 })
 export class TratamientoMedecinasComponent implements OnInit {
+  IdFarm: number | null = null; 
+  medicines: Medicina[] = []; 
   treatmentsMedicines: TreatmentsMedicines[] = [];
-  newTreatmentMedicine: TreatmentsMedicines = { description: '', periocityDay: 0, medicinesId: 0, medicines: '', treatmentId: 0, treatment: '' };
-  displayedColumns: string[] = ['description', 'periocityDay', 'medicines', 'treatment', 'actions'];
+  tratamientos: Treatments[] = []; 
+
+  newTreatmentMedicine: TreatmentsMedicines = { id: 0, name: '', description: '', periocityDay: 0, medicinesId: 0, treatmentId: 0 };
+  displayedColumns: string[] = ['id','description', 'periocityDay', 'medicines', 'treatment', 'actions'];
   dataSource!: MatTableDataSource<TreatmentsMedicines>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private treatmentMedicineService: TreatmentsMedicinesService, private alertService: AlertService) { }
+  constructor(private treatmentMedicineService: TreatmentsMedicinesService, private alertService: AlertService, private treatmentService: TreatmentsService, private medicinesService:MedicinaService) { }
 
   ngOnInit(): void {
-    this.getTreatmentsMedicines();
+
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
+
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString); // Convertir a number
+    } else {
+      this.IdFarm = null; // Si no hay ID, establecer a null
+    }
+
+    if (this.IdFarm !== null) {
+      this.getTreatmentsMedicines(this.IdFarm);
+      this.listTratamiento(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
+
+    this.listMedicinas();
+
   }
 
-  getTreatmentsMedicines(): void {
-    this.treatmentMedicineService.getAllTreatmentsMedicinesService().subscribe({
+  getTreatmentsMedicines(IdFarm:number): void {
+    this.treatmentMedicineService.getAllTreatmentsMedicinesService(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data; 
         this.dataSource = new MatTableDataSource(data);
@@ -72,14 +97,29 @@ export class TratamientoMedecinasComponent implements OnInit {
     
   }
 
+  listTratamiento(IdFarm: number): void {
+    this.treatmentService.getTreatments(IdFarm).subscribe({
+      next: (res: any) => {
+        const data = res.data;
+        this.tratamientos = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los tratamientos');
+      }
+    })
+  }
+
   onDelete(id: number): void {
     this.alertService.DeleteAlert().then(res => {
       if (res.isConfirmed) {
         this.treatmentMedicineService.deleteTreatmentsMedicinesService(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Eliminado correctamente');
-            this.getTreatmentsMedicines();
-          },
+            if (this.IdFarm !== null) {
+              this.getTreatmentsMedicines(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar');
           }
@@ -90,11 +130,15 @@ export class TratamientoMedecinasComponent implements OnInit {
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
-      if (this.newTreatmentMedicine.treatmentId > 0) {
+      if (this.newTreatmentMedicine.id > 0) {
         this.treatmentMedicineService.updateTreatmentsMedicinesService(this.newTreatmentMedicine.treatmentId, this.newTreatmentMedicine).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
-            this.getTreatmentsMedicines();
+            if (this.IdFarm !== null) {
+              this.getTreatmentsMedicines(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }
             form.resetForm();
           },
           error: () => {
@@ -105,7 +149,11 @@ export class TratamientoMedecinasComponent implements OnInit {
         this.treatmentMedicineService.createTreatmentsMedicinesService(this.newTreatmentMedicine).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
-            this.getTreatmentsMedicines();
+            if (this.IdFarm !== null) {
+              this.getTreatmentsMedicines(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }
             form.resetForm();
           },
           error: () => {
@@ -120,5 +168,20 @@ export class TratamientoMedecinasComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
-}
 
+
+  listMedicinas(): void {
+  
+    this.medicinesService.getMedicina().subscribe({
+      next: (res: any) => {
+  
+        const data = res.data;
+        this.medicines = data; 
+      },
+      error: (error) => {
+        console.log(error);
+        this.alertService.ErrorAlert('Error al cargar los medicamentos');
+      }
+    });
+  }
+}

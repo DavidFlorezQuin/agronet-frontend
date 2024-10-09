@@ -2,7 +2,7 @@ import { Animal } from "../animal/animal.module"
 
 export interface Nacimiento{
     id: number,
-    Assistence:string,
+    assistence:string,
     Result:number,
     Description:string,
     BirthWeight: number 
@@ -10,18 +10,3 @@ export interface Nacimiento{
     AnimalId?:number,
    
 }
-
-
-
-/*
- public string Assistence {  get; set; }
- public double Result { get; set; }
- public string Description {  get; set; }
-
- public double BirthWeight { get; set; }
-
- public int InseminationId { get; set; }
- public Inseminations Insemination { get; set; }
-
- public int AnimalId { get; set; }
-/ */

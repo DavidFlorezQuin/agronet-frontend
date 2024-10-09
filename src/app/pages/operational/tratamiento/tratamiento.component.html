@@ -5,7 +5,7 @@
 
       <h2 class="fw-normal mb-0 ">Tratamiento</h2>
       <!-- Botón para abrir el modal -->
-      <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#animalDiagnosticoModal"
+      <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#treatmentsModal"
         id="btn-forms">
         <i class="bi bi-plus-circle mx-2"></i>
         Registrar Tratamiento
@@ -23,6 +23,8 @@
 
   </div>
 
+  <div *ngIf="tratamiento.length === 0">No hay tratamientos activos.</div>
+
     <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
       <!-- ID Column -->
@@ -31,6 +33,11 @@
         <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.id }} </td>
       </ng-container>
 
+      <!-- Diagnóstico Column -->
+      <ng-container matColumnDef="diagnostico">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnostico </th>
+        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.animalDiagnostics }} </td>
+      </ng-container>
       <!-- Diagnóstico Column -->
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
@@ -48,22 +55,21 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de inicio </th>
         <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.startDate}} </td>
       </ng-container>
-      <!-- User Column -->
-      <ng-container matColumnDef="animalDiagnosticsId">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnostico </th>
-        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.animalDiagnosticsId}} </td>
+
+      <!-- Estado Column -->
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.state ? 'activo' : 'inactivo'}} </td>
       </ng-container>
 
       <!-- Actions Column -->
       <ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
-        <td mat-cell *matCellDef="let diagnostico">
-          <button mat-icon-button color="primary" (click)="onSubmit(diagnostico)">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="onDelete(diagnostico.id)">
-            <mat-icon>delete</mat-icon>
-          </button>
+        <td mat-cell *matCellDef="let element">
+          <div class="d-flex gap-2 justify-content-center" id="icons-section">
+            <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
+            <i class="bi bi-trash" (click)="onDelete(element)"></i>
+          </div>
         </td>
       </ng-container>
 
@@ -77,60 +83,47 @@
 
 
   <!-- Modal -->
-  <!-- Modal para crear o editar diagnóstico -->
-  <div class="modal fade" id="animalDiagnosticoModal" tabindex="-1" aria-labelledby="animalDiagnosticoModalLabel"
-    aria-hidden="true">
+  <div class="modal fade" id="treatmentsModal" tabindex="-1" aria-labelledby="treatmentsModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <!--Editar o crear-->
-          <h5 class="modal-title" id="animalDiagnosticoModalLabel"> {{ newTratamiento.id > 0 ? 'Editar Diagnóstico' :
-            'Nuevo Diagnóstico' }} </h5>
-          <!--Boton de cerrar-->
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <h5 class="modal-title" id="treatmentsModalLabel">Agregar Tratamiento</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
+        <div class="modal-body">
+          <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
 
-        <form #diagnosticoForm="ngForm" (ngSubmit)="onSubmit(diagnosticoForm)">
-          <div class="modal-body">
-
-            <!-- Diagnóstico -->
-            <mat-form-field appearance="fill">
-              <mat-label>Diagnóstico</mat-label>
-              <input matInput type="text" name="description" [(ngModel)]="newTratamiento.description" required>
-            </mat-form-field>
-            <!-- Diagnóstico -->
-            <mat-form-field appearance="fill">
-              <mat-label>finishiedDate</mat-label>
-              <input matInput type="text" name="finishiedDate" [(ngModel)]="newTratamiento.finishiedDate" required>
-            </mat-form-field>
-            <!-- Diagnóstico -->
-            <mat-form-field appearance="fill">
-              <mat-label>Diagnóstico</mat-label>
-              <input matInput type="text" name="startDate" [(ngModel)]="newTratamiento.startDate" required>
-            </mat-form-field>
-            <!-- Diagnóstico -->
-            <mat-form-field appearance="fill">
-              <mat-label>Diagnóstico</mat-label>
-              <input matInput type="text" name="animalDiagnosticsId" [(ngModel)]="newTratamiento.animalDiagnosticsId"
+            <div class="mb-3">
+              <label for="name" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newTratamiento.name"
                 required>
-            </mat-form-field>
+            </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Descripción</label>
+              <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newTratamiento.description"
+                required>
+            </div>
+            <div class="mb-3">
+              <label for="startDate" class="form-label">Fecha inicio</label>
+              <input type="date" class="form-control" id="startDate" name="startDate" [(ngModel)]="newTratamiento.startDate"
+                required>
+            </div>
+            <div class="mb-3">
+              <label for="finishiedDate" class="form-label">Fecha Fin</label>
+              <input type="date" class="form-control" id="finishiedDate" name="finishiedDate" [(ngModel)]="newTratamiento.finishiedDate"
+                required>
+            </div>
+            <div class="mb-3">
+              <label for="animalDiagnosticsId" class="form-label">Diagnósticos</label>
+              <select class="form-control" id="animalDiagnosticsId" name="animalDiagnosticsId" [(ngModel)]="newTratamiento.animalDiagnosticsId" required>
+                <option value="" disabled selected>Selecciona un animal</option>
+                <option *ngFor="let diagnostic of diagnostics" [value]="diagnostic.id">{{ diagnostic.name }}</option>
+              </select>
+            </div>
 
-
-
-
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">{{ newTratamiento.id > 0 ? 'Actualizar' : 'Crear' }}</button>
-          </div>
-        </form>
+            <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Enviar</button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
-
-  <!---
-
--->

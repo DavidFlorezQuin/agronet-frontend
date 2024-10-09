@@ -1,142 +1,149 @@
 <div class="container mt-3 border p-3 shadow-sm">
   <div class="d-flex justify-content-between">
-  
-      <section class="d-flex align-items-center gap-3">
-        <h2 class="fw-normal mb-0">Inventario Historia </h2>
-          
-          <button type="button" data-bs-toggle="modal" data-bs-target="#inventarioModal" id="btn-forms" class="btn h-50">
-            <i class="bi bi-plus-circle mx-2"></i>
-             Agregar Inventario Historia
-          
-          </button>
-      </section>
-  
-      <!-- Tabla con MatTable -->
-      <mat-form-field appearance="fill">
-        <mat-label>Buscar</mat-label>
-        <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
-      </mat-form-field>
-  
-  
-    </div>
-  
-  
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
-        <ng-container matColumnDef="id">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-            <td mat-cell *matCellDef="let element">{{element.id}}</td>
-          </ng-container>
-      
-          <!-- Columna Fecha -->
-          <ng-container matColumnDef="date">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
-            <td mat-cell *matCellDef="let element">{{element.date | date}}</td>
-          </ng-container>
-      
-          <!-- Columna Cantidad -->
-          <ng-container matColumnDef="amount">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</th>
-            <td mat-cell *matCellDef="let element">{{element.amount}}</td>
-          </ng-container>
-      
-          <!-- Columna Medida -->
-          <ng-container matColumnDef="measure">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Medida</th>
-            <td mat-cell *matCellDef="let element">{{element.measure}}</td>
-          </ng-container>
-      
-          <!-- Columna Tipo de Transacción -->
-          <ng-container matColumnDef="transactionType">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo Transacción</th>
-            <td mat-cell *matCellDef="let element">{{element.transactionType}}</td>
-          </ng-container>
-      
-          <!-- Columna Usuario -->
-          <ng-container matColumnDef="UserId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>
-            <td mat-cell *matCellDef="let element">{{element.UserId.username}}</td>
-          </ng-container>
-      
-          <!-- Columna Inventario Suplemento -->
-          <ng-container matColumnDef="InventorySuppliesId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Inventario Suplemento</th>
-            <td mat-cell *matCellDef="let element">{{element.InventorySuppliesId.amount}}</td>
-          </ng-container>
-      
-          <!-- Columna Acciones -->
-          <ng-container matColumnDef="acciones">
-            <th mat-header-cell *matHeaderCellDef>Acciones</th>
-            <td mat-cell *matCellDef="let element">
-              <button mat-button (click)="onSubmit(element)">Editar</button>
-              <button mat-button color="warn" (click)="onDelete(element.id)">Eliminar</button>
-            </td>
-          </ng-container>
-      
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-       </table>
-  
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+    <section class="d-flex align-items-center gap-3">
+      <h2 class="fw-normal mb-0">Inventario Historia </h2>
+
+      <button type="button" data-bs-toggle="modal" data-bs-target="#inventarioModal" id="btn-forms" class="btn h-50">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Agregar Inventario Historia
+
+      </button>
+    </section>
+
+    <!-- Tabla con MatTable -->
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
+    </mat-form-field>
+
   </div>
 
+  <div *ngIf="InventarioHistoria.length === 0">No hay historial inventario activos.</div>
 
-  <!-- Modal -->
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+      <td mat-cell *matCellDef="let element">{{element.id}}</td>
+    </ng-container>
+
+    <!-- Columna Fecha -->
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha</th>
+      <td mat-cell *matCellDef="let element">{{element.date | date}}</td>
+    </ng-container>
+
+    <!-- Columna Cantidad -->
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Cantidad</th>
+      <td mat-cell *matCellDef="let element">{{element.amount}}</td>
+    </ng-container>
+
+    <!-- Columna Medida -->
+    <ng-container matColumnDef="measure">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Medida</th>
+      <td mat-cell *matCellDef="let element">{{element.measure}}</td>
+    </ng-container>
+
+    <!-- Columna Tipo de Transacción -->
+    <ng-container matColumnDef="transactionType">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo Transacción</th>
+      <td mat-cell *matCellDef="let element">{{element.transactionType}}</td>
+    </ng-container>
+
+    <!-- Columna Usuario -->
+    <ng-container matColumnDef="UserId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>
+      <td mat-cell *matCellDef="let element">{{element.UserId.username}}</td>
+    </ng-container>
+
+    <!-- Columna Inventario Suplemento -->
+    <ng-container matColumnDef="InventorySuppliesId">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Inventario Suplemento</th>
+      <td mat-cell *matCellDef="let element">{{element.InventorySuppliesId.amount}}</td>
+    </ng-container>
+
+    <!-- Columna Acciones -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="d-flex gap-2 justify-content-center" id="icons-section">
+          <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
+          <i class="bi bi-trash" (click)="onDelete(element)"></i>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+<!-- Modal -->
 <div class="modal fade" id="inventarioModal" tabindex="-1" aria-labelledby="inventarioModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="inventarioModalLabel">
-            {{ newInventarioHistorias.id ? 'Editar Historia de Inventario' : 'Agregar Historia de Inventario' }}
-          </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form #inventarioForm="ngForm" (ngSubmit)="onSubmit(inventarioForm)">
-            <div class="mb-3">
-              <label for="amount" class="form-label">Cantidad</label>
-              <input type="number" class="form-control" id="amount" name="amount" [(ngModel)]="newInventarioHistorias.amount" required />
-            </div>
-  
-            <div class="mb-3">
-              <label for="measure" class="form-label">Medida</label>
-              <input type="number" class="form-control" id="measure" name="measure" [(ngModel)]="newInventarioHistorias.measure" required />
-            </div>
-  
-            <div class="mb-3">
-              <label for="transactionType" class="form-label">Tipo de Transacción</label>
-              <input type="text" class="form-control" id="transactionType" name="transactionType" [(ngModel)]="newInventarioHistorias.transactionType" required />
-            </div>
-  
-            <div class="mb-3">
-              <label for="UserId" class="form-label">Usuario</label>
-              <select class="form-control" id="UserId" name="UserId" [(ngModel)]="newInventarioHistorias.UserId" required>
-                <option value="" disabled selected>Seleccione un usuario</option>
-                <option *ngFor="let user of User" [value]="user.id">{{ user.username }}</option>
-              </select>
-            </div>
-  
-            <div class="mb-3">
-              <label for="InventorySuppliesId" class="form-label">Suplemento de Inventario</label>
-              <select class="form-control" id="InventorySuppliesId" name="InventorySuppliesId" [(ngModel)]="newInventarioHistorias.InventorySuppliesId" required>
-                <option value="" disabled selected>Seleccione un suplemento</option>
-                <option *ngFor="let suplemento of InventorySupplies" [value]="suplemento.id">{{ suplemento.amount }}</option>
-              </select>
-            </div>
-  
-            <div class="mb-3">
-              <label for="date" class="form-label">Fecha</label>
-              <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newInventarioHistorias.date" required />
-            </div>
-  
-            <button type="submit" class="btn btn-primary" [disabled]="!inventarioForm.valid">
-              {{ newInventarioHistorias.id ? 'Actualizar' : 'Guardar' }}
-            </button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="inventarioModalLabel">
+          {{ newInventarioHistorias.id ? 'Editar Historia de Inventario' : 'Agregar Historia de Inventario' }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #inventarioForm="ngForm" (ngSubmit)="onSubmit(inventarioForm)">
+          <div class="mb-3">
+            <label for="amount" class="form-label">Cantidad</label>
+            <input type="number" class="form-control" id="amount" name="amount"
+              [(ngModel)]="newInventarioHistorias.amount" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="measure" class="form-label">Medida</label>
+            <input type="number" class="form-control" id="measure" name="measure"
+              [(ngModel)]="newInventarioHistorias.measure" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="transactionType" class="form-label">Tipo de Transacción</label>
+            <input type="text" class="form-control" id="transactionType" name="transactionType"
+              [(ngModel)]="newInventarioHistorias.transactionType" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="UserId" class="form-label">Usuario</label>
+            <select class="form-control" id="UserId" name="UserId" [(ngModel)]="newInventarioHistorias.UserId" required>
+              <option value="" disabled selected>Seleccione un usuario</option>
+              <option *ngFor="let user of User" [value]="user.id">{{ user.username }}</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="InventorySuppliesId" class="form-label">Suplemento de Inventario</label>
+            <select class="form-control" id="InventorySuppliesId" name="InventorySuppliesId"
+              [(ngModel)]="newInventarioHistorias.InventorySuppliesId" required>
+              <option value="" disabled selected>Seleccione un suplemento</option>
+              <option *ngFor="let suplemento of InventorySupplies" [value]="suplemento.id">{{ suplemento.amount }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="date" class="form-label">Fecha</label>
+            <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newInventarioHistorias.date"
+              required />
+          </div>
+
+          <button type="submit" class="btn btn-primary" [disabled]="!inventarioForm.valid">
+            {{ newInventarioHistorias.id ? 'Actualizar' : 'Guardar' }}
+          </button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
       </div>
     </div>
   </div>
-  
+</div>

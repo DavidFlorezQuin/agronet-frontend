@@ -9,7 +9,7 @@ import { AnimalService } from '../animal/animal.service';
 import { UserService } from '../../../features/Security/users/user.service';
 import { Animal } from '../animal/animal.module';
 import { User } from '../../../features/Security/users/User.module';
-import { AnimalDiagnostics } from './animal-diagnostico.module';
+import { AnimalDiagnostics } from './AnimalDiagnostics.module';
 import { CommonModule } from '@angular/common';
 import { DataTablesModule } from 'angular-datatables';
 import { MatIconModule } from '@angular/material/icon';
@@ -35,8 +35,8 @@ import jsPDF from 'jspdf';
   templateUrl: './animal-diagnostico.component.html'
 })
 export class AnimalDiagnosticoComponent implements OnInit {
-
-  IdFarm: number = 4;
+  IdFarm: number | null = null;
+  usersId: number | null = null; // Definir como propiedad de la clase
 
   diagnostics: AnimalDiagnostics[] = [];
   animales: Animal[] = [];
@@ -47,7 +47,7 @@ export class AnimalDiagnosticoComponent implements OnInit {
 
   };
 
-  displayedColumns: string[] = ['id', 'diagnosis', 'animal', 'users', 'acciones'];
+  displayedColumns: string[] = ['id', 'name','diagnosis', 'animal', 'users', 'acciones'];
   dataSource: MatTableDataSource<AnimalDiagnostics> = new MatTableDataSource<AnimalDiagnostics>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -61,9 +61,25 @@ export class AnimalDiagnosticoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.listDiagnostics(this.IdFarm);
-    // this.listAnimals();
-    // this.listUsers();
+    const StorageId: string | null = localStorage.getItem('Usuario');
+    this.usersId = Number(StorageId);
+    this.newDiagnostic.usersId = this.usersId;
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
+
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString); // Convertir a number
+    } else {
+      console.error('ID de la finca no válido o no presente en localStorage');
+      this.IdFarm = null; // Si no hay ID, establecer a null
+    }
+
+    if (this.IdFarm !== null) {
+      this.listDiagnostics(this.IdFarm);
+      this.ListAnimal(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
+
   }
 
   listDiagnostics(IdFarm: number): void {
@@ -175,19 +191,30 @@ export class AnimalDiagnosticoComponent implements OnInit {
           next: () => {
             this.alertaService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.listDiagnostics(this.IdFarm);
-          },
+            if (this.IdFarm !== null) {
+              this.listDiagnostics(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar');
           }
         });
       } else {
-        this.diagnosticsService.createAnimalDiagnostics(this.newDiagnostic).subscribe({
+        const formData = form.value; 
+        const diagnostic: AnimalDiagnostics = {
+          ...formData,
+          usersId:Number(formData.usersId)
+        }
+        this.diagnosticsService.createAnimalDiagnostics(diagnostic).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Creado correctamente');
             form.reset();
-            this.listDiagnostics(this.IdFarm);
-          },
+            if (this.IdFarm !== null) {
+              this.listDiagnostics(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }            },
           error: () => {
             this.alertaService.ErrorAlert('Error al crear');
           }
@@ -196,14 +223,29 @@ export class AnimalDiagnosticoComponent implements OnInit {
     }
   }
 
+  ListAnimal(farmId: number): void {
+    this.animalService.getAnimals(farmId).subscribe({
+      next: (res: any) => {
+        const data = res.data;
+        this.animales = data;
+      },
+      error: () => {
+        this.alertaService.ErrorAlert('Error al obtener los animales');
+      }
+    });
+  }
+
   onDelete(id: number): void {
     this.alertaService.DeleteAlert().then((res) => {
       if (res.isConfirmed) {
         this.diagnosticsService.deleteAnimalDiagnostics(id).subscribe({
           next: (res) => {
             this.alertaService.SuccessAlert('Eliminado con éxito');
-            this.listDiagnostics(this.IdFarm);
-          },
+            if (this.IdFarm !== null) {
+              this.listDiagnostics(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }            },
           error: () => {
             this.alertaService.ErrorAlert('Error al eliminar el animal');
           }

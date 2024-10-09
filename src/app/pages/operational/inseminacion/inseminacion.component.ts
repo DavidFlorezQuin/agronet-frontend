@@ -37,7 +37,8 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class InseminationComponent implements OnInit {
 
-  IdFarm:number = 4; 
+  IdFarm: number | null = null;
+
   dataSource: MatTableDataSource<Insemination> = new MatTableDataSource<Insemination>();
 
   // referenicas del paginador y sort
@@ -45,13 +46,13 @@ export class InseminationComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   displayedColumns: string[] = ['id', 'description', 'semen', 'mother', 'result', 'inseminationType', 'state', 'acciones'];
-  
+
   inseminations: Insemination[] = [];
 
   newInsemination: Insemination = {
     id: 0,
     mother: '',
-    state:'',
+    state: '',
     semen: '',
     description: '',
     semenId: 0,
@@ -64,11 +65,25 @@ export class InseminationComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.listInseminations(this.IdFarm);
+
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
+
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString);
+    } else {
+      this.IdFarm = null;
+    }
+
+    if (this.IdFarm !== null) {
+      this.listInseminations(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
+
 
   }
 
-  listInseminations(IdFarm:number): void {
+  listInseminations(IdFarm: number): void {
     this.inseminationService.getInseminations(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
@@ -152,7 +167,9 @@ export class InseminationComponent implements OnInit {
         this.inseminationService.deleteInsemination(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Eliminado correctamente');
-            this.listInseminations(this.IdFarm);
+            if (this.IdFarm !== null) {
+              this.listInseminations(this.IdFarm);
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar');
@@ -169,7 +186,9 @@ export class InseminationComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.listInseminations(this.IdFarm);
+            if (this.IdFarm !== null) {
+              this.listInseminations(this.IdFarm);
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -184,13 +203,15 @@ export class InseminationComponent implements OnInit {
               id: 0, description: '',
               semenId: 0,
               semen: '',
-              state:'',
-              mother:'',
+              state: '',
+              mother: '',
               motherId: 0,
               result: '',
               inseminationType: ''
             };
-            this.listInseminations(this.IdFarm);
+            if (this.IdFarm !== null) {
+              this.listInseminations(this.IdFarm);
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

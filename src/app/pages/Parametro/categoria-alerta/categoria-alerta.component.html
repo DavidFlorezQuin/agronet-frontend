@@ -27,7 +27,7 @@
     </ng-container>
 
     <!-- Nombre Column -->
-    <ng-container matColumnDef="Name">
+    <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
@@ -78,7 +78,7 @@
         <form class="px-5" #categoriaAlertaForm="ngForm" (ngSubmit)="onSubmit(categoriaAlertaForm)">
           <div class="mb-3">
             <label for="Name" class="form-label">Nombre</label>
-            <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newCategoryaAlerta.Name"
+            <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newCategoryaAlerta.name"
               required>
           </div>
           <div class="mb-3">

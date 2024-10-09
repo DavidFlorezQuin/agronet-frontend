@@ -22,6 +22,8 @@ import { AlertService } from '../../../shared/components/alert.service';
 import jsPDF from 'jspdf';
 import { AnimalService } from '../animal/animal.service';
 import { Animal } from '../animal/animal.module';
+import { CategoriaAlertaaService } from '../../Parametro/categoria-alerta/categoria-alerta.service';
+import { CategoriaAlerta } from '../../Parametro/categoria-alerta/categoria-alerta.module';
 
 @Component({
   selector: 'app-alerta',
@@ -42,11 +44,23 @@ import { Animal } from '../animal/animal.module';
   styleUrl: './alerta.component.css'
 })
 export class AlertaComponent implements OnInit {
+
   alerta: Alerta[] = [];
   IdFarm: number | null = null; // Propiedad para almacenar el ID
+  IdUser: number | null = null; // Definir como propiedad de la clase
   animals: Animal[] = [];
+  CategoriaAlerta: CategoriaAlerta[] = [];
 
-  newAlerta: Alerta = { id: 0, name: '', description: '', date: new Date, isRead: new Boolean, animalId: 0, categoryAlertId: 0, usersId: 0, animal:'', categoryAlert:'', users:'' };
+  newAlerta: Alerta = {
+    id: 0,
+    name: '',
+    description: '',
+    date: new Date(),
+    isRead: false,
+    animalId: 0,
+    categoryAlertId: 0,
+    usersId: 0,
+  };
 
   displayedColumns: string[] = ['id', 'name', 'date', 'isRead', 'animal', 'categoryAlert', 'users', 'acciones'];
   dataSource!: MatTableDataSource<Alerta>;
@@ -54,42 +68,47 @@ export class AlertaComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private AlertaService: AlertaService, private alertService: AlertService, private animalService: AnimalService) { }
+  constructor(private AlertaService: AlertaService, private alertService: AlertService, private animalService: AnimalService, private CategoriaAlertaaService: CategoriaAlertaaService) { }
 
   ngOnInit(): void {
+    const StorageId: string | null = localStorage.getItem('Usuario');
+    this.IdUser = Number(StorageId);
+    this.newAlerta.usersId = this.IdUser;
+
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
-    
+
     if (idFarmString && !isNaN(Number(idFarmString))) {
       this.IdFarm = Number(idFarmString); // Convertir a number
     } else {
       this.IdFarm = null; // Si no hay ID, establecer a null
     }
-    
+
     if (this.IdFarm !== null) {
       this.listAlerta(this.IdFarm);
       this.ListAnimal(this.IdFarm);
+      this.listCategoryAlert();
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
   }
 
+
   ListAnimal(farmId: number): void {
     this.animalService.getAnimals(farmId).subscribe({
       next: (res: any) => {
-        const data = res.data; 
-        this.animals = data; 
-        this.dataSource.data = data;
+        const data = res.data;
+        this.animals = data;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los animales');
       }
     });
   }
-    
-  listAlerta(IdFarm:number): void {
+
+  listAlerta(IdFarm: number): void {
     this.AlertaService.getAlerta(IdFarm).subscribe({
       next: (res: any) => {
-        const data = res.data; 
+        const data = res.data;
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -101,15 +120,28 @@ export class AlertaComponent implements OnInit {
       }
     });
   }
-  
+
+  listCategoryAlert(): void {
+    this.CategoriaAlertaaService.getCategoriaAlerta().subscribe({
+      next: (res: any) => {
+
+        const data = res.data;
+        this.CategoriaAlerta = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los datos');
+      }
+    });
+  }
+
   downloadPDF(): void {
     const doc = new jsPDF();
-  
+
     // Título del PDF
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
     doc.text('AGRONET', 14, 10); // Título del PDF
-  
+
     // Agregar subtítulo debajo del título
     doc.setFontSize(10); // Tamaño de fuente para el subtítulo
     doc.setTextColor(0, 0, 0); // Color negro para el subtítulo
@@ -118,22 +150,19 @@ export class AlertaComponent implements OnInit {
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
     doc.text('Histórico de alertas', 14, 23); // Título del PDF
-  
+
     // Encabezados de la tabla
     const headers = [['id', 'Nombre', 'Description', 'Date', 'IsRead', 'animal', 'categoryAlert', 'users']];
-  
+
     // Datos de la tabla
     const data = this.dataSource.data.map(alerta => [
-      alerta.id, 
-      alerta.name, 
-      alerta.description, 
+      alerta.id,
+      alerta.name,
+      alerta.description,
       alerta.date,
       alerta.isRead,
-      alerta.animal,
-      alerta.categoryAlert,
-      alerta.users
     ]);
-  
+
     // Generar tabla usando autoTable
     (doc as any).autoTable({
       head: headers,
@@ -146,21 +175,21 @@ export class AlertaComponent implements OnInit {
         cellPadding: 2, // Espaciado dentro de las celdas
       },
       columnStyles: {
-        0: { cellWidth: 10 },   
-        1: { cellWidth: 30 },   
-        2: { cellWidth: 50 },  
-        3: { cellWidth: 30 },   
-        4: { cellWidth: 20 },   
-        5: { cellWidth: 20 },   
-        6: { cellWidth: 20 },   
-        7: { cellWidth: 10 }   
+        0: { cellWidth: 10 },
+        1: { cellWidth: 30 },
+        2: { cellWidth: 50 },
+        3: { cellWidth: 30 },
+        4: { cellWidth: 20 },
+        5: { cellWidth: 20 },
+        6: { cellWidth: 20 },
+        7: { cellWidth: 10 }
       }
     });
-  
+
     // Guardar el archivo PDF
     doc.save('alertas.pdf');
   }
-  
+
   onEdit(alerta: Alerta): void {
     this.newAlerta = { ...alerta };
   }
@@ -175,7 +204,8 @@ export class AlertaComponent implements OnInit {
               this.listAlerta(this.IdFarm);
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }          },
+            }
+          },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar');
           }
@@ -191,18 +221,30 @@ export class AlertaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.newAlerta = { id: 0, name: '', description: '', date: new Date, isRead: new Boolean, animalId: 0, categoryAlertId: 0, usersId: 0, animal:'', categoryAlert:'', users:'' };
+            this.newAlerta = { id: 0, name: '', description: '', date: new Date, isRead: new Boolean, animalId: 0, categoryAlertId: 0, usersId: 0 };
             if (this.IdFarm !== null) {
               this.listAlerta(this.IdFarm);
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }          },
+            }
+          },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
           }
         });
       } else {
-        this.AlertaService.createAlerta(this.newAlerta).subscribe({
+
+        const formData = form.value;
+        const alertaData: Alerta = {
+          ...formData,
+          animalId: Number(formData.animalId),
+          categoryAlertId: Number(formData.categoryAlertId),
+          usersId: Number(formData.usersId),
+          isRead: false,
+          date: new Date(formData.date).toISOString() // Convertir a Date y luego a formato ISO
+
+        };
+        this.AlertaService.createAlerta(alertaData).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
@@ -210,7 +252,8 @@ export class AlertaComponent implements OnInit {
               this.listAlerta(this.IdFarm);
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }             },
+            }
+          },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');
           }

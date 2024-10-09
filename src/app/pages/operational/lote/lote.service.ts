@@ -13,19 +13,19 @@ export class LoteService {
 
   constructor(private http: HttpClient) {}
 
-  getLote(): Observable<Lote[]> {
-    return this.http.get<Lote[]>(`${this._baseUrl}/Lot/List`);
+  getLote(IdFarm: number): Observable<Lote[]> {
+    return this.http.get<Lote[]>(`${this._baseUrl}/Lot/datatable/${IdFarm}`);
   }
 
   deleteLote(id: number): Observable<void> {
-    return this.http.delete<void>(`${this._baseUrl}/Lote/${id}`);
+    return this.http.delete<void>(`${this._baseUrl}/Lot/${id}`);
   }
 
   updateLote(lote: Lote, id: number): Observable<Lote> {
-    return this.http.put<Lote>(`${this._baseUrl}/Lote/${id}`, lote);
+    return this.http.put<Lote>(`${this._baseUrl}/Lot/${id}`, lote);
   }
 
   createLote(lote: Lote): Observable<Lote> {
-    return this.http.post<Lote>(`${this._baseUrl}/Lote`, lote);
+    return this.http.post<Lote>(`${this._baseUrl}/Lot/save`, lote);
   }
 }

@@ -1,5 +1,4 @@
 
-
 .btn-seccion{
     background-color: var(--color-green-600);
     font-family: system;
@@ -26,6 +25,6 @@ span{
 
 }
 
-.footer a{
+a{
     color: var(--color-green-900);
 }

@@ -14,6 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
 import jsPDF from 'jspdf';
+import { FincaService } from '../finca/finca.service';
+import { Finca } from '../finca/finca.module';
 
 @Component({
   selector: 'app-lote',
@@ -37,25 +39,55 @@ export class LoteComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'name', 'hectare', 'farmId', 'actions'];
   dataSource!: MatTableDataSource<Lote>;
+  IdFarm: number | null = null;
 
+  fincas: Finca[] = [];
   lote: Lote[] = [];
   newLote: Lote = {
     id: 0, name: '', hectare: 0,
-    farmId: 0, farm: ''
+    farmId: 0,
 
   }
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private loteService: LoteService, private alertaService: AlertService) { }
+  constructor(private loteService: LoteService, private alertaService: AlertService, private fincaService:FincaService) { }
   ngOnInit(): void {
 
-    this.listLot();
+    const StorageId: string | null = localStorage.getItem('Usuario');
+    const IdUser: number = StorageId ? Number(StorageId) : 0; 
+    
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
+    
+    if (idFarmString && !isNaN(Number(idFarmString))) {
+      this.IdFarm = Number(idFarmString); 
+    } else {
+      console.error('ID de la finca no válido o no presente en localStorage');
+      this.IdFarm = null; 
+    }
+    
+    if (this.IdFarm !== null) {
+      this.listLot(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
+    this.listFinca(IdUser); 
   }
 
-  listLot(): void {
+  listFinca(IdUser:number): void {
+    this.fincaService.getFincas(IdUser).subscribe({
+      next: (res: any) => {
+        const data = res.data; 
+        this.fincas = data; 
+      },
+      error: () => {
+        this.alertaService.ErrorAlert('Error al obtener los datos de las fincas');
+      }
+    });
+  }
+  listLot(IdFarm:number): void {
 
-    this.loteService.getLote().subscribe({
+    this.loteService.getLote(IdFarm).subscribe({
       next: (res: any) => {
 
         const data = res.data;
@@ -68,9 +100,7 @@ export class LoteComponent implements OnInit {
         this.alertaService.ErrorAlert('Error al obtener los datos');
       }
     });
-
   }
-
 
   downloadPDF(): void {
     const doc = new jsPDF();
@@ -97,7 +127,6 @@ export class LoteComponent implements OnInit {
       lote.id,
       lote.name,
       lote.hectare,
-      lote.farm,
     ]);
 
     // Generar tabla usando autoTable
@@ -133,8 +162,11 @@ export class LoteComponent implements OnInit {
         this.loteService.deleteLote(id).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Eliminado correctamente');
-            this.listLot();
-          },
+            if (this.IdFarm !== null) {
+              this.listLot(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertaService.ErrorAlert('Error al eliminar');
           }
@@ -152,10 +184,13 @@ export class LoteComponent implements OnInit {
             form.reset();
             this.newLote = {
               id: 0, name: '', hectare: 0,
-              farmId: 0, farm: ''
+              farmId: 0, 
             };
-            this.listLot();
-          },
+            if (this.IdFarm !== null) {
+              this.listLot(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar');
           }
@@ -165,8 +200,11 @@ export class LoteComponent implements OnInit {
           next: () => {
             this.alertaService.SuccessAlert('Creado correctamente');
             form.reset();
-            this.listLot();
-          },
+            if (this.IdFarm !== null) {
+              this.listLot(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
             this.alertaService.ErrorAlert('Error al crear');
           }

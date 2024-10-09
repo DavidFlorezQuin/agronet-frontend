@@ -1,0 +1,47 @@
+<main class="d-flex justify-content-center align-items-center shadow-sm"> 
+
+    <div class="card w-50 border p-5 my-5">
+
+        <form #personForm="ngForm" (ngSubmit)="onSubmit(personForm)">
+            <h3 class="text-center">Registrarse</h3>
+            <div class="mb-3">
+            <label for="firstName" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="newPerson.firstName"
+                required>
+        </div>
+
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Apellido</label>
+            <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="newPerson.lastName"
+                required>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newPerson.email" required>
+        </div>
+        <div class="mb-3">
+            <label for="phone" class="form-label">Teléfono</label>
+            <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="newPerson.phone" required>
+        </div>
+        
+        <div class="mb-3">
+            <label for="typeDocument" class="form-label">Tipo de documento</label>
+            <select class="form-control" id="typeDocument" name="typeDocument" [(ngModel)]="newPerson.typeDocument" required>
+              <option value="" disabled selected>Seleccione un tipo documento</option>
+              <option *ngFor="let typeDocument of typeDocuments" [value]="typeDocument">{{ typeDocument }}</option>
+            </select>
+          </div>
+        <div class="mb-3">
+            <label for="document" class="form-label">Documento</label>
+            <input type="text" class="form-control" id="document" name="document" [(ngModel)]="newPerson.document"
+                required>
+        </div>
+        <div class="mb-3">
+            <label for="birthday" class="form-label">Fecha de Nacimiento</label>
+            <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday"
+            required>
+        </div>
+        <button type="submit" id="btn-forms" class="btn w-100 mt-4" [disabled]="!personForm.valid">Registrarme</button>
+    </form>
+</div>
+</main>

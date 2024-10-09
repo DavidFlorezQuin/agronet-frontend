@@ -1,6 +1,6 @@
 export interface CategoriaAlerta{
   id: number,
-  Name: string,
+  name: string,
   Description: string,
   Color:string
 }

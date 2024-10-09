@@ -25,11 +25,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { LoteService } from '../lote/lote.service';
 import { Lote } from '../lote/lote.module';
 import jsPDF from 'jspdf';
+import { EnumService } from '../../../shared/components/enum.service';
 @Component({
   selector: 'app-animal',
   standalone: true,
   imports: [
-    CommonModule, 
+    CommonModule,
     FormsModule,
     DataTablesModule,
     MatIconModule,
@@ -39,69 +40,72 @@ import jsPDF from 'jspdf';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './animal.component.html'})
+  templateUrl: './animal.component.html'
+})
 export class AnimalComponent implements OnInit {
 
   animales: Animal[] = [];
-  IdFarm: number | null = null; // Propiedad para almacenar el ID
-
+  IdFarm: number | null = null; 
+  races: [] = [];
   newAnimales: Animal = {
-    id: 0, name: '', weight: 0, photo: '', raceId: 0, gender:'', purpose: '', birthDay: new Date(), state: true, lotId: 0, lot:'', race:''
+    id: 0, name: '', weight: 0, photo: '', gender: '', purpose: '', birthDay: new Date(), state: true, lotId: 0, race: ''
   };
-  displayedColumns: string[] = ['id', 'animal', 'weight','gender', 'race', 'purpose', 'birthDay', 'lotId', 'acciones'];
+  displayedColumns: string[] = ['id', 'animal', 'weight', 'gender', 'race', 'purpose', 'birthDay', 'lotId', 'acciones'];
 
   dataSource!: MatTableDataSource<Animal>;
 
   lote: Lote[] = [];
-  
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  
-  constructor(private animalService: AnimalService, private alertaService: AlertService, private loteService:LoteService) { }
-  
-  ngOnInit(): void {  
+
+  constructor(private animalService: AnimalService, private alertaService: AlertService, private loteService: LoteService, private enumSevice: EnumService) { }
+
+  ngOnInit(): void {
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
-    
+
     if (idFarmString && !isNaN(Number(idFarmString))) {
-      this.IdFarm = Number(idFarmString); // Convertir a number
-    } else {
-      console.error('ID de la finca no válido o no presente en localStorage');
-      this.IdFarm = null; // Si no hay ID, establecer a null
+      this.IdFarm = Number(idFarmString); 
     }
-    
+
     if (this.IdFarm !== null) {
       this.ListAnimal(this.IdFarm);
+      this.listLot(this.IdFarm);
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
 
-    this.listLot(); 
-
+    this.listRace();
   }
-  
 
-
-  listLot(): void {
-    this.loteService.getLote().subscribe({
+  listRace(): void {
+    this.enumSevice.getRace().subscribe({
       next: (res: any) => {
-        const data = res.data; 
+        this.races = res;
+      }
+    })
+  }
+
+  listLot(IdFarm: number): void {
+    this.loteService.getLote(IdFarm).subscribe({
+      next: (res: any) => {
+        const data = res.data;
         this.lote = data;
       },
       error: (err) => {
         this.alertaService.ErrorAlert('Algo salió mal')
       }
     })
-  
   }
 
   downloadPDF(): void {
     const doc = new jsPDF();
-  
+
     // Título del PDF
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
     doc.text('AGRONET', 14, 10); // Título del PDF
-  
+
     // Agregar subtítulo debajo del título
     doc.setFontSize(10); // Tamaño de fuente para el subtítulo
     doc.setTextColor(0, 0, 0); // Color negro para el subtítulo
@@ -110,22 +114,21 @@ export class AnimalComponent implements OnInit {
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
     doc.text('Histórico de modulos', 14, 23); // Título del PDF
-  
+
     // Encabezados de la tabla
-    const headers = [['id', 'Animal', 'Raza', 'Peso','Género', 'Propósito', 'Nacimiento', 'Lote']];
-  
+    const headers = [['id', 'Animal', 'Raza', 'Peso', 'Género', 'Propósito', 'Nacimiento', 'Lote']];
+
     // Datos de la tabla
-    const data = this.dataSource.data.map(animales => [
-      animales.id, 
-      animales.name, 
-      animales.race, 
-      animales.weight, 
+    const data = this.animales.map(animales => [
+      animales.id,
+      animales.name,
+      animales.race,
+      animales.weight,
       animales.gender,
       animales.purpose,
       animales.birthDay,
-      animales.lot
     ]);
-  
+
     // Generar tabla usando autoTable
     (doc as any).autoTable({
       head: headers,
@@ -138,17 +141,17 @@ export class AnimalComponent implements OnInit {
         cellPadding: 2, // Espaciado dentro de las celdas
       },
       columnStyles: {
-        0: { cellWidth: 10 },   
-        1: { cellWidth: 20 },   
-        2: { cellWidth: 20 },  
-        3: { cellWidth: 20 },   
-        4: { cellWidth: 20 },   
-        5: { cellWidth: 20 },   
-        6: { cellWidth: 20 },   
-        7: { cellWidth: 20 },   
+        0: { cellWidth: 10 },
+        1: { cellWidth: 20 },
+        2: { cellWidth: 20 },
+        3: { cellWidth: 20 },
+        4: { cellWidth: 20 },
+        5: { cellWidth: 20 },
+        6: { cellWidth: 20 },
+        7: { cellWidth: 20 },
       }
     });
-  
+
     // Guardar el archivo PDF
     doc.save('animal.pdf');
   }
@@ -157,11 +160,11 @@ export class AnimalComponent implements OnInit {
   ListAnimal(farmId: number): void {
     this.animalService.getAnimals(farmId).subscribe({
       next: (res: any) => {
-        const data = res.data; 
+        const data = res.data;
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-        this.animales = data; 
+        this.animales = data;
         this.dataSource.data = data;
       },
       error: () => {
@@ -169,7 +172,7 @@ export class AnimalComponent implements OnInit {
       }
     });
   }
-  
+
 
   aplicarFiltro(event: Event): void {
 
@@ -221,6 +224,11 @@ export class AnimalComponent implements OnInit {
         this.animalService.updateAnimal(this.newAnimales, this.newAnimales.id).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Actualizado correctamente');
+            if (this.IdFarm !== null) {
+              this.ListAnimal(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }
             form.reset();
           },
           error: () => {
@@ -231,7 +239,14 @@ export class AnimalComponent implements OnInit {
         this.animalService.createAnimal(this.newAnimales).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Creado correctamente');
+            if (this.IdFarm !== null) {
+              this.ListAnimal(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }
             form.reset();
+
+
           },
           error: () => {
             this.alertaService.ErrorAlert('Error al crear');

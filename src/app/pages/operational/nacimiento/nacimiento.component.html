@@ -22,6 +22,8 @@
 
 </div>
 
+<div *ngIf="nacimiento.length === 0">No hay nacimientos activos.</div>
+
 <!-- Tabla de Nacimientos -->
 <table mat-table [dataSource]="dataSource" matSort class="table table-striped">
   <ng-container matColumnDef="id">
@@ -76,15 +78,20 @@
       <div class="modal-body">
         <form #form="ngForm" (ngSubmit)="onSubmit(form)">
           <div class="mb-3">
-            <label for="Assistence" class="form-label">Asistencia</label>
-            <input type="text" id="Assistence" class="form-control" [(ngModel)]="newNacimiento.Assistence"
-              name="Assistence" required />
+            <label for="purpose" class="form-label">Asistencia</label>
+            <select class="form-control" id="assistence" name="assistence" [(ngModel)]="newNacimiento.assistence" required>
+              <option value="" disabled selected>Selecciona un respuesta</option>
+              <option value="T">Verdadero</option>
+              <option value="F">Falso</option>
+            </select>
           </div>
-
           <div class="mb-3">
-            <label for="Result" class="form-label">Resultado</label>
-            <input type="number" id="Result" class="form-control" [(ngModel)]="newNacimiento.Result" name="Result"
-              required />
+            <label for="purpose" class="form-label">Resultado</label>
+            <select class="form-control" id="result" name="result" [(ngModel)]="newNacimiento.Result" required>
+              <option value="" disabled selected>Selecciona un respuesta</option>
+              <option value="1">Efectiva</option>
+              <option value="0">Negativa</option>
+            </select>
           </div>
 
           <div class="mb-3">
@@ -100,9 +107,11 @@
           </div>
 
           <div class="mb-3">
-            <label for="Inseminacionid" class="form-label">ID Inseminación</label>
-            <input type="text" id="Inseminacionid" class="form-control" [(ngModel)]="newNacimiento.Inseminacionid"
-              name="Inseminacionid" required />
+            <label for="Inseminacionid" class="form-label">Inseminación</label>
+            <select class="form-control" id="Inseminacionid" name="Inseminacionid" [(ngModel)]="newNacimiento.Inseminacionid" required>
+              <option value="" disabled selected>Seleccione una vaca</option>
+              <option *ngFor="let insemination of inseminations" [value]="insemination.id">{{ insemination.mother }}</option>
+            </select>
           </div>
 
           <div class="modal-footer">

@@ -14,12 +14,12 @@ export class InventoriesService {
 
   constructor(private http: HttpClient) {}
 
-  getInventories(): Observable<Inventories[]> {
-    return this.http.get<Inventories[]>(`${this._baseUrl}/Inventory/List`);
+  getInventories(IdFarm:number): Observable<Inventories[]> {
+    return this.http.get<Inventories[]>(`${this._baseUrl}/Inventory/datatable/${IdFarm}`);
   }
 
   createInventory(inventory: Inventories): Observable<Inventories> {
-    return this.http.post<Inventories>(`${this._baseUrl}/Inventory`, inventory);
+    return this.http.post<Inventories>(`${this._baseUrl}/Inventory/save`, inventory);
   }
 
   updateInventory(inventory: Inventories,  id: number): Observable<Inventories> {
