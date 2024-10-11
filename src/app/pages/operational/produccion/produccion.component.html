@@ -141,7 +141,7 @@
             <div class="mb-3">
               <label for="expirateDate" class="form-label">Fecha de Expiración</label>
               <input type="date" class="form-control" id="expirateDate" name="expirateDate"
-                [(ngModel)]="newProduction.expirateDate" required>
+                [(ngModel)]="newProduction.expirateDate" required [min]="minExpirateDate" [max]="maxExpirateDate">
             </div>
 
             <div class="mb-3">

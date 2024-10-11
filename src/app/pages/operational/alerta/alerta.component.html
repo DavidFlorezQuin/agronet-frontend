@@ -113,7 +113,7 @@
           </div>
           <div class="mb-3">
             <label for="Date" class="form-label">Fecha</label>
-            <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newAlerta.date" required>
+            <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newAlerta.date" required [min]="minDate" [max]="maxDate">
           </div>
           <div class="mb-3">
             <label for="animalsId" class="form-label">Animal</label>

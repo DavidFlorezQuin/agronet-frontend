@@ -44,6 +44,9 @@ import { CategoriaAlerta } from '../../Parametro/categoria-alerta/categoria-aler
   styleUrl: './alerta.component.css'
 })
 export class AlertaComponent implements OnInit {
+  
+  maxDate: string = new Date().toISOString().split('T')[0];  // Fecha actual
+  minDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0]; 
 
   alerta: Alerta[] = [];
   IdFarm: number | null = null; // Propiedad para almacenar el ID

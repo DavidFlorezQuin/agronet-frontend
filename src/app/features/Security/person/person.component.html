@@ -140,7 +140,7 @@
           <div class="mb-3">
             <label for="birthday" class="form-label">Fecha de Nacimiento</label>
             <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday"
-              required>
+              required [min]="minDate" [max]="maxDate">
           </div>
           <button type="submit" class="btn btn-primary" [disabled]="!personForm.valid">{{ newPerson.id ? 'Actualizar' :
             'Guardar' }}</button>

@@ -44,6 +44,10 @@ import { InventarioSuplementoService } from '../inventario-suplemento/inventario
   styleUrls: ['./inventario-historia.component.css']
 })
 export class InventarioHistoriaComponent implements OnInit{
+
+  maxDate: string = new Date().toISOString().split('T')[0];  // Fecha actual
+  minDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0]; 
+
 InventarioHistoria:InventarioHistoria[] = [];
 newInventarioHistorias: InventarioHistoria = {
   id: 0, 

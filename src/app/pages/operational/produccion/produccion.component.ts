@@ -40,6 +40,13 @@ import Swal from 'sweetalert2';
 })
 export class ProduccionComponent implements OnInit {
 
+  // Fecha mínima: 1 año en el futuro
+  minExpirateDate: string = new Date(new Date().setFullYear(new Date().getFullYear() + 0,9)).toISOString().split('T')[0];
+  
+  // Fecha máxima: 10 años en el futuro
+  maxExpirateDate: string = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0];
+
+
   IdFarm: number | null = null;
   newProduction: Productions = {
     id: 0,
