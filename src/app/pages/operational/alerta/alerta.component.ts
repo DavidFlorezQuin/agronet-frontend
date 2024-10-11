@@ -213,7 +213,6 @@ export class AlertaComponent implements OnInit {
       }
     });
   }
-
   onSubmit(form: NgForm): void {
     if (!form.valid) {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
@@ -222,6 +221,7 @@ export class AlertaComponent implements OnInit {
   
     const formData = form.value;
     const alertaData: Alerta = {
+      id: this.newAlerta.id, // Agrega el ID aquí
       ...formData,
       animalId: Number(formData.animalId),
       categoryAlertId: Number(formData.categoryAlertId),
@@ -231,31 +231,32 @@ export class AlertaComponent implements OnInit {
     };
   
     if (this.newAlerta.id > 0) {
-      // Actualizar alerta existente
       this.AlertaService.updateAlerta(alertaData, this.newAlerta.id).subscribe({
         next: () => {
           this.alertService.SuccessAlert('Actualizado correctamente');
           this.resetForm(form);
           this.refreshAlertList();
         },
-        error: () => {
-          this.alertService.ErrorAlert('Error al actualizar');
+        error: (err) => {
+          console.error(err);
+          this.alertService.ErrorAlert('Error al actualizar: ' + err.message);
         }
       });
     } else {
-      // Crear nueva alerta
       this.AlertaService.createAlerta(alertaData).subscribe({
         next: () => {
           this.alertService.SuccessAlert('Creado correctamente');
           this.resetForm(form);
           this.refreshAlertList();
         },
-        error: () => {
-          this.alertService.ErrorAlert('Error al crear');
+        error: (err) => {
+          console.error(err);
+          this.alertService.ErrorAlert('Error al crear: ' + err.message);
         }
       });
     }
   }
+  
   
   private resetForm(form: NgForm): void {
     form.reset();
