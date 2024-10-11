@@ -215,54 +215,61 @@ export class AlertaComponent implements OnInit {
   }
 
   onSubmit(form: NgForm): void {
-    if (form.valid) {
-      if (this.newAlerta.id > 0) {
-        this.AlertaService.updateAlerta(this.newAlerta, this.newAlerta.id).subscribe({
-          next: () => {
-            this.alertService.SuccessAlert('Actualizado correctamente');
-            form.reset();
-            this.newAlerta = { id: 0, name: '', description: '', date: new Date, isRead: new Boolean, animalId: 0, categoryAlertId: 0, usersId: 0 };
-            if (this.IdFarm !== null) {
-              this.listAlerta(this.IdFarm);
-            } else {
-              console.warn('No se pudo obtener el ID de la finca.');
-            }
-          },
-          error: () => {
-            this.alertService.ErrorAlert('Error al actualizar');
-          }
-        });
-      } else {
-
-        const formData = form.value;
-        const alertaData: Alerta = {
-          ...formData,
-          animalId: Number(formData.animalId),
-          categoryAlertId: Number(formData.categoryAlertId),
-          usersId: Number(formData.usersId),
-          isRead: false,
-          date: new Date(formData.date).toISOString() // Convertir a Date y luego a formato ISO
-
-        };
-        this.AlertaService.createAlerta(alertaData).subscribe({
-          next: () => {
-            this.alertService.SuccessAlert('Creado correctamente');
-            form.reset();
-            if (this.IdFarm !== null) {
-              this.listAlerta(this.IdFarm);
-            } else {
-              console.warn('No se pudo obtener el ID de la finca.');
-            }
-          },
-          error: () => {
-            this.alertService.ErrorAlert('Error al crear');
-          }
-        });
-      }
-    } else {
+    if (!form.valid) {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
+      return;
+    }
+  
+    const formData = form.value;
+    const alertaData: Alerta = {
+      ...formData,
+      animalId: Number(formData.animalId),
+      categoryAlertId: Number(formData.categoryAlertId),
+      usersId: Number(formData.usersId),
+      isRead: false,
+      date: new Date(formData.date).toISOString()
+    };
+  
+    if (this.newAlerta.id > 0) {
+      // Actualizar alerta existente
+      this.AlertaService.updateAlerta(alertaData, this.newAlerta.id).subscribe({
+        next: () => {
+          this.alertService.SuccessAlert('Actualizado correctamente');
+          this.resetForm(form);
+          this.refreshAlertList();
+        },
+        error: () => {
+          this.alertService.ErrorAlert('Error al actualizar');
+        }
+      });
+    } else {
+      // Crear nueva alerta
+      this.AlertaService.createAlerta(alertaData).subscribe({
+        next: () => {
+          this.alertService.SuccessAlert('Creado correctamente');
+          this.resetForm(form);
+          this.refreshAlertList();
+        },
+        error: () => {
+          this.alertService.ErrorAlert('Error al crear');
+        }
+      });
     }
   }
+  
+  private resetForm(form: NgForm): void {
+    form.reset();
+    this.newAlerta = { id: 0, name: '', description: '', date: new Date(), isRead: false, animalId: 0, categoryAlertId: 0, usersId: 0 };
+  }
+  
+  private refreshAlertList(): void {
+    if (this.IdFarm !== null) {
+      this.listAlerta(this.IdFarm);
+    } else {
+      console.warn('No se pudo obtener el ID de la finca.');
+    }
+  }
+  
 
   aplicarFiltro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

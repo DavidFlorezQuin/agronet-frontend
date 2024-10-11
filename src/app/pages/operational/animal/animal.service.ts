@@ -18,6 +18,12 @@ export class AnimalService {
   getAnimals(farmId: number): Observable<Animal[]> {
     return this.http.get<Animal[]>(`${this._baseUrl}/Animal/datatable/${farmId}`);
   }
+  getAnimalsBulls(farmId: number): Observable<Animal[]> {
+    return this.http.get<Animal[]>(`${this._baseUrl}/Animal/datatable/bulls/${farmId}`);
+  }
+  getAnimalsCows(farmId: number): Observable<Animal[]> {
+    return this.http.get<Animal[]>(`${this._baseUrl}/Animal/datatable/cows/${farmId}`);
+  }
 
   deleteAnimal(id: number): Observable<void> {
     return this.http.delete<void>(`${this._baseUrl}/Animal/${id}`);

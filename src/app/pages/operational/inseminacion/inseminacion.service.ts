@@ -26,6 +26,6 @@ export class InseminationService {
   }
 
   createInsemination(insemination: Insemination): Observable<Insemination> {
-    return this.http.post<Insemination>(`${this._baseUrl}/Insemination`, insemination);
+    return this.http.post<Insemination>(`${this._baseUrl}/Insemination/save`, insemination);
   }
 }

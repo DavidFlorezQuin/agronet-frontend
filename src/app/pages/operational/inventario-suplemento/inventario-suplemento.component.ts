@@ -19,6 +19,7 @@ import { Inventories } from '../inventario/Inventories.module';
 import { InventoriesService } from '../inventario/inventario.service';
 import { Suplemento } from '../../Parametro/insumos/suplementos.module';
 import { SuplementoService } from '../../Parametro/insumos/suplementos.service';
+import { EnumService } from '../../../shared/components/enum.service';
 @Component({
   selector: 'app-inventario-suplemento',
   standalone: true,
@@ -40,6 +41,8 @@ import { SuplementoService } from '../../Parametro/insumos/suplementos.service';
 export class InventarioSuplementoComponent implements OnInit {
 
   IdFarm: number | null = null;
+  measurements: [] = [];
+
 
   newInventarioSuplemento: InventarioSuplemento = {
     id: 0,
@@ -49,7 +52,7 @@ export class InventarioSuplementoComponent implements OnInit {
     suppliesId: 0,
   };
 
-  Suplemento: Suplemento[] = [];
+  suplementos: Suplemento[] = [];
   Inventario: Inventories[] = [];
   InventarioSuplemento: InventarioSuplemento[] = [];
   displayedColumns: string[] = [
@@ -68,26 +71,39 @@ export class InventarioSuplementoComponent implements OnInit {
   constructor(private inventarioSuplementoService: InventarioSuplementoService,
     private alertService: AlertService,
     private inventarioService: InventoriesService,
-    private suplementoService: SuplementoService) { }
+    private suplementoService: SuplementoService,
+    private enumController: EnumService
+  ) { }
 
   ngOnInit(): void {
-    const idFarmString = localStorage.getItem('idFincaSeleccionada'); 
+    const idFarmString = localStorage.getItem('idFincaSeleccionada');
 
-    if(idFarmString && !isNaN(Number(idFarmString))){
+    if (idFarmString && !isNaN(Number(idFarmString))) {
       this.IdFarm = Number(idFarmString);
     }
 
-    if(this.IdFarm != null){
+    if (this.IdFarm != null) {
 
       this.listInventario(this.IdFarm);
     }
     this.listInventarioSuplemento();
     this.listSuplemento();
+    this.listMeasurement();
   }
 
+  listMeasurement(): void {
+    this.enumController.getMeasurement().subscribe({
+      next: (res: any) => {
+        this.measurements = res;
+      },
+      error: (error) => {
+        this.alertService.ErrorAlert('Error al cargar los medicamentos');
+      }
+    });
+  }
 
-  downloadPDF(){
-    
+  downloadPDF() {
+
   }
   listInventarioSuplemento(): void {
     this.inventarioSuplementoService.getInventarioSuplemento().subscribe({
@@ -98,7 +114,6 @@ export class InventarioSuplementoComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.InventarioSuplemento = data;
         this.dataSource.data = data;
-
       },
       error: (error) => {
         console.log(error);
@@ -107,7 +122,7 @@ export class InventarioSuplementoComponent implements OnInit {
     });
   }
 
-  listInventario(IdFarm:number): void {
+  listInventario(IdFarm: number): void {
     this.inventarioService.getInventories(IdFarm).subscribe({
       next: (inventarios: Inventories[]) => {
         this.Inventario = inventarios;
@@ -121,8 +136,8 @@ export class InventarioSuplementoComponent implements OnInit {
 
   listSuplemento(): void {
     this.suplementoService.getSuplemento().subscribe({
-      next: (Suplemento: Suplemento[]) => {
-        this.Suplemento = Suplemento;
+      next: (res:any) => {
+        this.suplementos = res;
       },
       error: (err) => {
         console.log(err);

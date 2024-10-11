@@ -68,7 +68,7 @@
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
         <div class="d-flex gap-2 justify-content-center" id="icons-section">
-          <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
+          <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#inseminacionModal" (click)="onEdit(element)"></i>
           <i class="bi bi-trash" (click)="onDelete(element)"></i>
         </div>
       </td>
@@ -100,23 +100,37 @@
           </div>
 
           <div class="mb-3">
-            <label for="semenId" class="form-label">ID de Semen</label>
-            <input type="number" class="form-control" id="semenId" name="semenId" [(ngModel)]="newInsemination.semenId" required />
+            <label for="semenId" class="form-label">Padre</label>
+            <select class="form-control" id="semenId" name="semenId" [(ngModel)]="newInsemination.semenId" required>
+              <option value="" disabled selected>Seleccione un animal</option>
+              <option *ngFor="let bull of bulls" [value]="bull.id">{{ bull.name }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="motherId" class="form-label">Madre</label>
+            <select class="form-control" id="motherId" name="motherId" [(ngModel)]="newInsemination.motherId" required>
+              <option value="" disabled selected>Seleccione un animal</option>
+              <option *ngFor="let cow of cows" [value]="cow.id">{{ cow.name }}</option>
+            </select>
           </div>
 
           <div class="mb-3">
-            <label for="motherId" class="form-label">ID de Madre</label>
-            <input type="number" class="form-control" id="motherId" name="motherId" [(ngModel)]="newInsemination.motherId" required />
+            <label for="inseminationType" class="form-label">Resultado</label>
+
+            <select class="form-control" id="inseminationType" name="inseminationType" [(ngModel)]="newInsemination.result" required>
+              <option value="" disabled selected>Selecciona el resultado</option>
+              <option value="FALLIDO">Fallido</option>
+              <option value="EXITOSO">Exitoso</option>
+            </select>
           </div>
 
-          <div class="mb-3">
-            <label for="result" class="form-label">Resultado</label>
-            <input type="text" class="form-control" id="result" name="result" [(ngModel)]="newInsemination.result" required />
-          </div>
-
-          <div class="mb-3">
-            <label for="inseminationType" class="form-label">Tipo de Inseminación</label>
-            <input type="text" class="form-control" id="inseminationType" name="inseminationType" [(ngModel)]="newInsemination.inseminationType" required />
+          <div class="mb-5">
+            <label for="inseminationType" class="form-label">Tipo Inseminación</label>
+            <select class="form-control" id="inseminationType" name="inseminationType" [(ngModel)]="newInsemination.inseminationType" required>
+              <option value="" disabled selected>Selecciona un tipo inseminación</option>
+              <option value="NATURAL">Natural</option>
+              <option value="ARTIFICIAL">Artificial</option>
+            </select>
           </div>
 
           <button type="submit" class="btn btn-primary" [disabled]="!inseminacionForm.valid">
@@ -124,9 +138,7 @@
           </button>
         </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-      </div>
+
     </div>
   </div>
 </div>

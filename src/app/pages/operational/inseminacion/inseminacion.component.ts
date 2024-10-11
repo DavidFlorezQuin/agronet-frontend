@@ -16,6 +16,9 @@ import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
 import jsPDF from 'jspdf';
 import { MatIconModule } from '@angular/material/icon';
+import { Animal } from '../animal/animal.module';
+import { AnimalService } from '../animal/animal.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-insemination',
@@ -38,7 +41,8 @@ import { MatIconModule } from '@angular/material/icon';
 export class InseminationComponent implements OnInit {
 
   IdFarm: number | null = null;
-
+  bulls: Animal[] = [];
+  cows: Animal[] = []; 
   dataSource: MatTableDataSource<Insemination> = new MatTableDataSource<Insemination>();
 
   // referenicas del paginador y sort
@@ -51,9 +55,6 @@ export class InseminationComponent implements OnInit {
 
   newInsemination: Insemination = {
     id: 0,
-    mother: '',
-    state: '',
-    semen: '',
     description: '',
     semenId: 0,
     motherId: 0,
@@ -61,10 +62,9 @@ export class InseminationComponent implements OnInit {
     inseminationType: ''
   };
 
-  constructor(private inseminationService: InseminationService, private alertService: AlertService) { }
+  constructor(private animalesService:AnimalService, private inseminationService: InseminationService, private alertService: AlertService) { }
 
   ngOnInit(): void {
-
 
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
 
@@ -76,6 +76,8 @@ export class InseminationComponent implements OnInit {
 
     if (this.IdFarm !== null) {
       this.listInseminations(this.IdFarm);
+      this.listBulls(this.IdFarm);
+      this.listCows(this.IdFarm);
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
@@ -93,6 +95,28 @@ export class InseminationComponent implements OnInit {
 
         this.inseminations = data;
         this.dataSource.data = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los datos');
+      }
+    });
+  }
+  listCows(IdFarm: number): void {
+    this.animalesService.getAnimalsCows(IdFarm).subscribe({
+      next: (res: any) => {
+        const data = res.data;
+        this.cows = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los datos');
+      }
+    });
+  }
+  listBulls(IdFarm: number): void {
+    this.animalesService.getAnimalsBulls(IdFarm).subscribe({
+      next: (res: any) => {
+        const data = res.data;
+        this.bulls = data;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
@@ -123,11 +147,8 @@ export class InseminationComponent implements OnInit {
     const data = this.dataSource.data.map(inseminations => [
       inseminations.id,
       inseminations.description,
-      inseminations.mother,
-      inseminations.semen,
       inseminations.result,
-      inseminations.inseminationType,
-      inseminations.state
+      inseminations.inseminationType
     ]);
 
     // Generar tabla usando autoTable
@@ -202,9 +223,6 @@ export class InseminationComponent implements OnInit {
             this.newInsemination = {
               id: 0, description: '',
               semenId: 0,
-              semen: '',
-              state: '',
-              mother: '',
               motherId: 0,
               result: '',
               inseminationType: ''
@@ -213,9 +231,13 @@ export class InseminationComponent implements OnInit {
               this.listInseminations(this.IdFarm);
             }
           },
-          error: () => {
-            this.alertService.ErrorAlert('Error al crear');
-          }
+          error: (err) => {
+            let errorMessage = err.error?.message || err.message || "Ha ocurrido un error inesperado.";
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: errorMessage || "Ha ocurrido un error inesperado.",
+            });          }
         });
       }
     } else {

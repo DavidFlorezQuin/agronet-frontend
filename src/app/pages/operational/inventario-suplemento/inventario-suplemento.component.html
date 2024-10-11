@@ -83,15 +83,20 @@
         </div>
         <div class="modal-body">
           <form #suplementoForm="ngForm" (ngSubmit)="onSubmit(suplementoForm)">
+
             <div class="mb-3">
               <label for="amount" class="form-label">Cantidad</label>
               <input type="number" class="form-control" id="amount" name="amount" [(ngModel)]="newInventarioSuplemento.amount" required>
             </div>
-  
             <div class="mb-3">
-              <label for="measure" class="form-label">Medida</label>
-              <input type="number" class="form-control" id="measure" name="measure" [(ngModel)]="newInventarioSuplemento.measure" required>
+              <label for="purpose" class="form-label">Medida</label>
+              <select class="form-control" id="measure" name="measure" [(ngModel)]="newInventarioSuplemento.measure"
+                required>
+                <option value="" disabled selected>Selecciona una medida</option>
+                <option *ngFor="let measurement of measurements" [value]="measurement">{{ measurement }}</option>
+              </select>
             </div>
+
   
             <div class="mb-3">
               <label for="inventoryId" class="form-label">Inventario</label>
@@ -105,15 +110,12 @@
               <label for="suppliesId" class="form-label">Suplemento</label>
               <select class="form-control" id="suppliesId" name="suppliesId" [(ngModel)]="newInventarioSuplemento.suppliesId" required>
                 <option value="" disabled selected>Seleccione un suplemento</option>
-                <option *ngFor="let suplemento of Suplemento" [value]="suplemento.id">{{ suplemento.name }}</option>
+                <option *ngFor="let suplemento of suplementos" [value]="suplemento.id">{{ suplemento.name }}</option>
               </select>
             </div>
   
             <button type="submit" class="btn btn-primary" [disabled]="!suplementoForm.valid">Guardar</button>
           </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
         </div>
       </div>
     </div>

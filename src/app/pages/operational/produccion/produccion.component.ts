@@ -19,6 +19,7 @@ import { Animal } from '../animal/animal.module';
 import { AnimalService } from '../animal/animal.service';
 import jsPDF from 'jspdf';
 import { EnumService } from '../../../shared/components/enum.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-produccion',
@@ -224,8 +225,13 @@ export class ProduccionComponent implements OnInit {
               this.listProductions(this.IdFarm);
             }
           },
-          error: () => {
-            this.alertService.ErrorAlert('Error al crear');
+          error: (err) => {
+            let errorMessage = err.error?.message || err.message || "Ha ocurrido un error inesperado.";
+              Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: errorMessage || "Ha ocurrido un error inesperado.",
+            });
           }
         });
       }
