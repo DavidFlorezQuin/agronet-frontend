@@ -97,22 +97,60 @@
           <div class="mb-3">
             <label for="Description" class="form-label">Descripción</label>
             <input type="text" id="Description" class="form-control" [(ngModel)]="newNacimiento.Description"
-              name="Description" required />
+              name="Description" required minlength="10" #descriptionField="ngModel"
+              [ngClass]="{
+                'is-invalid': descriptionField.invalid && descriptionField.touched,
+                'is-valid': descriptionField.valid && descriptionField.touched
+              }" />
+          
+            <!-- Mensajes de error -->
+            <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+              <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+            </div>
+            <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
+              Descripción válida.
+            </div>
           </div>
+          
 
           <div class="mb-3">
             <label for="BirthWeight" class="form-label">Peso al Nacer</label>
             <input type="number" id="BirthWeight" class="form-control" [(ngModel)]="newNacimiento.BirthWeight"
-              name="BirthWeight" required />
+              name="BirthWeight" required min="1" pattern="^[1-9]\d*$*-" #birthWeightField="ngModel"
+              [ngClass]="{'is-invalid': birthWeightField.invalid && birthWeightField.touched, 'is-valid':
+               birthWeightField.valid && birthWeightField.touched}"  (keypress)="preventNegative($event)" />
+              
+               <!-- Mensajes de error -->
+              <div *ngIf="birthWeightField.invalid && birthWeightField.touched" class="invalid-feedback">
+                  <div *ngIf="birthWeightField.errors?.['required']">El peso es obligatorio.</div>
+                  <div *ngIf="birthWeightField.errors?.['min']">El peso debe ser mayor o igual a 0.</div>
+                  <div *ngIf="birthWeightField.errors?.['pattern']">El peso debe ser un número positivo.</div>
+            </div>
+             <div *ngIf="birthWeightField.valid && birthWeightField.touched" class="valid-feedback">
+               Peso válido.
+              </div>
           </div>
 
           <div class="mb-3">
-            <label for="Inseminacionid" class="form-label">Vaca Inseminada</label>
-            <select class="form-control" id="Inseminacionid" name="Inseminacionid" [(ngModel)]="newNacimiento.Inseminacionid" required>
-              <option value="" disabled selected>Seleccione una vaca</option>
-              <option *ngFor="let insemination of inseminations" [value]="insemination.id">{{ insemination.mother }}</option>
+            <label for="Inseminacionid" class="form-label">Inseminación</label>
+            <select class="form-control" id="Inseminacionid" name="Inseminacionid" [(ngModel)]="newNacimiento.Inseminacionid" 
+            #Inseminacionid="ngModel" required>
+                <option value="" disabled selected>Seleccione una vaca</option>
+                <ng-container *ngIf="inseminations.length > 0">
+                    <option *ngFor="let insemination of inseminations" [value]="insemination.id">{{ insemination.motherId }}</option>
+                </ng-container>
+                
+                <!-- Si no hay toros disponibles -->
+                <option *ngIf="inseminations.length === 0" disabled>No hay vacas disponibles</option>
             </select>
-          </div>
+            
+            <!-- Mensaje de error -->
+            <div *ngIf="Inseminacionid.invalid && Inseminacionid.touched" class="text-danger">
+                Seleccionar una vaca inseminada es obligatorio.
+            </div>
+        </div>
+        
 
           <div class="modal-footer">
             <button type="submit" class="btn btn-primary">{{ newNacimiento.id ? 'Actualizar' : 'Agregar' }}</button>
