@@ -107,10 +107,10 @@
           </div>
 
           <div class="mb-3">
-            <label for="Inseminacionid" class="form-label">Inseminación</label>
+            <label for="Inseminacionid" class="form-label">Vaca Inseminada</label>
             <select class="form-control" id="Inseminacionid" name="Inseminacionid" [(ngModel)]="newNacimiento.Inseminacionid" required>
               <option value="" disabled selected>Seleccione una vaca</option>
-              <option *ngFor="let insemination of inseminations" [value]="insemination.id">{{ insemination.motherId }}</option>
+              <option *ngFor="let insemination of inseminations" [value]="insemination.id">{{ insemination.mother }}</option>
             </select>
           </div>
 

@@ -41,7 +41,7 @@ import { Insemination } from '../inseminacion/Insemination.module';
 export class NacimientoComponent implements OnInit {
   IdFarm: number | null = null; 
 
-  inseminations: Insemination[] = [];
+  inseminations: any[] = [];
   nacimiento: Nacimiento[] = [];
   newNacimiento: Nacimiento = {
     id: 0,

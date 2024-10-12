@@ -55,7 +55,7 @@ export class VentasComponent implements OnInit {
     productionId: 0,
     currency: ''
   };
-  productions: Productions[] = [];
+  productions: any[] = [];
   sales: Ventas[] = [];
   displayedColumns: string[] = ['id', 'price', 'quantity', 'production', 'currency', 'acciones'];
   dataSource!: MatTableDataSource<Ventas>;

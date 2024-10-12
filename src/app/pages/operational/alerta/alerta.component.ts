@@ -49,8 +49,8 @@ export class AlertaComponent implements OnInit {
   minDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0]; 
 
   alerta: Alerta[] = [];
-  IdFarm: number | null = null; // Propiedad para almacenar el ID
-  IdUser: number | null = null; // Definir como propiedad de la clase
+  IdFarm: number | null = null; 
+IdUser: number | null = null;  
   animals: Animal[] = [];
   CategoriaAlerta: CategoriaAlerta[] = [];
 
@@ -237,7 +237,7 @@ export class AlertaComponent implements OnInit {
       this.AlertaService.updateAlerta(alertaData, this.newAlerta.id).subscribe({
         next: () => {
           this.alertService.SuccessAlert('Actualizado correctamente');
-          this.resetForm(form);
+          this.resetForm();
           this.refreshAlertList();
         },
         error: (err) => {
@@ -249,7 +249,7 @@ export class AlertaComponent implements OnInit {
       this.AlertaService.createAlerta(alertaData).subscribe({
         next: () => {
           this.alertService.SuccessAlert('Creado correctamente');
-          this.resetForm(form);
+          this.resetForm();
           this.refreshAlertList();
         },
         error: (err) => {
@@ -261,8 +261,7 @@ export class AlertaComponent implements OnInit {
   }
   
   
-  private resetForm(form: NgForm): void {
-    form.reset();
+   resetForm(): void {
     this.newAlerta = { id: 0, name: '', description: '', date: new Date(), isRead: false, animalId: 0, categoryAlertId: 0, usersId: 0 };
   }
   
