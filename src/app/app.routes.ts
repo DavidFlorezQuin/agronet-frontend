@@ -50,19 +50,19 @@ export const routes: Routes = [
         path: 'login',
         component: LoginComponent,
     },
-    {
+    {   
         path: 'reset-email',
         component: SendEmailComponent,
     },
-    {
+    {   
         path: 'register-user',
         component: FormUserComponent,
     },
-    {
+    {   
         path: 'register',
         component: FormRegisterComponent,
     },
-    {
+    {   
         path: 'reset-password',
         component: NewPasswordComponent,
     },
@@ -74,16 +74,15 @@ export const routes: Routes = [
     {
         path: 'home',
         component: HomeComponent
+    }, {
+        path: 'menu',
+        component: MenuComponent
     },
     {
         path: 'dashboard',
         component: MainComponent,
-        canActivate: [authGuard],
         children: [
-            {
-                path: 'menu',
-                component: MenuComponent
-            },
+
             // SECURITY
             {
                 path: 'role-view',

@@ -1,4 +1,4 @@
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -202,7 +202,14 @@ IdUser: number | null = null;
     }
   }
   
-
+  checkValidSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+    } else {
+      field.control.setErrors(null);
+    }
+    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
+  }
   onDelete(id: number): void {
     this.alertService.DeleteAlert().then((res) => {
       if (res.isConfirmed) {
