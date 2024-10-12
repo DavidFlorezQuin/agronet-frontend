@@ -3,7 +3,7 @@
   <div class="d-flex justify-content-between">
     <section class="d-flex align-items-center gap-3">
       <h2 class="fw-normal mb-0">Alertas</h2>
-      <button type="button" data-bs-toggle="modal" data-bs-target="#alertModal" id="btn-forms" class="btn h-50">
+      <button type="button" data-bs-toggle="modal" (click)="resetForm()" data-bs-target="#alertModal" id="btn-forms" class="btn h-50">
         <i class="bi bi-plus-circle mx-2"></i>
         Agregar Alerta
       </button>
@@ -98,7 +98,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="alertModalLabel">Agregar/Editar Alerta</h5>
+        <h5 class="modal-title" id="alertModalLabel">{{ newAlerta.id ? 'Actualizar Alerta' : 'Agregar Alerta' }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -144,7 +144,7 @@
           </div>
 
           <div class="mb-3">
-            <label for="Date" class="form-label">Fecha</label>
+            <label for="Date" class="form-label">Fecha <span style="color: red;">*</span></label>
             <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newAlerta.date" required [min]="minDate" [max]="maxDate">
           </div>
           <div class="mb-3">

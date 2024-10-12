@@ -24,7 +24,8 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-produccion',
   standalone: true,
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     FormsModule,
     DataTablesModule,
     CommonModule,
@@ -199,6 +200,11 @@ export class ProduccionComponent implements OnInit {
     });
   }
 
+  updateStock(quantityTotal: number): void {
+    this.newProduction.stock = quantityTotal; // Actualiza stock con el valor de cantidad total
+  }
+  
+
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newProduction.id > 0) {
@@ -226,6 +232,7 @@ export class ProduccionComponent implements OnInit {
       } else {
         this.productionsService.createProduction(this.newProduction).subscribe({
           next: () => {
+
             this.alertService.SuccessAlert('Creado correctamente ');
             form.reset();
             if (this.IdFarm !== null) {

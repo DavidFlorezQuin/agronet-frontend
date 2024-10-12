@@ -42,7 +42,7 @@ export class InseminationComponent implements OnInit {
 
   IdFarm: number | null = null;
   bulls: Animal[] = [];
-  cows: Animal[] = []; 
+  cows: Animal[] = [];
   dataSource: MatTableDataSource<Insemination> = new MatTableDataSource<Insemination>();
 
   // referenicas del paginador y sort
@@ -62,7 +62,7 @@ export class InseminationComponent implements OnInit {
     inseminationType: ''
   };
 
-  constructor(private animalesService:AnimalService, private inseminationService: InseminationService, private alertService: AlertService) { }
+  constructor(private animalesService: AnimalService, private inseminationService: InseminationService, private alertService: AlertService) { }
 
   ngOnInit(): void {
 
@@ -265,7 +265,8 @@ export class InseminationComponent implements OnInit {
               icon: "error",
               title: "Oops...",
               text: errorMessage || "Ha ocurrido un error inesperado.",
-            });          }
+            });
+          }
         });
       }
     } else {

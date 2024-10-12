@@ -111,17 +111,12 @@
               </select>
             </div>
 
-            <div class="mb-3">
-              <label for="stock" class="form-label">Stock</label>
-              <input type="number" class="form-control" id="stock" name="stock" [(ngModel)]="newProduction.stock"
-                required>
-            </div>
-
+            
             <div class="mb-3">
               <label for="purpose" class="form-label">Medida</label>
               <select class="form-control" id="measurement" name="measurement" [(ngModel)]="newProduction.measurement"
-                required>
-                <option value="" disabled selected>Selecciona una medida</option>
+              required>
+              <option value="" disabled selected>Selecciona una medida</option>
                 <option *ngFor="let measurement of measurements" [value]="measurement">{{ measurement }}</option>
               </select>
             </div>
@@ -135,15 +130,21 @@
             <div class="mb-3">
               <label for="quantityTotal" class="form-label">Cantidad Total</label>
               <input type="number" class="form-control" id="quantityTotal" name="quantityTotal"
-                [(ngModel)]="newProduction.quantityTotal" required>
+                [(ngModel)]="newProduction.quantityTotal" (ngModelChange)="updateStock($event)" required>
             </div>
-
+            
+            <div class="mb-3">
+              <label for="stock" class="form-label">Stock</label>
+              <input disabled type="number" class="form-control" id="stock" name="stock" 
+                [(ngModel)]="newProduction.stock" required>
+            </div>
+            
             <div class="mb-3">
               <label for="expirateDate" class="form-label">Fecha de Expiración</label>
               <input type="date" class="form-control" id="expirateDate" name="expirateDate"
-                [(ngModel)]="newProduction.expirateDate" required [min]="minExpirateDate" [max]="maxExpirateDate">
+              [(ngModel)]="newProduction.expirateDate" required [min]="minExpirateDate" [max]="maxExpirateDate">
             </div>
-
+            
             <div class="mb-3">
               <label for="animalId" class="form-label">Animales</label>
               <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newProduction.animalId" required>
@@ -151,7 +152,7 @@
                 <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
               </select>
             </div>
-
+            
             <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Enviar</button>
           </form>
         </div>

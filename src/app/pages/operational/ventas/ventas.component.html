@@ -116,7 +116,7 @@
           <div class="mb-3">
             <label for="productionId" class="form-label">Producción</label>
             <select class="form-control" id="productionId" name="productionId" [(ngModel)]="newSale.productionId" required>
-              <option *ngFor="let production of productions" [value]="production.id">{{ production.id }}</option>
+              <option *ngFor="let production of productions" [value]="production.id">{{ production.animal }} - {{ production.typeProduction }} {{ production.stock }} {{ production.measurement }}</option>
             </select>
           </div> 
 

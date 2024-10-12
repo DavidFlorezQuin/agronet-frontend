@@ -49,8 +49,8 @@ export class AlertaComponent implements OnInit {
   maxDate: string = new Date(new Date().setFullYear(new Date().getFullYear() + 5)).toISOString().split('T')[0]; // Fecha máxima (hoy + 5 años)
 
   alerta: Alerta[] = [];
-  IdFarm: number | null = null; // Propiedad para almacenar el ID
-  IdUser: number | null = null; // Definir como propiedad de la clase
+  IdFarm: number | null = null; 
+IdUser: number | null = null;  
   animals: Animal[] = [];
   CategoriaAlerta: CategoriaAlerta[] = [];
 
@@ -235,7 +235,6 @@ export class AlertaComponent implements OnInit {
       }
     });
   }
-
   onSubmit(form: NgForm): void {
     if (!form.valid) {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
@@ -244,6 +243,7 @@ export class AlertaComponent implements OnInit {
   
     const formData = form.value;
     const alertaData: Alerta = {
+      id: this.newAlerta.id, // Agrega el ID aquí
       ...formData,
       animalId: Number(formData.animalId),
       categoryAlertId: Number(formData.categoryAlertId),
@@ -253,35 +253,35 @@ export class AlertaComponent implements OnInit {
     };
   
     if (this.newAlerta.id > 0) {
-      // Actualizar alerta existente
       this.AlertaService.updateAlerta(alertaData, this.newAlerta.id).subscribe({
         next: () => {
           this.alertService.SuccessAlert('Actualizado correctamente');
-          this.resetForm(form);
+          this.resetForm();
           this.refreshAlertList();
           this.newAlerta = { ...alertaData };
         },
-        error: () => {
-          this.alertService.ErrorAlert('Error al actualizar');
+        error: (err) => {
+          console.error(err);
+          this.alertService.ErrorAlert('Error al actualizar: ' + err.message);
         }
       });
     } else {
-      // Crear nueva alerta
       this.AlertaService.createAlerta(alertaData).subscribe({
         next: () => {
           this.alertService.SuccessAlert('Creado correctamente');
-          this.resetForm(form);
+          this.resetForm();
           this.refreshAlertList();
         },
-        error: () => {
-          this.alertService.ErrorAlert('Error al crear');
+        error: (err) => {
+          console.error(err);
+          this.alertService.ErrorAlert('Error al crear: ' + err.message);
         }
       });
     }
   }
   
-  private resetForm(form: NgForm): void {
-    form.reset();
+  
+   resetForm(): void {
     this.newAlerta = { id: 0, name: '', description: '', date: new Date(), isRead: false, animalId: 0, categoryAlertId: 0, usersId: 0 };
   }
   
