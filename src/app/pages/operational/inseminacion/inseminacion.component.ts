@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { InseminationService } from './inseminacion.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import { Insemination } from './Insemination.module';
@@ -81,7 +81,7 @@ export class InseminationComponent implements OnInit {
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
-
+    this.setDefaultSelections();
 
   }
 
@@ -101,22 +101,50 @@ export class InseminationComponent implements OnInit {
       }
     });
   }
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.bulls.length > 0) {
+      this.newInsemination.semenId = this.bulls[0].id;
+    }
+    // Si hay vacas disponibles, seleccionar la primera como valor predeterminado
+    if (this.cows.length > 0) {
+      this.newInsemination.motherId = this.cows[0].id;
+    }
+  }
+  checkValidSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+    } else {
+      field.control.setErrors(null);
+    }
+    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
+  }
+
   listCows(IdFarm: number): void {
     this.animalesService.getAnimalsCows(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.cows = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
       }
     });
   }
+  validateSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+      field.control.markAsTouched();
+    }
+  
+  }
   listBulls(IdFarm: number): void {
     this.animalesService.getAnimalsBulls(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.bulls = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');

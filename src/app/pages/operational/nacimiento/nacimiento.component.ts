@@ -19,6 +19,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
 import { InseminationService } from '../inseminacion/inseminacion.service';
 import { Insemination } from '../inseminacion/Insemination.module';
+import { Animal } from '../animal/animal.module';
 
 @Component({
   selector: 'app-nacimiento',
@@ -40,7 +41,7 @@ import { Insemination } from '../inseminacion/Insemination.module';
 })
 export class NacimientoComponent implements OnInit {
   IdFarm: number | null = null; 
-
+  bulls: Animal[] = [];
   inseminations: Insemination[] = [];
   nacimiento: Nacimiento[] = [];
   newNacimiento: Nacimiento = {
@@ -77,6 +78,11 @@ export class NacimientoComponent implements OnInit {
       console.warn('No se pudo obtener el ID de la finca.');
     }
   }
+  
+  
+  validateBirthWeight(): boolean {
+    return typeof this.newNacimiento.BirthWeight === 'number' && this.newNacimiento.BirthWeight >= 0;
+}
 
   listInseminations(IdFarm:number): void {
     this.inseminationService.getInseminations(IdFarm).subscribe({
@@ -214,6 +220,11 @@ export class NacimientoComponent implements OnInit {
     } else {
       this.alertaService.ErrorAlert('Por favor completa todod los campos');
 
+    }
+  }
+  preventNegative(event: KeyboardEvent): void {
+    if (event.key === '-') {
+        event.preventDefault(); // Prevenir la entrada del símbolo de menos
     }
   }
 }
