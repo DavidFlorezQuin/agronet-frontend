@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Route, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Route, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { RoleMenu } from '../../login/models/MenuRole.module';
 
@@ -12,21 +12,29 @@ import { RoleMenu } from '../../login/models/MenuRole.module';
   styleUrl: './menu.component.css'
 })
 export class MenuComponent {
+  id: number = 0; 
 
-  id:number = 0; 
-
-  constructor(private serviceAuth:AuthService){
-    const storedId = localStorage.getItem('menuId'); 
-    if(storedId !== null){
-      this.id = Number(storedId)
-    }else{
+  constructor(private serviceAuth: AuthService, private router: Router) {
+    const storedId = localStorage.getItem('menuId');
+    
+    if (storedId && storedId !== '0') {
+      this.id = Number(storedId);
+    } else {
       this.id = this.serviceAuth.getRoleMenu();
       localStorage.setItem('menuId', this.id.toString());
     }
+    
     this.loadMenu(this.id);
   }
+  
 
 
+  onLogout(): void {
+    // Elimina el token o cualquier otro dato relacionado con la sesión
+    this.serviceAuth.setLoggedIn(false)
+    this.router.navigate(['/login']); // Redirige al usuario a la página de inicio de sesión
+
+  }
   
   menuData: RoleMenu[] = [];
 
