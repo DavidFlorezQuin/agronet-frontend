@@ -59,8 +59,10 @@
     </ng-container>
     <ng-container matColumnDef="state">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
-      <td mat-cell *matCellDef="let element"> {{element.state}} </td>
-    </ng-container>
+      <td mat-cell *matCellDef="let element"> 
+        {{ element.state ? 'Activo' : 'Inactivo' }}
+      </td>
+          </ng-container>
 
     
     <!-- Acciones Column -->
@@ -177,6 +179,7 @@
               <option value="">Selecciona el resultado</option>
               <option value="FALLIDO">Fallido</option>
               <option value="EXITOSO">Exitoso</option>
+              <option value="PENDIENTE">Pendiente</option>
             </select>
             <div *ngIf="inseminationType.invalid && inseminationType.touched" class="text-danger">
               El resultado es obligatorio.

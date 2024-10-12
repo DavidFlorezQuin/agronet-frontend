@@ -9,15 +9,19 @@ export class AlertService {
   constructor() { }
 
 
-  SuccessAlert(message: string){
+  SuccessAlert(message: string) {
     Swal.fire({
-      title: `${message}con éxito!`,
+      title: `${message} con éxito!`,
       icon: 'success',
-      confirmButtonText: 'OK',
+      html: `
+        <button type="button" 
+                class="btn btn-primary px-4" 
+                data-bs-dismiss="modal">
+          OK
+        </button>
+      `,
+      showConfirmButton: false, // Desactivamos el botón predeterminado
       buttonsStyling: false,
-      customClass: {
-        confirmButton: 'btn btn-primary px-4',
-      },
     });
   }
 
