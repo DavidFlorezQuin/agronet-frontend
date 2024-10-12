@@ -96,29 +96,80 @@
             <div class="mb-3">
               <label for="name" class="form-label">Nombre</label>
               <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newTratamiento.name"
-                required>
+                
+              required 
+              minlength="4" #Nombre="ngModel"
+              [ngClass]="{
+               'is-invalid': Nombre.invalid && Nombre.touched,
+               'is-valid': Nombre.valid && Nombre.touched
+             }"
+              />
+              <!-- Mensajes de error -->
+           <div *ngIf="Nombre.invalid && Nombre.touched" class="invalid-feedback">
+             <div *ngIf="Nombre.errors?.['required']">El nombre  es obligatorio.</div>
+             <div *ngIf="Nombre.errors?.['minlength']">El nombre  debe tener al menos 4 caracteres.</div>
+           </div>
+                               
+           <div *ngIf="Nombre.valid && Nombre.touched" class="valid-feedback">
+             Descripción válida.
+           </div>
             </div>
+
             <div class="mb-3">
               <label for="description" class="form-label">Descripción</label>
               <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newTratamiento.description"
-                required>
+                name="Description" required minlength="10" #descriptionField="ngModel"
+              [ngClass]="{
+                'is-invalid': descriptionField.invalid && descriptionField.touched,
+                'is-valid': descriptionField.valid && descriptionField.touched
+              }" />
+          
+            <!-- Mensajes de error -->
+            <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+              <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+            </div>
+            <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
+              Descripción válida.
+            </div>
+
             </div>
             <div class="mb-3">
               <label for="startDate" class="form-label">Fecha inicio</label>
               <input type="date" class="form-control" id="startDate" name="startDate" [(ngModel)]="newTratamiento.startDate"
-                required>
+                required [min]="minDate">
             </div>
             <div class="mb-3">
               <label for="finishiedDate" class="form-label">Fecha Fin</label>
               <input type="date" class="form-control" id="finishiedDate" name="finishiedDate" [(ngModel)]="newTratamiento.finishiedDate"
-                required>
+                required [min]="minDate">
             </div>
             <div class="mb-3">
               <label for="animalDiagnosticsId" class="form-label">Diagnósticos</label>
-              <select class="form-control" id="animalDiagnosticsId" name="animalDiagnosticsId" [(ngModel)]="newTratamiento.animalDiagnosticsId" required>
-                <option value="" disabled selected>Selecciona un animal</option>
-                <option *ngFor="let diagnostic of diagnostics" [value]="diagnostic.id">{{ diagnostic.name }}</option>
+              <select class="form-control" id="animalDiagnosticsId" name="animalDiagnosticsId" [(ngModel)]="newTratamiento.animalDiagnosticsId" 
+              #diagnostico="ngModel" required
+              (change)="checkValidSelection(diagnostico)"
+              [ngClass]="{
+                'is-invalid': diagnostico.invalid && diagnostico.touched,
+                'is-valid': diagnostico.valid && diagnostico.touched
+              }">
+             
+                <option value=""  selected>Selecciona un animal</option>
+                <ng-container *ngIf="diagnostics.length > 0">
+                  <option *ngFor="let diagnostic of diagnostics" [value]="diagnostic.id">{{ diagnostic.name }}</option>
+
+                </ng-container>
+                <option *ngIf="diagnostics.length === 0" disabled>No hay animales disponibles</option>
+              
               </select>
+              
+            <!-- Mensajes de error -->
+            <div *ngIf="diagnostico.invalid && diagnostico.touched" class="invalid-feedback">
+              Seleccionar una madre es obligatorio.
+            </div>
+            <div *ngIf="diagnostico.valid && diagnostico.touched" class="valid-feedback">
+              Madre seleccionada correctamente.
+            </div>
             </div>
 
             <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Enviar</button>

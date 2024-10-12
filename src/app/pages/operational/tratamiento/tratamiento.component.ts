@@ -5,7 +5,7 @@ import { AlertService } from '../../../shared/components/alert.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,7 +38,7 @@ import { AnimalDiagnostics } from '../animal-diagnostico/AnimalDiagnostics.modul
   templateUrl: './tratamiento.component.html'
 })
 export class TratamientoComponent implements OnInit {
-
+  minDate: string = new Date().toISOString().split('T')[0];
   IdFarm: number | null = null;
   diagnostics: AnimalDiagnostics[] = [];
   tratamiento: Treatments[] = [];
@@ -76,13 +76,29 @@ export class TratamientoComponent implements OnInit {
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
+    this.setDefaultSelections();
   }
-
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.diagnostics.length > 0) {
+      this.newTratamiento.animalDiagnosticsId = this.diagnostics[0].id;
+    }
+    
+  }
+  checkValidSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+    } else {
+      field.control.setErrors(null);
+    }
+    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
+  }
   listDiagnostics(IdFarm: number): void {
     this.animalDiagnosticService.getAnimalDiagnostics(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.diagnostics = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los diagnósticos');
