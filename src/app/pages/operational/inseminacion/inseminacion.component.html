@@ -96,41 +96,71 @@
         <form #inseminacionForm="ngForm" (ngSubmit)="onSubmit(inseminacionForm)">
           <div class="mb-3">
             <label for="description" class="form-label">Descripción</label>
-            <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newInsemination.description" required />
+            <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newInsemination.description" 
+             #description="ngModel"
+            required />
+            <div *ngIf="description.invalid && description.touched" class="text-danger">
+              La descripción es obligatoria.
+            </div>
           </div>
 
           <div class="mb-3">
             <label for="semenId" class="form-label">Padre</label>
-            <select class="form-control" id="semenId" name="semenId" [(ngModel)]="newInsemination.semenId" required>
-              <option value="" disabled selected>Seleccione un animal</option>
-              <option *ngFor="let bull of bulls" [value]="bull.id">{{ bull.name }}</option>
+            <select class="form-control" id="semenId" name="semenId" [(ngModel)]="newInsemination.semenId" 
+            #semenId="ngModel"
+            required>
+              <option value="" disabled >Seleccione un animal</option>
+               <!-- Usa un ng-container para dividir las directivas -->
+                   <ng-container *ngIf="bulls.length > 0">
+                     <option *ngFor="let bull of bulls" [value]="bull.id">{{ bull.name }}</option>
+                   </ng-container>
+                <!-- Si no hay toros disponibles -->
+              <option *ngIf="bulls.length === 0" disabled>No hay animales disponibles</option>
             </select>
+            <div *ngIf="semenId.invalid && semenId.touched" class="text-danger">
+              Seleccionar un padre es obligatorio.
+            </div>
           </div>
           <div class="mb-3">
             <label for="motherId" class="form-label">Madre</label>
-            <select class="form-control" id="motherId" name="motherId" [(ngModel)]="newInsemination.motherId" required>
+            <select class="form-control" id="motherId" name="motherId" [(ngModel)]="newInsemination.motherId" 
+            #motherId="ngModel"
+            required>
               <option value="" disabled selected>Seleccione un animal</option>
               <option *ngFor="let cow of cows" [value]="cow.id">{{ cow.name }}</option>
             </select>
+            <div *ngIf="motherId.invalid && motherId.touched" class="text-danger">
+              Seleccionar una madre es obligatorio.
+            </div>
           </div>
 
           <div class="mb-3">
             <label for="inseminationType" class="form-label">Resultado</label>
 
-            <select class="form-control" id="inseminationType" name="inseminationType" [(ngModel)]="newInsemination.result" required>
+            <select class="form-control" id="inseminationType" name="inseminationType" [(ngModel)]="newInsemination.result" 
+            #inseminationType="ngModel"
+            required>
               <option value="" disabled selected>Selecciona el resultado</option>
               <option value="FALLIDO">Fallido</option>
               <option value="EXITOSO">Exitoso</option>
             </select>
+            <div *ngIf="inseminationType.invalid && inseminationType.touched" class="text-danger">
+              El resultado es obligatorio.
+            </div>
           </div>
 
           <div class="mb-5">
             <label for="inseminationType" class="form-label">Tipo Inseminación</label>
-            <select class="form-control" id="inseminationType" name="inseminationType" [(ngModel)]="newInsemination.inseminationType" required>
+            <select class="form-control" id="inseminationType" name="inseminationType" [(ngModel)]="newInsemination.inseminationType" 
+            #inseminationTypeType="ngModel"
+            required>
               <option value="" disabled selected>Selecciona un tipo inseminación</option>
               <option value="NATURAL">Natural</option>
               <option value="ARTIFICIAL">Artificial</option>
             </select>
+            <div *ngIf="inseminationTypeType.invalid && inseminationTypeType.touched" class="text-danger">
+              El tipo de inseminación es obligatorio.
+            </div>
           </div>
 
           <button type="submit" class="btn btn-primary" [disabled]="!inseminacionForm.valid">
