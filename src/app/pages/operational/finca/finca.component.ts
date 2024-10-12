@@ -82,7 +82,11 @@ export class FincaComponent implements OnInit {
       }
     });
   }
-
+  preventNegative(event: KeyboardEvent): void {
+    if (event.key === '-') {
+        event.preventDefault(); // Prevenir la entrada del símbolo de menos
+    }
+  }
   listFincas(IdFarm: number): void {
     this.fincaService.getFincas(IdFarm).subscribe({
       next: (res: any) => {

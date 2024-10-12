@@ -78,21 +78,40 @@
       <div class="modal-body">
         <form #form="ngForm" (ngSubmit)="onSubmit(form)">
           <div class="mb-3">
-            <label for="purpose" class="form-label">Asistencia</label>
-            <select class="form-control" id="assistence" name="assistence" [(ngModel)]="newNacimiento.assistence" required>
-              <option value="" disabled selected>Selecciona un respuesta</option>
+            <label for="assistence" class="form-label">Asistencia</label>
+            <select class="form-control" id="assistence" name="assistence" [(ngModel)]="newNacimiento.assistence" 
+                    #nacimientoId="ngModel" required (change)="checkValidSelection(nacimientoId)"
+                    [ngClass]="{
+                      'is-invalid': nacimientoId.invalid && nacimientoId.touched,
+                      'is-valid': nacimientoId.valid && nacimientoId.touched
+                    }">
+              <option value="" disabled>Selecciona un respuesta</option>
               <option value="T">Verdadero</option>
               <option value="F">Falso</option>
             </select>
+            <div *ngIf="nacimientoId.invalid && nacimientoId.touched" class="text-danger">
+              El selector es obligatorio.
+            </div>
           </div>
+          
           <div class="mb-3">
-            <label for="purpose" class="form-label">Resultado</label>
-            <select class="form-control" id="result" name="result" [(ngModel)]="newNacimiento.Result" required>
-              <option value="" disabled selected>Selecciona un respuesta</option>
+            <label for="result" class="form-label">Resultado</label>
+            <select class="form-control" id="result" name="result" [(ngModel)]="newNacimiento.Result" 
+                    #resultadoId="ngModel" required (change)="checkValidSelection(resultadoId)"
+                    [ngClass]="{
+                      'is-invalid': resultadoId.invalid && resultadoId.touched,
+                      'is-valid': resultadoId.valid && resultadoId.touched
+                    }">
+              <option value="">Selecciona un respuesta</option>
               <option value="1">Efectiva</option>
               <option value="0">Negativa</option>
             </select>
+            <div *ngIf="resultadoId.invalid && resultadoId.touched" class="text-danger">
+              El resultado es obligatorio.
+            </div>
           </div>
+          
+          
 
           <div class="mb-3">
             <label for="Description" class="form-label">Descripción</label>

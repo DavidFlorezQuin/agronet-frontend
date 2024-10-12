@@ -1,4 +1,4 @@
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -45,8 +45,8 @@ import { CategoriaAlerta } from '../../Parametro/categoria-alerta/categoria-aler
 })
 export class AlertaComponent implements OnInit {
   
-  maxDate: string = new Date().toISOString().split('T')[0];  // Fecha actual
-  minDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0]; 
+  minDate: string = new Date().toISOString().split('T')[0]; // Fecha actual
+  maxDate: string = new Date(new Date().setFullYear(new Date().getFullYear() + 5)).toISOString().split('T')[0]; // Fecha máxima (hoy + 5 años)
 
   alerta: Alerta[] = [];
   IdFarm: number | null = null; // Propiedad para almacenar el ID
@@ -72,7 +72,16 @@ export class AlertaComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private AlertaService: AlertaService, private alertService: AlertService, private animalService: AnimalService, private CategoriaAlertaaService: CategoriaAlertaaService) { }
-
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.animals.length > 0) {
+      this.newAlerta.animalId = this.alerta[0].id;
+    }
+    // Si hay vacas disponibles, seleccionar la primera como valor predeterminado
+    if (this.CategoriaAlerta.length > 0) {
+      this.newAlerta.categoryAlertId = this.CategoriaAlerta[0].id;
+    }
+  }
   ngOnInit(): void {
     const StorageId: string | null = localStorage.getItem('Usuario');
     this.IdUser = Number(StorageId);
@@ -93,14 +102,23 @@ export class AlertaComponent implements OnInit {
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
+    this.setDefaultSelections();
   }
-
+  checkValidSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+    } else {
+      field.control.setErrors(null);
+    }
+    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
+  }
 
   ListAnimal(farmId: number): void {
     this.animalService.getAnimals(farmId).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.animals = data;
+        this.setDefaultSelections(); 
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los animales');
@@ -130,6 +148,7 @@ export class AlertaComponent implements OnInit {
 
         const data = res.data;
         this.CategoriaAlerta = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
@@ -240,6 +259,7 @@ export class AlertaComponent implements OnInit {
           this.alertService.SuccessAlert('Actualizado correctamente');
           this.resetForm(form);
           this.refreshAlertList();
+          this.newAlerta = { ...alertaData };
         },
         error: () => {
           this.alertService.ErrorAlert('Error al actualizar');
