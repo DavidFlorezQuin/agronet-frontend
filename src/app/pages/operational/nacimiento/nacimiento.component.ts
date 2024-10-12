@@ -42,7 +42,7 @@ import { Animal } from '../animal/animal.module';
 export class NacimientoComponent implements OnInit {
   IdFarm: number | null = null; 
   bulls: Animal[] = [];
-  inseminations: Insemination[] = [];
+  inseminations: any[] = [];
   nacimiento: Nacimiento[] = [];
   newNacimiento: Nacimiento = {
     id: 0,

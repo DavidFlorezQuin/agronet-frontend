@@ -157,7 +157,7 @@
             #Inseminacionid="ngModel" required>
                 <option value="" disabled selected>Seleccione una vaca</option>
                 <ng-container *ngIf="inseminations.length > 0">
-                    <option *ngFor="let insemination of inseminations" [value]="insemination.id">{{ insemination.motherId }}</option>
+                    <option *ngFor="let insemination of inseminations" [value]="insemination.id">{{ insemination.mother }}</option>
                 </ng-container>
                 
                 <!-- Si no hay toros disponibles -->
