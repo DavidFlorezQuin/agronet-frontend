@@ -84,19 +84,64 @@
       </div>
       <div class="modal-body">
         <form #fincaForm="ngForm" (ngSubmit)="onSubmit(fincaForm)">
+          
           <div class="mb-3">
             <label for="fincaName" class="form-label">Nombre de la Finca</label>
-            <input type="text" class="form-control" id="fincaName" name="name" [(ngModel)]="newFinca.name" required>
+            <input type="text" class="form-control" id="fincaName" name="name" [(ngModel)]="newFinca.name" 
+            required
+           required minlength="3" maxlength="29" #nameField="ngModel"
+              [ngClass]="{
+                'is-invalid': nameField.invalid && nameField.touched,
+                'is-valid': nameField.valid && nameField.touched
+              }" />
+              <!-- Mensajes de error -->
+            <div *ngIf="nameField.invalid && nameField.touched" class="invalid-feedback">
+              <div *ngIf="nameField.errors?.['required']">El nombre es obligatorio.</div>
+              <div *ngIf="nameField.errors?.['minlength']">El nombre debe tener al menos 10 caracteres.</div>
+              <div *ngIf="nameField.errors?.['maxlength']">El nombre no puede tener más de 29 caracteres.</div>
+            </div>
+            <div *ngIf="nameField.valid && nameField.touched" class="valid-feedback">
+              Nombre válido.
+            </div>
           </div>
+
           <div class="mb-3">
-            <label for="hectare" class="form-label">Dimensión</label>
+            <label for="hectare" class="form-label">Dimensión de Hectarea</label>
             <input type="number" class="form-control" id="hectare" name="hectare" [(ngModel)]="newFinca.hectare"
-              required>
+             required min="1" pattern="^[1-9]\d*$*-" #hectare="ngModel"
+             [ngClass]="{'is-invalid': hectare.invalid && hectare.touched, 'is-valid':
+             hectare.valid && hectare.touched}"  (keypress)="preventNegative($event)" />
+            
+
+             
+               <!-- Mensajes de error -->
+               <div *ngIf="hectare.invalid && hectare.touched" class="invalid-feedback">
+                <div *ngIf="hectare.errors?.['required']">La dimención de la hectarea es obligatorio.</div>
+                <div *ngIf="hectare.errors?.['min']">La dimención de la hectarea debe ser mayor o igual a 0.</div>
+                <div *ngIf="hectare.errors?.['pattern']">La dimención de la hectarea debe ser un número positivo.</div>
+          </div>
+           <div *ngIf="hectare.valid && hectare.touched" class="valid-feedback">
+             Peso válido.
+            </div>
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Descripción</label>
             <textarea class="form-control" id="description" name="description" [(ngModel)]="newFinca.description"
-              required></textarea>
+              required minlength="10" #descriptionField="ngModel"
+              [ngClass]="{
+               'is-invalid': descriptionField.invalid && descriptionField.touched,
+               'is-valid': descriptionField.valid && descriptionField.touched
+             }">
+            </textarea>
+             <!-- Mensajes de error -->
+             <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+              <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+            </div>
+
+            <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
+              Descripción válida.
+            </div>
           </div>
           <!-- <div class="mb-3">
                 <label for="cityId" class="form-label">Ciudad</label>

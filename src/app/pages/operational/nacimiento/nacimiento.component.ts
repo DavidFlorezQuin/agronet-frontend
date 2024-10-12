@@ -78,8 +78,7 @@ export class NacimientoComponent implements OnInit {
       console.warn('No se pudo obtener el ID de la finca.');
     }
   }
-  
-  
+
   validateBirthWeight(): boolean {
     return typeof this.newNacimiento.BirthWeight === 'number' && this.newNacimiento.BirthWeight >= 0;
 }
@@ -220,6 +219,18 @@ export class NacimientoComponent implements OnInit {
     } else {
       this.alertaService.ErrorAlert('Por favor completa todod los campos');
 
+    }
+  }
+  checkValidSelection(selectControl: any): void {
+    if (selectControl.invalid && selectControl.touched) {
+      console.error('Selección no válida');
+
+      if (selectControl.value === '') {
+        selectControl.control.setErrors({ required: true });
+      } else {
+        selectControl.control.setErrors(null);
+      }
+      selectControl.control.markAsTouched(); 
     }
   }
   preventNegative(event: KeyboardEvent): void {

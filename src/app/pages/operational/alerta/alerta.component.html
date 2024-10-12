@@ -78,6 +78,7 @@
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
         <div class="d-flex gap-2 justify-content-center" id="icons-section">
+          
           <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#alertModal" (click)="onEdit(element)"></i>
           <i class="bi bi-trash" (click)="onDelete(element)"></i>
         </div>
@@ -103,31 +104,102 @@
       <div class="modal-body">
         <form #alertForm="ngForm" (ngSubmit)="onSubmit(alertForm)">
           <input type="hidden" id="usersId" name="usersId" [(ngModel)]="newAlerta.usersId">
+          
           <div class="mb-3">
-            <label for="Name" class="form-label">Nombre <span style="color: red;">*</span></label>
-              <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newAlerta.name" required>
+            <label for="Name" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newAlerta.name" 
+            required  required minlength="4" #NombreDeAlertas="ngModel"
+              [ngClass]="{
+               'is-invalid': NombreDeAlertas.invalid && NombreDeAlertas.touched,
+               'is-valid': NombreDeAlertas.valid && NombreDeAlertas.touched
+             }"
+              required />
+              <!-- Mensajes de error -->
+            <div *ngIf="NombreDeAlertas.invalid && NombreDeAlertas.touched" class="invalid-feedback">
+              <div *ngIf="NombreDeAlertas.errors?.['required']">El nombre de la alerta es obligatoria.</div>
+              <div *ngIf="NombreDeAlertas.errors?.['minlength']">El nombre de la alerta debe tener al menos 4 caracteres.</div>
+            </div>
+
+            <div *ngIf="NombreDeAlertas.valid && NombreDeAlertas.touched" class="valid-feedback">
+              Descripción válida.
+            </div>
           </div>
           <div class="mb-3">
-            <label for="Description" class="form-label">Descripción <span style="color: red;">*</span></label>
-            <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newAlerta.description" required>
+            <label for="Description" class="form-label">Descripción</label>
+            <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newAlerta.description" 
+            required minlength="10" #descriptionField="ngModel"
+              [ngClass]="{
+                'is-invalid': descriptionField.invalid && descriptionField.touched,
+                'is-valid': descriptionField.valid && descriptionField.touched
+              }" />
+          
+            <!-- Mensajes de error -->
+            <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+              <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+            </div>
+            <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
+              Descripción válida.
+            </div>
           </div>
+
           <div class="mb-3">
             <label for="Date" class="form-label">Fecha <span style="color: red;">*</span></label>
             <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newAlerta.date" required [min]="minDate" [max]="maxDate">
           </div>
           <div class="mb-3">
             <label for="animalsId" class="form-label">Animal</label>
-            <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newAlerta.animalId">
-              <option value="" disabled selected>Seleccione un animal</option>
-              <option *ngFor="let animal of animals" [value]="animal.id">{{ animal.name }}</option>
+            <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newAlerta.animalId" 
+            #animalId="ngModel" required
+              (change)="checkValidSelection(animalId)"
+              [ngClass]="{
+                'is-invalid': animalId.invalid && animalId.touched,
+                'is-valid': animalId.valid && animalId.touched
+              }">
+              <option value=""  selected>Seleccione un animal</option>
+              <ng-container *ngIf="animals.length > 0">
+                <option *ngFor="let animal of animals" [value]="animal.id">{{ animal.name }}</option>
+
+              </ng-container>
+              <option *ngIf="animals.length === 0" disabled>No hay animales disponibles</option>
+
             </select>
+            
+            <!-- Mensajes de error -->
+            <div *ngIf="animalId.invalid && animalId.touched" class="invalid-feedback">
+              Seleccionar un animal es obligatorio.
+            </div>
+            <div *ngIf="animalId.valid && animalId.touched" class="valid-feedback">
+              Animal seleccionada correctamente.
+            </div>
           </div>
+
           <div class="mb-3">
-            <label for="animalsId" class="form-label">Categoría Alerta <span style="color: red;">*</span></label>
-            <select class="form-control" id="categoryAlertId" name="categoryAlertId" [(ngModel)]="newAlerta.categoryAlertId" required>
-              <option value="" disabled selected>Seleccione un categoría</option>
-              <option *ngFor="let CategoriaAlert of CategoriaAlerta" [value]="CategoriaAlert.id">{{ CategoriaAlert.name }}</option>
+            <label for="animalsId" class="form-label">Categoría Alerta</label>
+            <select class="form-control" id="categoryAlertId" name="categoryAlertId" [(ngModel)]="newAlerta.categoryAlertId" 
+            
+            #categoryAlertId="ngModel" required
+              (change)="checkValidSelection(categoryAlertId)"
+              [ngClass]="{
+                'is-invalid': categoryAlertId.invalid && categoryAlertId.touched,
+                'is-valid': categoryAlertId.valid && categoryAlertId.touched
+              }">
+              <option value="" selected>Seleccione un categoría</option>
+              <ng-container *ngIf="CategoriaAlerta.length > 0">
+                <option *ngFor="let CategoriaAlert of CategoriaAlerta" [value]="CategoriaAlert.id">{{ CategoriaAlert.name }}</option>
+              </ng-container>
+
+              <option *ngIf="animals.length === 0" disabled>No hay animales disponibles</option>
+
             </select>
+            <!-- Mensajes de error -->
+            <div *ngIf="categoryAlertId.invalid && categoryAlertId.touched" class="invalid-feedback">
+              Seleccionar un animal es obligatorio.
+            </div>
+            <div *ngIf="categoryAlertId.valid && categoryAlertId.touched" class="valid-feedback">
+              Animal seleccionada correctamente.
+            </div>
+
           </div>
 
           <button type="submit" class="btn btn-primary" [disabled]="!alertForm.valid">{{ newAlerta.id ? 'Actualizar' : 'Guardar' }}</button>

@@ -4,7 +4,7 @@ import { Animal } from './animal.module';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { NgForm } from '@angular/forms';
+import { NgForm, NgModel } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { AlertService } from '../../../shared/components/alert.service';
 import { NgModule } from '@angular/core';
@@ -61,6 +61,8 @@ export class AnimalComponent implements OnInit {
 
   constructor(private animalService: AnimalService, private alertaService: AlertService, private loteService: LoteService, private enumSevice: EnumService) { }
 
+  maxDate: string = new Date().toISOString().split('T')[0];  // Fecha actual
+  minDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0]; 
   ngOnInit(): void {
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
 
@@ -77,7 +79,19 @@ export class AnimalComponent implements OnInit {
 
     this.listRace();
   }
-
+  checkValidSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+    } else {
+      field.control.setErrors(null);
+    }
+    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
+  }
+  preventNegative(event: KeyboardEvent): void {
+    if (event.key === '-') {
+        event.preventDefault(); // Prevenir la entrada del símbolo de menos
+    }
+  }
   listRace(): void {
     this.enumSevice.getRace().subscribe({
       next: (res: any) => {
