@@ -63,6 +63,7 @@ export class InseminationComponent implements OnInit {
   };
 
   constructor(private animalesService: AnimalService, private inseminationService: InseminationService, private alertService: AlertService) { }
+  
 
   ngOnInit(): void {
 
@@ -84,7 +85,10 @@ export class InseminationComponent implements OnInit {
     this.setDefaultSelections();
 
   }
-
+  /** el isValidOption sirve para la parte de padre de semental no de la finca*/
+  isValidOption(value: string): boolean {
+    return value !== '' && value !== 'no-propiedad'; // Cambia 'no-propiedad' al valor que hayas asignado
+}
   listInseminations(IdFarm: number): void {
     this.inseminationService.getInseminations(IdFarm).subscribe({
       next: (res: any) => {

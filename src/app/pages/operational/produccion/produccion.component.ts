@@ -99,13 +99,26 @@ export class ProduccionComponent implements OnInit {
       console.warn('No se pudo obtener el ID de la finca.');
     }
     this.listMeasurement();
+    this.setDefaultSelections();
   }
+  checkValidSelection(selectControl: any): void {
+    if (selectControl.invalid && selectControl.touched) {
+      console.error('Selección no válida');
 
+      if (selectControl.value === '') {
+        selectControl.control.setErrors({ required: true });
+      } else {
+        selectControl.control.setErrors(null);
+      }
+      selectControl.control.markAsTouched(); 
+    }
+  }
   ListAnimal(farmId: number): void {
     this.animalService.getAnimals(farmId).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.animales = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los animales');
@@ -253,7 +266,18 @@ export class ProduccionComponent implements OnInit {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
   }
-
+  preventNegative(event: KeyboardEvent): void {
+    if (event.key === '-') {
+        event.preventDefault(); // Prevenir la entrada del símbolo de menos
+    }
+  }
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.animales.length > 0) {
+      this.newProduction.animalId = this.animales[0].id;
+    }
+    
+  }
   onEdit(production: Productions): void {
     this.newProduction = { ...production };
   }

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { AlertService } from '../../../shared/components/alert.service';
 import { AnimalDiagnosticsService } from './animal-diagnostico.service';
 import { AnimalService } from '../animal/animal.service';
@@ -79,9 +79,24 @@ export class AnimalDiagnosticoComponent implements OnInit {
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
-
+      this.setDefaultSelections();
   }
 
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.animales.length > 0) {
+      this.newDiagnostic.animalId = this.animales[0].id;
+    }
+    
+  }
+  checkValidSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+    } else {
+      field.control.setErrors(null);
+    }
+    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
+  }
   listDiagnostics(IdFarm: number): void {
     this.diagnosticsService.getAnimalDiagnostics(IdFarm).subscribe({
       next: (res: any) => {
@@ -228,6 +243,7 @@ export class AnimalDiagnosticoComponent implements OnInit {
       next: (res: any) => {
         const data = res.data;
         this.animales = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertaService.ErrorAlert('Error al obtener los animales');

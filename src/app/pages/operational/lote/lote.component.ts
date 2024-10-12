@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { LoteService } from './lote.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import { Lote } from './lote.module';
@@ -72,13 +72,34 @@ export class LoteComponent implements OnInit {
       console.warn('No se pudo obtener el ID de la finca.');
     }
     this.listFinca(IdUser); 
+    this.setDefaultSelections();
   }
-
+  preventNegative(event: KeyboardEvent): void {
+    if (event.key === '-') {
+        event.preventDefault(); // Prevenir la entrada del símbolo de menos
+    }
+  }
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.fincas.length > 0) {
+      this.newLote.farmId= this.fincas[0].id;
+    }
+    
+  }
+  checkValidSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+    } else {
+      field.control.setErrors(null);
+    }
+    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
+  }
   listFinca(IdUser:number): void {
     this.fincaService.getFincas(IdUser).subscribe({
       next: (res: any) => {
         const data = res.data; 
         this.fincas = data; 
+        this.setDefaultSelections(); 
       },
       error: () => {
         this.alertaService.ErrorAlert('Error al obtener los datos de las fincas');

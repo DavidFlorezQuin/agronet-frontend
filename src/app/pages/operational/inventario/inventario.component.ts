@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 
 import { AlertService } from '../../../shared/components/alert.service';
 import { Inventories } from './Inventories.module';
@@ -81,6 +81,7 @@ export class InventarioComponent implements OnInit {
     }
 
     this.listFinca(IdUser);
+    this.setDefaultSelections();
   }
 
   listInventories(IdFarm: number): void {
@@ -100,7 +101,21 @@ export class InventarioComponent implements OnInit {
       }
     });
   }
-
+  checkValidSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+    } else {
+      field.control.setErrors(null);
+    }
+    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
+  }
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.fincas.length > 0) {
+      this.newInventory.farmId= this.fincas[0].id;
+    }
+    
+  }
   downloadPDF() {
     const doc = new jsPDF();
 
@@ -155,7 +170,8 @@ export class InventarioComponent implements OnInit {
     this.fincaService.getFincas(IdUser).subscribe({
       next: (res: any) => {
         const data = res.data; 
-        this.fincas = data; 
+        this.fincas = data;
+        this.setDefaultSelections(); 
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos de las fincas');

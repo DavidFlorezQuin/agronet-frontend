@@ -55,7 +55,7 @@
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
         <div class="d-flex gap-2 justify-content-center" id="icons-section">
-          <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
+          <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#modalInventory"(click)="onEdit(element)"></i>
           <i class="bi bi-trash" (click)="onDelete(element)"></i>
         </div>
       </td>
@@ -81,19 +81,72 @@
         <form #inventoryForm="ngForm" (ngSubmit)="onSubmit(inventoryForm)">
           <div class="mb-3">
             <label for="name" class="form-label">Nombre</label>
-            <input type="text" id="name" class="form-control" name="name" [(ngModel)]="newInventory.name" required />
+            <input type="text" id="name" class="form-control" name="name" [(ngModel)]="newInventory.name" 
+            
+            required 
+            minlength="4" #NombreDelInventario="ngModel"
+            [ngClass]="{
+             'is-invalid': NombreDelInventario.invalid && NombreDelInventario.touched,
+             'is-valid': NombreDelInventario.valid && NombreDelInventario.touched
+           }"
+            />
+            <!-- Mensajes de error -->
+         <div *ngIf="NombreDelInventario.invalid && NombreDelInventario.touched" class="invalid-feedback">
+           <div *ngIf="NombreDelInventario.errors?.['required']">El nombre del animal diagnostico es obligatoria.</div>
+           <div *ngIf="NombreDelInventario.errors?.['minlength']">El nombre del animal diagnostico debe tener al menos 4 caracteres.</div>
+         </div>
+
+         <div *ngIf="NombreDelInventario.valid && NombreDelInventario.touched" class="valid-feedback">
+           Descripción válida.
+         </div>
           </div>
+
           <div class="mb-3">
             <label for="description" class="form-label">Descripción</label>
             <textarea id="description" class="form-control" name="description" [(ngModel)]="newInventory.description"
-              required></textarea>
+              required
+              minlength="10" #inventario="ngModel"
+             [ngClass]="{
+              'is-invalid': inventario.invalid && inventario.touched,
+              'is-valid': inventario.valid && inventario.touched
+            }"
+              ></textarea>
+              
+             <!-- Mensajes de error -->
+            <div *ngIf="inventario.invalid && inventario.touched" class="invalid-feedback">
+              <div *ngIf="inventario.errors?.['required']">La descripción es obligatoria.</div>
+              <div *ngIf="inventario.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+            </div>
+
+            <div *ngIf="inventario.valid && inventario.touched" class="valid-feedback">
+              Descripción válida.
+            </div>
           </div>
 
           <div class="mb-3">
             <label for="farmId" class="form-label">Finca</label>
-            <select class="form-control" id="farmId" name="farmId" [(ngModel)]="newInventory.farmId" required>
-              <option *ngFor="let finca of fincas" [value]="finca.id">{{ finca.name }}</option>
+            <select class="form-control" id="farmId" name="farmId" [(ngModel)]="newInventory.farmId" 
+            #semenId="ngModel" required
+              (change)="checkValidSelection(semenId)"
+              [ngClass]="{
+                'is-invalid': semenId.invalid && semenId.touched,
+                'is-valid': semenId.valid && semenId.touched
+              }">
+              <option value="" selected>Seleccione una Finca</option>
+              <ng-container *ngIf="fincas.length > 0">
+                <option *ngFor="let finca of fincas" [value]="finca.id">{{ finca.name }}</option>
+
+              </ng-container>
+              <option *ngIf="fincas.length === 0" disabled>No hay fincas disponibles</option>
+           
             </select>
+            <!-- Mensajes de error -->
+            <div *ngIf="semenId.invalid && semenId.touched" class="invalid-feedback">
+              Seleccionar una finca es obligatorio.
+            </div>
+            <div *ngIf="semenId.valid && semenId.touched" class="valid-feedback">
+              Finca seleccionado correctamente.
+            </div>
           </div>
 
           <button type="submit" class="btn btn-success">{{ newInventory.id ? 'Actualizar' : 'Agregar' }}</button>

@@ -76,7 +76,7 @@
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
         <div class="d-flex gap-2 justify-content-center" id="icons-section">
-          <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
+          <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#productoModal"(click)="onEdit(element)"></i>
           <i class="bi bi-trash" (click)="onDelete(element)"></i>
         </div>
       </td>
@@ -104,33 +104,85 @@
             <div class="mb-3">
               <label for="purpose" class="form-label">Tipo producción</label>
               <select class="form-control" id="typeProduction" name="typeProduction"
-                [(ngModel)]="newProduction.typeProduction" required>
+                [(ngModel)]="newProduction.typeProduction" #produccionId="ngModel" required (change)="checkValidSelection(produccionId)"
+                [ngClass]="{
+                  'is-invalid': produccionId.invalid && produccionId.touched,
+                  'is-valid': produccionId.valid && produccionId.touched
+                }">
                 <option value="" disabled selected>Selecciona un propósito</option>
                 <option value="VENTA">Venta</option>
                 <option value="LECHE">Leche</option>
               </select>
+              <div *ngIf="produccionId.invalid && produccionId.touched" class="text-danger">
+                El selector es obligatorio.
+              </div>
             </div>
 
             
             <div class="mb-3">
               <label for="purpose" class="form-label">Medida</label>
               <select class="form-control" id="measurement" name="measurement" [(ngModel)]="newProduction.measurement"
-              required>
+              #medidaId="ngModel" required
+              (change)="checkValidSelection(medidaId)"
+              [ngClass]="{
+                'is-invalid': medidaId.invalid && medidaId.touched,
+                'is-valid': medidaId.valid && medidaId.touched
+              }">
               <option value="" disabled selected>Selecciona una medida</option>
-                <option *ngFor="let measurement of measurements" [value]="measurement">{{ measurement }}</option>
+                
+                <ng-container *ngIf="measurements.length > 0">
+                  <option *ngFor="let measurement of measurements" [value]="measurement">{{ measurement }}</option>
+                </ng-container>
+                <option *ngIf="measurements.length === 0" disabled>No hay animales disponibles</option>
+              
               </select>
+              <!-- Mensajes de error -->
+            <div *ngIf="medidaId.invalid && medidaId.touched" class="invalid-feedback">
+              Seleccionar la medida es obligatorio.
+            </div>
+            <div *ngIf="medidaId.valid && medidaId.touched" class="valid-feedback">
+              Medida seleccionada correctamente.
+            </div>
             </div>
 
             <div class="mb-3">
               <label for="description" class="form-label">Descripción</label>
               <textarea class="form-control" id="description" name="description" [(ngModel)]="newProduction.description"
-                required></textarea>
+              required minlength="10" #descriptionField="ngModel"
+              [ngClass]="{
+               'is-invalid': descriptionField.invalid && descriptionField.touched,
+               'is-valid': descriptionField.valid && descriptionField.touched
+             }"></textarea>
+             
+             <!-- Mensajes de error -->
+            <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+              <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+            </div>
+
+            <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
+              Descripción válida.
+            </div>
             </div>
 
             <div class="mb-3">
               <label for="quantityTotal" class="form-label">Cantidad Total</label>
               <input type="number" class="form-control" id="quantityTotal" name="quantityTotal"
-                [(ngModel)]="newProduction.quantityTotal" (ngModelChange)="updateStock($event)" required>
+                [(ngModel)]="newProduction.quantityTotal" (ngModelChange)="updateStock($event)" 
+                
+                equired min="1" pattern="^[1-9]\d*$*-" #cantidadTotal="ngModel"
+              [ngClass]="{'is-invalid': cantidadTotal.invalid && cantidadTotal.touched, 'is-valid':
+               cantidadTotal.valid && cantidadTotal.touched}"  (keypress)="preventNegative($event)" />
+              
+               <!-- Mensajes de error -->
+              <div *ngIf="cantidadTotal.invalid && cantidadTotal.touched" class="invalid-feedback">
+                  <div *ngIf="cantidadTotal.errors?.['required']">El peso es obligatorio.</div>
+                  <div *ngIf="cantidadTotal.errors?.['min']">El peso debe ser mayor a 0.</div>
+                  <div *ngIf="cantidadTotal.errors?.['pattern']">El peso debe ser un número positivo.</div>
+            </div>
+             <div *ngIf="cantidadTotal.valid && cantidadTotal.touched" class="valid-feedback">
+               Peso válido.
+              </div>
             </div>
             
             <div class="mb-3">
@@ -147,10 +199,29 @@
             
             <div class="mb-3">
               <label for="animalId" class="form-label">Animales</label>
-              <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newProduction.animalId" required>
-                <option value="" disabled selected>Selecciona un animal</option>
-                <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
+              <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newProduction.animalId" 
+              #semenId="ngModel" required
+              (change)="checkValidSelection(semenId)"
+              [ngClass]="{
+                'is-invalid': semenId.invalid && semenId.touched,
+                'is-valid': semenId.valid && semenId.touched
+              }">
+                <option value=""  selected>Selecciona un animal</option>
+                <ng-container *ngIf="animales.length > 0">
+                  <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
+
+                </ng-container>
+                <option *ngIf="animales.length === 0" disabled>No hay animales disponibles</option>
+             
               </select>
+              
+            <!-- Mensajes de error -->
+            <div *ngIf="semenId.invalid && semenId.touched" class="invalid-feedback">
+              Seleccionar un animal es obligatorio.
+            </div>
+            <div *ngIf="semenId.valid && semenId.touched" class="valid-feedback">
+              Animal seleccionado correctamente.
+            </div>
             </div>
             
             <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Enviar</button>

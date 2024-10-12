@@ -102,8 +102,7 @@
              [ngClass]="{
               'is-invalid': descriptionField.invalid && descriptionField.touched,
               'is-valid': descriptionField.valid && descriptionField.touched
-            }"
-             required />
+            }"/>
              <!-- Mensajes de error -->
             <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
               <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
@@ -124,6 +123,7 @@
                 'is-valid': semenId.valid && semenId.touched
               }">
               <option value="">Seleccione un animal</option>
+              <option value="no-propiedad">Semental no propiedad de la finca</option>
               <ng-container *ngIf="bulls.length > 0">
                 <option *ngFor="let bull of bulls" [value]="bull.id">{{ bull.name }}</option>
               </ng-container>

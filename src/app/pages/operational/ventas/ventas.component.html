@@ -87,11 +87,11 @@
         <form #inventoryForm="ngForm" (ngSubmit)="onSubmit(inventoryForm)">
           <div class="mb-3">
             <label for="price" class="form-label">Precio</label>
-            <input type="text" id="price" class="form-control" name="price" [(ngModel)]="newSale.price" required />
+            <input type="number" id="price" class="form-control" name="price" [(ngModel)]="newSale.price" required />
           </div>
           <div class="mb-3">
             <label for="quantity" class="form-label">Cantidad</label>
-            <input id="quantity" class="form-control" name="quantity" [(ngModel)]="newSale.quantity"
+            <input type="number" id="quantity" class="form-control" name="quantity" [(ngModel)]="newSale.quantity"
               required>
           </div>
 
