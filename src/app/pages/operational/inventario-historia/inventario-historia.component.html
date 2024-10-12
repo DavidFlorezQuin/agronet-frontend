@@ -133,7 +133,7 @@
           <div class="mb-3">
             <label for="date" class="form-label">Fecha</label>
             <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newInventarioHistorias.date"
-              required />
+              required [min]="minDate" [max]="maxDate">
           </div>
 
           <button type="submit" class="btn btn-primary" [disabled]="!inventarioForm.valid">
