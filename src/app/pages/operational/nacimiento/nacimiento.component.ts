@@ -20,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { InseminationService } from '../inseminacion/inseminacion.service';
 import { Insemination } from '../inseminacion/Insemination.module';
 import { Animal } from '../animal/animal.module';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-nacimiento',
@@ -40,16 +41,18 @@ import { Animal } from '../animal/animal.module';
   styleUrl: './nacimiento.component.css'
 })
 export class NacimientoComponent implements OnInit {
-  IdFarm: number | null = null; 
+  IdFarm: number | null = null;
   bulls: Animal[] = [];
   inseminations: any[] = [];
   nacimiento: Nacimiento[] = [];
   newNacimiento: Nacimiento = {
     id: 0,
-    assistence: '', Result: 0,
-    Description: '',
-    BirthWeight: 0,
-    Inseminacionid: '', AnimalId: 0,
+    assistence: '', 
+    result: 0,
+    description: '',
+    birthWeight: 0,
+    inseminationId: 0, 
+    AnimalId: null,
 
 
   };
@@ -59,7 +62,7 @@ export class NacimientoComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private nacimientoService: NacimetoService, private alertaService: AlertService, private inseminationService:InseminationService) { }
+  constructor(private nacimientoService: NacimetoService, private alertaService: AlertService, private inseminationService: InseminationService) { }
 
   ngOnInit(): void {
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
@@ -80,10 +83,10 @@ export class NacimientoComponent implements OnInit {
   }
 
   validateBirthWeight(): boolean {
-    return typeof this.newNacimiento.BirthWeight === 'number' && this.newNacimiento.BirthWeight >= 0;
-}
+    return typeof this.newNacimiento.birthWeight === 'number' && this.newNacimiento.birthWeight >= 0;
+  }
 
-  listInseminations(IdFarm:number): void {
+  listInseminations(IdFarm: number): void {
     this.inseminationService.getInseminations(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
@@ -130,15 +133,7 @@ export class NacimientoComponent implements OnInit {
   onEdit(nacimiento: Nacimiento): void {
     this.newNacimiento = { ...nacimiento };
   }
-  /**
-   * Handles the editing of a nacimiento object.
-   *
-   * This function takes a Nacimiento object as a parameter and copies its properties to the newNacimiento object.
-   * This allows for editing the nacimiento object in the component's UI.
-   *
-   * @param nacimiento - The Nacimiento object to be edited.
-   * @returns {void} - This function does not return any value.
-   */
+
 
   eliminar(id: number): void {
     this.alertaService.DeleteAlert().then((res) => {
@@ -150,7 +145,8 @@ export class NacimientoComponent implements OnInit {
               this.ListNacimiento(this.IdFarm);
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }          },
+            }
+          },
           error: () => {
             this.alertaService.ErrorAlert('Error al eliminar el animal');
           }
@@ -178,7 +174,6 @@ export class NacimientoComponent implements OnInit {
     }
 
   }
-
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newNacimiento.id > 0) {
@@ -188,17 +183,19 @@ export class NacimientoComponent implements OnInit {
             form.reset();
             this.newNacimiento = {
               id: 0,
-              assistence: '', Result: 0,
-              Description: '',
-              BirthWeight: 0,
-              Inseminacionid: '', AnimalId: 0,
-
+              assistence: '', 
+              result: 0,
+              description: '',
+              birthWeight: 0,
+              inseminationId: 0, 
+              AnimalId: null,  // Se establece como null aquí
             }
             if (this.IdFarm !== null) {
               this.ListNacimiento(this.IdFarm);
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }                },
+            }
+          },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar');
           }
@@ -206,21 +203,35 @@ export class NacimientoComponent implements OnInit {
       } else {
         this.nacimientoService.createNacimiento(this.newNacimiento).subscribe({
           next: () => {
-            this.alertaService.SuccessAlert('Creado correctamente');
+            Swal.fire({
+              title: `Nacimiento registrado con éxito!`,
+              icon: 'success',
+              confirmButtonText: 'OK',
+              buttonsStyling: false,
+              html: `
+                <a href="animales" class="btn btn-success px-4" style="text-decoration: none;">
+                  Agregar animal
+                </a>
+              `,
+              customClass: {
+                confirmButton: 'btn btn-primary px-4',
+              },
+            });
             form.reset();
-            this.ListNacimiento;
-          },
-          error: () => {
+            if (this.IdFarm !== null) {
+              this.ListNacimiento(this.IdFarm);
+            }          },
+          error: (err) => {
+            console.error(err); 
             this.alertaService.ErrorAlert('Error al crear');
-
           }
         });
       }
     } else {
-      this.alertaService.ErrorAlert('Por favor completa todod los campos');
-
+      this.alertaService.ErrorAlert('Por favor completa todos los campos');
     }
   }
+  
   checkValidSelection(selectControl: any): void {
     if (selectControl.invalid && selectControl.touched) {
       console.error('Selección no válida');
@@ -230,12 +241,12 @@ export class NacimientoComponent implements OnInit {
       } else {
         selectControl.control.setErrors(null);
       }
-      selectControl.control.markAsTouched(); 
+      selectControl.control.markAsTouched();
     }
   }
   preventNegative(event: KeyboardEvent): void {
     if (event.key === '-') {
-        event.preventDefault(); // Prevenir la entrada del símbolo de menos
+      event.preventDefault(); // Prevenir la entrada del símbolo de menos
     }
   }
 }

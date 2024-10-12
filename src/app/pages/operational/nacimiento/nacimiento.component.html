@@ -38,7 +38,7 @@
 
   <ng-container matColumnDef="Result">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Resultado</th>
-    <td mat-cell *matCellDef="let row">{{ row.result }}</td>
+    <td mat-cell *matCellDef="let row">{{ row.result ? 'EXITOSO' : 'FALLIDO'}}</td>
   </ng-container>
 
   <ng-container matColumnDef="Description">
@@ -86,8 +86,8 @@
                       'is-valid': nacimientoId.valid && nacimientoId.touched
                     }">
               <option value="" disabled>Selecciona un respuesta</option>
-              <option value="T">Verdadero</option>
-              <option value="F">Falso</option>
+              <option value="SÍ">Verdadero</option>
+              <option value="NO">Falso</option>
             </select>
             <div *ngIf="nacimientoId.invalid && nacimientoId.touched" class="text-danger">
               El selector es obligatorio.
@@ -96,7 +96,7 @@
           
           <div class="mb-3">
             <label for="result" class="form-label">Resultado</label>
-            <select class="form-control" id="result" name="result" [(ngModel)]="newNacimiento.Result" 
+            <select class="form-control" id="result" name="result" [(ngModel)]="newNacimiento.result" 
                     #resultadoId="ngModel" required (change)="checkValidSelection(resultadoId)"
                     [ngClass]="{
                       'is-invalid': resultadoId.invalid && resultadoId.touched,
@@ -115,7 +115,7 @@
 
           <div class="mb-3">
             <label for="Description" class="form-label">Descripción</label>
-            <input type="text" id="Description" class="form-control" [(ngModel)]="newNacimiento.Description"
+            <input type="text" id="Description" class="form-control" [(ngModel)]="newNacimiento.description"
               name="Description" required minlength="10" #descriptionField="ngModel"
               [ngClass]="{
                 'is-invalid': descriptionField.invalid && descriptionField.touched,
@@ -135,7 +135,7 @@
 
           <div class="mb-3">
             <label for="BirthWeight" class="form-label">Peso al Nacer</label>
-            <input type="number" id="BirthWeight" class="form-control" [(ngModel)]="newNacimiento.BirthWeight"
+            <input type="number" id="BirthWeight" class="form-control" [(ngModel)]="newNacimiento.birthWeight"
               name="BirthWeight" required min="1" pattern="^[1-9]\d*$*-" #birthWeightField="ngModel"
               [ngClass]="{'is-invalid': birthWeightField.invalid && birthWeightField.touched, 'is-valid':
                birthWeightField.valid && birthWeightField.touched}"  (keypress)="preventNegative($event)" />
@@ -153,7 +153,7 @@
 
           <div class="mb-3">
             <label for="Inseminacionid" class="form-label">Inseminación</label>
-            <select class="form-control" id="Inseminacionid" name="Inseminacionid" [(ngModel)]="newNacimiento.Inseminacionid" 
+            <select class="form-control" id="Inseminacionid" name="Inseminacionid" [(ngModel)]="newNacimiento.inseminationId" 
             #Inseminacionid="ngModel" required>
                 <option value="" disabled selected>Seleccione una vaca</option>
                 <ng-container *ngIf="inseminations.length > 0">
