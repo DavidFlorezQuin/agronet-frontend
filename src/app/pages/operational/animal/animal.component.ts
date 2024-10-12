@@ -200,6 +200,8 @@ export class AnimalComponent implements OnInit {
     });
 
   }
+
+
   editar(form: NgForm): void {
     if (form.valid) {
       if (this.newAnimales.id > 0) {
