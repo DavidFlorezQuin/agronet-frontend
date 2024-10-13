@@ -89,39 +89,51 @@ export class VacunaComponent implements OnInit {
       }
     });
   }
-
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newVaccine.id > 0) {
-        this.vaccinesService
-          .updateVaccine(this.newVaccine, this.newVaccine.id)
-          .subscribe({
-            next: () => {
-              this.alertService.SuccessAlert('Actualizado correctamente');
-              form.resetForm();
-              this.newVaccine = { id: 0, name: '', description: '', dosesRequired: 0, refuerzoPeriod: 0, contraindications: '', typeVaccine: '' };
-              this.listVaccines();
-            },
-            error: () => {
-              this.alertService.ErrorAlert('Error al actualizar');
-            }
-          });
-      } else {
-        this.vaccinesService.createVaccine(this.newVaccine).subscribe({
+        // Actualización de vacuna
+        this.vaccinesService.updateVaccine(this.newVaccine, this.newVaccine.id).subscribe({
           next: () => {
-            this.alertService.SuccessAlert('Creado correctamente');
+            this.alertService.SuccessAlert('Vacuna actualizada correctamente');
             form.resetForm();
-            this.newVaccine = { id: 0, name: '', description: '', dosesRequired: 0, refuerzoPeriod: 0, contraindications: '', typeVaccine: '' };
+            this.resetVaccine(); // Función para resetear el objeto
             this.listVaccines();
           },
           error: () => {
-            this.alertService.ErrorAlert('Error al crear');
+            this.alertService.ErrorAlert('Error al actualizar la vacuna');
+          }
+        });
+      } else {
+        // Creación de nueva vacuna
+        this.vaccinesService.createVaccine(this.newVaccine).subscribe({
+          next: () => {
+            this.alertService.SuccessAlert('Vacuna creada correctamente');
+            form.resetForm();
+            this.resetVaccine(); // Función para resetear el objeto
+            this.listVaccines();
+          },
+          error: () => {
+            this.alertService.ErrorAlert('Error al crear la vacuna');
           }
         });
       }
     } else {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
+  }
+  
+  // Función para resetear el objeto de vacuna
+  resetVaccine(): void {
+    this.newVaccine = { 
+      id: 0, 
+      name: '', 
+      description: '', 
+      dosesRequired: 0, 
+      refuerzoPeriod: 0, 
+      contraindications: '', 
+      typeVaccine: '' 
+    };
   }
 
   aplicarFiltro(event: Event): void {

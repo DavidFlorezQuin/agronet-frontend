@@ -10,23 +10,23 @@ import { environment } from '../../../../env/enviroment';
 })
 export class VaccinesService {
     
-  private _baseUrl = `${environment.apiBaseUrl}/Vaccine`;
+  private _baseUrl = environment.apiBaseUrl;
 
   constructor(private http: HttpClient) {}
 
   getVaccines(): Observable<Vaccines[]> {
-    return this.http.get<Vaccines[]>(`${this._baseUrl}/List`);
+    return this.http.get<Vaccines[]>(`${this._baseUrl}/Vaccine/List/`);
   }
 
   createVaccine(vaccine: Vaccines): Observable<Vaccines> {
-    return this.http.post<Vaccines>(`${this._baseUrl}`, vaccine);
+    return this.http.post<Vaccines>(`${this._baseUrl}/Vaccine/save`, vaccine);
   }
 
   updateVaccine(vaccine: Vaccines, id: number): Observable<Vaccines> {
-    return this.http.put<Vaccines>(`${this._baseUrl}/${id}`, vaccine);
+    return this.http.put<Vaccines>(`${this._baseUrl}/Vaccine/${id}`, vaccine);
   }
 
   deleteVaccine(id: number): Observable<void> {
-    return this.http.delete<void>(`${this._baseUrl}/${id}`);
+    return this.http.delete<void>(`${this._baseUrl}/Vaccine/${id}`);
   }
 }

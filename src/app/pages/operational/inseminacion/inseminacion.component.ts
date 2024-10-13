@@ -212,6 +212,21 @@ export class InseminationComponent implements OnInit {
 
   onEdit(insemination: Insemination): void {
     this.newInsemination = { ...insemination };
+
+    // Verificar si el toro seleccionado (semenId) existe en la lista de toros
+    const selectedBull = this.bulls.find(bull => bull.id === this.newInsemination.semenId);
+    if (!selectedBull) {
+      // Si no existe el toro en la lista (por ejemplo, un toro no propiedad de la finca),
+      // se asigna un valor numérico especial, como -1
+      this.newInsemination.semenId = -1;  // Usamos -1 para indicar "no propiedad"
+    }
+  
+    // Verificar si la vaca seleccionada (motherId) existe en la lista de vacas
+    const selectedCow = this.cows.find(cow => cow.id === this.newInsemination.motherId);
+    if (!selectedCow) {
+      // Si no existe la vaca en la lista, asignamos un valor numérico especial
+      this.newInsemination.motherId = -1;  // Usamos -1 para indicar una opción no válida o vacía
+    }
   }
 
   onDelete(id: number): void {

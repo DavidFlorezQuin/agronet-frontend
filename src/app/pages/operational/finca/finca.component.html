@@ -89,7 +89,7 @@
             <label for="fincaName" class="form-label">Nombre de la Finca</label>
             <input type="text" class="form-control" id="fincaName" name="name" [(ngModel)]="newFinca.name" 
             required
-           required minlength="3" maxlength="29" #nameField="ngModel"
+            minlength="3" maxlength="29" #nameField="ngModel"
               [ngClass]="{
                 'is-invalid': nameField.invalid && nameField.touched,
                 'is-valid': nameField.valid && nameField.touched
@@ -149,14 +149,17 @@
             </div>
           </div>
           <div class="mb-3">
-          <div class="mb-3">
+            <div class="mb-3">
+              <div class="mb-3">
                 <label for="cityId" class="form-label">Ciudad</label>
                 <select class="form-select" id="cityId" name="cityId" [(ngModel)]="newFinca.cityId" required>
                   <option *ngFor="let city of City" [value]="city.id">{{ city.name }}</option>
                   <option *ngFor="let city of City" [value]="city.id">{{ city.name }}</option>
                 </select>
               </div>
-          <button type="submit" class="btn btn-primary" [disabled]="!fincaForm.valid">Guardar</button>
+              <button type="submit" class="btn btn-primary" [disabled]="!fincaForm.valid">Guardar</button>
+            </div>
+            </div>
         </form>
       </div>
       <div class="modal-footer">

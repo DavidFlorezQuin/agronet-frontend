@@ -140,7 +140,16 @@ export class AlertaComponent implements OnInit {
       }
     });
   }
-
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.animals.length > 0) {
+      this.newAlerta.animalId= this.animals[0].id;
+    }
+    // Si hay vacas disponibles, seleccionar la primera como valor predeterminado
+    if (this.CategoriaAlerta.length > 0) {
+      this.newAlerta.categoryAlertId= this.CategoriaAlerta[0].id;
+    }
+  }
   downloadPDF(): void {
     const doc = new jsPDF();
 
