@@ -74,7 +74,9 @@ export class MedicinaComponent implements OnInit {
   }
   onEdit(Medicina: Medicina): void {
     this.NewMedicinas = { ...Medicina };
-
+    console.log('Datos cargados para edición:', this.NewMedicinas);
+     // Forzar la actualización de los datos en el modal
+    
 
   }
   onDelete(id: number): void {
@@ -103,11 +105,12 @@ export class MedicinaComponent implements OnInit {
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.NewMedicinas.id > 0) {
+        console.log('Datos para actualizar:', this.NewMedicinas);
         this.medicinaService.updateMedicina(this.NewMedicinas, this.NewMedicinas.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            this.NewMedicinas = { id: 0, name: '', Administration: '', CategoryMedicinesId: 0 };
+            this.resetMedicines();
             this.listMedicinas();
 
           },
@@ -120,6 +123,7 @@ export class MedicinaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
+            this.resetMedicines();
             this.listMedicinas();
           },
           error: () => {
@@ -130,6 +134,13 @@ export class MedicinaComponent implements OnInit {
     } else {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
+
+  }
+
+  resetMedicines(): void {
+    this.NewMedicinas = { id: 0, name: '', 
+      Administration: '', 
+      CategoryMedicinesId: 0 };
 
   }
 

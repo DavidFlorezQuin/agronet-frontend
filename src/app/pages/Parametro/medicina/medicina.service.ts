@@ -17,16 +17,17 @@ import { environment } from '../../../../env/enviroment';
       return this.http.get<Medicina[]>(`${this._baseUrl}/Medicines/list`);
     }
     createMedicina(medicina: Medicina): Observable<Medicina> {
-      return this.http.post<Medicina>(`${this._baseUrl}/Medicines`, medicina);
+      return this.http.post<Medicina>(`${this._baseUrl}/Medicines/save`, medicina);
     }
 
     deleteMedicina(id: number): Observable<void> {
       return this.http.delete<void>(`${this._baseUrl}/Medicines/${id}`);
     }
 
-    updateMedicina(medicina: Medicina, id: number): Observable<Medicina> {
-      const url = `${this._baseUrl}/Medicines/${id}`;  // Incluye el id en la URL
-      return this.http.put<Medicina>(url, medicina);
-    }
+     // Función para actualizar un medicamento existente
+  updateMedicina(medicina: Medicina, id: number): Observable<Medicina> {
+    const url = `${this._baseUrl}/Medicines/${id}`;  // Incluye el id en la URL
+    return this.http.put<Medicina>(url, medicina);
+  }
 
   }

@@ -44,20 +44,15 @@
       </ng-container>
 
       <!-- Acciones Column -->
-      <ng-container matColumnDef="acciones">
+      <<ng-container matColumnDef="acciones">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let element">
           <div class="d-flex gap-2 justify-content-center" id="icons-section">
-          <i class="bi bi-pencil-square" data-bs-toggle="modal"
-          data-bs-target="#medicineModal" (click)="onEdit(element.id)"></i>
-          <i class="bi bi-trash" (click)="onDelete(element.id)"></i>
-        </div>
-          <!---
-        <button mat-icon-button color="accent" (click)="onView({id: element.id, name: element.name})">
-          <mat-icon>visibility</mat-icon>
-        </button>
-        -->
-
+            <!-- Ícono para editar medicina -->
+            <i class="bi bi-pencil-square"  data-bs-toggle="modal" data-bs-target="#medicineModal" (click)="onEdit(element)"></i>
+            <!-- Ícono para eliminar medicina -->
+            <i class="bi bi-trash" (click)="onDelete(element.id)"></i>
+          </div>
         </td>
       </ng-container>
 
@@ -70,38 +65,39 @@
   </div>
 
   <!-- Modal para agregar/editar medicamentos -->
-  <div class="modal fade" id="medicineModal" tabindex="-1" aria-labelledby="medicineModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="medicineModalLabel">Agregar/Editar Medicamento</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        
-        <div class="modal-body">
-          <form #medicineForm="ngForm" (ngSubmit)="onSubmit(medicineForm)">
-            <div class="mb-3">
-              <label for="name" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="name" name="name" [(ngModel)]="NewMedicinas.name" required>
-            </div>
-            <div class="mb-3">
-              <label for="type" class="form-label">Administration</label>
-              <input type="text" class="form-control" id="type" name="type" [(ngModel)]="NewMedicinas.Administration"
-                required>
-            </div>
-            <div class="mb-3">
-              <label for="dose" class="form-label">Dosis</label>
-              <input type="text" class="form-control" id="dose" name="dose"
-                [(ngModel)]="NewMedicinas.CategoryMedicinesId" required>
-            </div>
-
-            <button type="submit" class="btn btn-primary" [disabled]="!medicineForm.valid">{{ NewMedicinas.id ?
-              'Actualizar' : 'Guardar' }}</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        </div>
+<div class="modal fade" id="medicineModal" tabindex="-1" aria-labelledby="medicineModalLabel" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="medicineModalLabel">{{ NewMedicinas.id ? 'Editar' : 'Agregar' }} Medicamento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body">
+        <form #medicineForm="ngForm" (ngSubmit)="onSubmit(medicineForm)">
+          <!-- Campo de nombre -->
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="NewMedicinas.name" required>
+          </div>
+          <!-- Campo de administración -->
+          <div class="mb-3">
+            <label for="type" class="form-label">Administración</label>
+            <input type="text" class="form-control" id="type" name="type" [(ngModel)]="NewMedicinas.Administration" required>
+          </div>
+          <!-- Campo de categoría de medicinas -->
+          <div class="mb-3">
+            <label for="dose" class="form-label">Categoría de Medicina</label>
+            <input type="number" class="form-control" id="categoryMedicineId" name="categoryMedicineId"
+              [(ngModel)]="NewMedicinas.CategoryMedicinesId" required>
+          </div>
+          <!-- Botón de acción para crear o actualizar -->
+          <button type="submit" class="btn btn-primary">{{ NewMedicinas.id ? 'Actualizar' : 'Guardar' }}</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
       </div>
     </div>
   </div>
+</div>
