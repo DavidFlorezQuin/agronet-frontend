@@ -276,6 +276,17 @@ export class AlertaComponent implements OnInit {
 
   }
 
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.animals.length > 0) {
+      this.newAlerta.animalId= this.animals[0].id;
+    }
+    // Si hay vacas disponibles, seleccionar la primera como valor predeterminado
+    if (this.CategoriaAlerta.length > 0) {
+      this.newAlerta.categoryAlertId= this.CategoriaAlerta[0].id;
+    }
+  }
+
 
   resetForm(): void {
     this.newAlerta = { ...this.newAlerta, id: 0, name: '', description: '', date: new Date(), isRead: false };
@@ -289,7 +300,6 @@ export class AlertaComponent implements OnInit {
       console.warn('No se pudo obtener el ID de la finca.');
     }
   }
-
 
   aplicarFiltro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
