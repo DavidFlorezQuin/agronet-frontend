@@ -22,9 +22,11 @@ export class TreatmentsService {
 
   updateTreatment(treatment: Treatments, id:number): Observable<Treatments> {
     const url = `${this._baseUrl}/Treatment/${id}`
-    return this.http.put<Treatments>(url,treatment);  }
+    return this.http.put<Treatments>(url,treatment); 
+   }
 
-  deleteTreatment(id: number): Observable<void> {
-    return this.http.delete<void>(`${this._baseUrl}/Treatment${id}`)
-  }
+  
+deleteTreatment(id: number): Observable<void> {
+  return this.http.delete<void>(`${this._baseUrl}/Treatment/${id}`);
+   }
 }
