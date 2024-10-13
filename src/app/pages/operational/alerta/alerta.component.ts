@@ -28,29 +28,29 @@ import { CategoriaAlerta } from '../../Parametro/categoria-alerta/categoria-aler
 @Component({
   selector: 'app-alerta',
   standalone: true,
-  imports: [CommonModule,
-    FormsModule,
-    DataTablesModule,
+  imports: [
     CommonModule,
     FormsModule,
+    DataTablesModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule],
+    MatSortModule,
+  ],
   templateUrl: './alerta.component.html',
   styleUrl: './alerta.component.css'
 })
 export class AlertaComponent implements OnInit {
   
-  maxDate: string = new Date().toISOString().split('T')[0];  // Fecha actual
-  minDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0]; 
+   // Fecha actual
+  minDate: string = new Date().toISOString().split('T')[0];
 
   alerta: Alerta[] = [];
   IdFarm: number | null = null; 
-IdUser: number | null = null;  
+  IdUser: number | null = null;  
   animals: Animal[] = [];
   CategoriaAlerta: CategoriaAlerta[] = [];
 
@@ -202,14 +202,12 @@ IdUser: number | null = null;
     }
   }
   
-  checkValidSelection(field: NgModel) {
-    if (field.value === '') {
-      field.control.setErrors({ required: true });
-    } else {
-      field.control.setErrors(null);
-    }
-    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
+  checkValidSelection(field: NgModel): void {
+    const hasValue = field.value.trim() !== '';
+    field.control.setErrors(hasValue ? null : { required: true });
+    field.control.markAsTouched();
   }
+  
   onDelete(id: number): void {
     this.alertService.DeleteAlert().then((res) => {
       if (res.isConfirmed) {
@@ -239,7 +237,7 @@ IdUser: number | null = null;
     const alertaData: Alerta = {
       id: this.newAlerta.id, // Agrega el ID aquí
       ...formData,
-      animalId: Number(formData.animalId),
+      animalId: Number(formData.animalId) !== 0 ? Number(formData.animalId) : null,
       categoryAlertId: Number(formData.categoryAlertId),
       usersId: Number(formData.usersId),
       isRead: false,
@@ -263,7 +261,6 @@ IdUser: number | null = null;
         next: () => {
           this.alertService.SuccessAlert('Creado correctamente');
           this.resetForm();
-          this.refreshAlertList();
         },
         error: (err) => {
           console.error(err);
@@ -271,12 +268,14 @@ IdUser: number | null = null;
         }
       });
     }
+  
   }
   
   
-   resetForm(): void {
-    this.newAlerta = { id: 0, name: '', description: '', date: new Date(), isRead: false, animalId: 0, categoryAlertId: 0, usersId: 0 };
+  resetForm(): void {
+    this.newAlerta = { ...this.newAlerta, id: 0, name: '', description: '', date: new Date(), isRead: false };
   }
+  
   
   private refreshAlertList(): void {
     if (this.IdFarm !== null) {

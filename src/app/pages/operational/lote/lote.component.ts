@@ -46,7 +46,6 @@ export class LoteComponent implements OnInit {
   newLote: Lote = {
     id: 0, name: '', hectare: 0,
     farmId: 0,
-
   }
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -199,14 +198,22 @@ export class LoteComponent implements OnInit {
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newLote.id > 0) {
-        this.loteService.updateLote(this.newLote, this.newLote.id).subscribe({
+
+        const loteData:Lote ={
+          id:this.newLote.id,
+          name:this.newLote.name,
+          hectare:this.newLote.hectare,
+          farmId:this.newLote.farmId
+        }
+
+        this.loteService.updateLote(loteData, this.newLote.id).subscribe({
+
           next: () => {
             this.alertaService.SuccessAlert('Actualizado correctamente');
             form.reset();
             this.newLote = {
               id: 0, name: '', hectare: 0,
-              farmId: 0, 
-            };
+              farmId: 0,             };
             if (this.IdFarm !== null) {
               this.listLot(this.IdFarm);
             } else {

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Lote } from './lote.module';  
 import { environment } from '../../../../env/enviroment'; 
+import { Lote } from './lote.module';
+
 
 @Injectable({
   providedIn: 'root'
