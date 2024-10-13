@@ -38,8 +38,8 @@ import { MatButtonModule } from '@angular/material/button';
   styles: []
 })
 export class PersonComponent implements OnInit {
-  maxDate: string = new Date().toISOString().split('T')[0];  // Fecha actual
-  minDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0]; 
+  maxDate: string = new Date(2006, 11, 31).toISOString().split('T')[0];  // Fecha máxima permitida: 31 de diciembre de 2006
+minDate: string = '1990-01-01';  // Fecha mínima permitida (por ejemplo, desde 1900)
 
   persons: Person[] = [];
   newPerson: Person = { id: 0, state: true, firstName: '', lastName: '', email: '', gender: '', document: '', typeDocument: '', direction: '', phone: '', birthday: '' }
