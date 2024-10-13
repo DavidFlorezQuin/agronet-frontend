@@ -86,7 +86,20 @@ aria-hidden="true">
         <div class="mb-3">
           <label for="Description" class="form-label">Descripción</label>
           <input type="text" class="form-control" id="description" name="description"
-            [(ngModel)]="newTreatmentMedicine.description" required>
+            [(ngModel)]="newTreatmentMedicine.description" minlength="10" #descriptionField="ngModel"
+            [ngClass]="{
+             'is-invalid': descriptionField.invalid && descriptionField.touched,
+             'is-valid': descriptionField.valid && descriptionField.touched
+           }"/>
+            <!-- Mensajes de error -->
+           <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+             <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
+             <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+           </div>
+
+           <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
+             Descripción válida.
+           </div>
         </div>
         <div class="mb-3">
           <label for="periocityDay" class="form-label">Periocidad</label>

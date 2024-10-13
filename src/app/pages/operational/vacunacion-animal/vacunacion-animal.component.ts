@@ -5,7 +5,7 @@ import { VaccineAnimals } from './vacunacion.module';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -60,6 +60,7 @@ export class VacunacionComponent implements OnInit {
     nextDose: null
   };
   displayedColumns: string[] = ['id', 'Animal', 'Vacuna', 'dateApplied', 'nextDose', 'acciones'];
+  minDate: string = new Date().toISOString().split('T')[0]; // Fecha actual
 
   vacunas: Vaccines[] = [];
   animales: Animal[] = [];
@@ -92,10 +93,30 @@ export class VacunacionComponent implements OnInit {
       console.warn('No se pudo obtener el ID de la finca.');
     }
     this.loadVacuna();
+    this.setDefaultSelections();
   }
 
   downloadPDF() {
 
+  }
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.vacunas.length > 0) {
+      this.newVaccineAnimal.vaccinesId = this.vacunas[0].id;
+    }
+
+    if (this.animales.length > 0) {
+      this.newVaccineAnimal.animalId = this.animales[0].id;
+    }
+    
+  }
+  checkValidSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+    } else {
+      field.control.setErrors(null);
+    }
+    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
   }
   listVaccineAnimals(IdFarm: number): void {
     this.vaccineAnimalsService.getVaccineAnimals(IdFarm).subscribe({
@@ -131,6 +152,7 @@ export class VacunacionComponent implements OnInit {
       next: (res: any) => {
         const data = res.data;
         this.animales = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los animales');
@@ -143,6 +165,7 @@ export class VacunacionComponent implements OnInit {
       next: (res: any) => {
         const data = res.data;
         this.vacunas = data;
+        this.setDefaultSelections();
       },
       error: (error) => {
         console.log(error);

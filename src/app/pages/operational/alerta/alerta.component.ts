@@ -93,6 +93,7 @@ IdUser: number | null = null;
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
+    this.setDefaultSelections();
   }
 
 
@@ -101,6 +102,7 @@ IdUser: number | null = null;
       next: (res: any) => {
         const data = res.data;
         this.animals = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los animales');
@@ -200,6 +202,15 @@ IdUser: number | null = null;
       const dateObj = new Date(this.newAlerta.date);
       this.newAlerta.date = dateObj.toISOString().split('T')[0]; // 'YYYY-MM-DD'
     }
+  }
+
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.animals.length > 0) {
+      this.newAlerta.animalId= this.animals[0].id;
+    }
+    // Si hay vacas disponibles, seleccionar la primera como valor predeterminado
+    
   }
   
   checkValidSelection(field: NgModel) {

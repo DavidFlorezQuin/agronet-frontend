@@ -154,7 +154,7 @@
             #animalId="ngModel" required
               (change)="checkValidSelection(animalId)"
               [ngClass]="{
-                'is-invalid': animalId.invalid && animalId.touched,
+                
                 'is-valid': animalId.valid && animalId.touched
               }">
               <option value=""  selected>Seleccione un animal</option>
@@ -167,9 +167,7 @@
             </select>
             
             <!-- Mensajes de error -->
-            <div *ngIf="animalId.invalid && animalId.touched" class="invalid-feedback">
-              Seleccionar un animal es obligatorio.
-            </div>
+           
             <div *ngIf="animalId.valid && animalId.touched" class="valid-feedback">
               Animal seleccionada correctamente.
             </div>
