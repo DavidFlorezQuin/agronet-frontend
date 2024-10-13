@@ -20,6 +20,8 @@ export class FormRegisterComponent implements OnInit {
   typeDocuments: [] = [];
   persons: Person[] = [];
   newPerson: Person = { id: 0, state: true, firstName: '', lastName: '', email: '', gender: '', document: '', typeDocument: '', direction: '', phone: '', birthday: '' }
+  
+  emailError: string = ''; 
   ngOnInit(): void {
     this.listTypeDocument()
   }
@@ -35,7 +37,21 @@ export class FormRegisterComponent implements OnInit {
       }
     })
   }
+  validateEmail(): void {
+    this.emailError = '';
+    if (this.newPerson.email) {
+      const isValid = this.validateEmailDomain(this.newPerson.email);
+      if (!isValid) {
+        this.emailError = 'Solo se permiten correos de Gmail y Hotmail.';
+      }
+    }
+  }
 
+  validateEmailDomain(email: string): boolean {
+    const allowedDomains = ['gmail.com', 'hotmail.com'];
+    const domain = email.split('@')[1];
+    return allowedDomains.includes(domain);
+  }
   onSubmit(form: NgForm) {
     this.personService.createPerson(this.newPerson).subscribe({
       next: (res) => {

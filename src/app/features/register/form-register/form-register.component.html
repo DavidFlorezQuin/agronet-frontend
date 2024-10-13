@@ -7,22 +7,88 @@
             <div class="mb-3">
             <label for="firstName" class="form-label">Nombre</label>
             <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="newPerson.firstName"
-                required>
+                required minlength="10" #NombreDelaPersona="ngModel" [ngClass]="{
+                    'is-invalid': NombreDelaPersona.invalid && NombreDelaPersona.touched,
+                    'is-valid': NombreDelaPersona.valid && NombreDelaPersona.touched
+                  }" />
+                 <!-- Mensajes de error -->
+                 <div *ngIf="NombreDelaPersona.invalid && NombreDelaPersona.touched" class="invalid-feedback">
+                   <div *ngIf="NombreDelaPersona.errors?.['required']">El nombre es obligatorio.</div>
+                   <div *ngIf="NombreDelaPersona.errors?.['minlength']">El nombre de la persona debe tener al menos 10 caracteres.
+                   </div>
+                 </div>
+     
+                 <div *ngIf="NombreDelaPersona.valid && NombreDelaPersona.touched" class="valid-feedback">
+                   Descripción válida.
+                 </div>
         </div>
 
         <div class="mb-3">
             <label for="lastName" class="form-label">Apellido</label>
             <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="newPerson.lastName"
-                required>
+                required minlength="10" #ApellidoDelaPersona="ngModel" [ngClass]="{
+                    'is-invalid': ApellidoDelaPersona.invalid && ApellidoDelaPersona.touched,
+                    'is-valid': ApellidoDelaPersona.valid && ApellidoDelaPersona.touched
+                  }" />
+                 <!-- Mensajes de error -->
+                 <div *ngIf="ApellidoDelaPersona.invalid && ApellidoDelaPersona.touched" class="invalid-feedback">
+                   <div *ngIf="ApellidoDelaPersona.errors?.['required']">El apellido es obligatorio.</div>
+                   <div *ngIf="ApellidoDelaPersona.errors?.['minlength']">El apellido de la persona debe tener al menos 10 caracteres.
+                   </div>
+                 </div>
+     
+                 <div *ngIf="ApellidoDelaPersona.valid && ApellidoDelaPersona.touched" class="valid-feedback">
+                   Descripción válida.
+                 </div>
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">Correo Electrónico</label>
-            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newPerson.email" required>
+            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newPerson.email" (blur)="validateEmail()"
+             required
+             #CorreoPersona="ngModel" [ngClass]="{
+                'is-invalid': CorreoPersona.invalid && CorreoPersona.touched,
+                'is-valid': CorreoPersona.valid && CorreoPersona.touched
+              }">
+              <!-- Mensajes de error -->
+              <div *ngIf="CorreoPersona.invalid && CorreoPersona.touched" class="invalid-feedback">
+                <div *ngIf="CorreoPersona.errors?.['required']">El correo es obligatorio.</div>
+                
+                </div>
+
+             <div *ngIf="emailError" class="text-danger">{{ emailError }}</div>
+
+             <div *ngIf="CorreoPersona.valid && CorreoPersona.touched" class="valid-feedback">
+                   Descripción válida.
+                 </div>
         </div>
         <div class="mb-3">
             <label for="phone" class="form-label">Teléfono</label>
-            <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="newPerson.phone" required>
-        </div>
+            <input type="tel" 
+                   class="form-control" 
+                   id="phone" 
+                   name="phone" 
+                   [(ngModel)]="newPerson.phone"
+                   required 
+                   minlength="10" 
+                   maxlength="10" 
+                   pattern="[0-9]*" 
+                   #TelefonoPersona="ngModel" 
+                   [ngClass]="{
+                     'is-invalid': TelefonoPersona.invalid && TelefonoPersona.touched,
+                     'is-valid': TelefonoPersona.valid && TelefonoPersona.touched
+                   }" />
+            <!-- Mensajes de error -->
+            <div *ngIf="TelefonoPersona.invalid && TelefonoPersona.touched" class="invalid-feedback">
+              <div *ngIf="TelefonoPersona.errors?.['required']">El teléfono es obligatorio.</div>
+              <div *ngIf="TelefonoPersona.errors?.['minlength']">El teléfono debe tener al menos 10 números.</div>
+              <div *ngIf="TelefonoPersona.errors?.['maxlength']">El teléfono no puede tener más de 10 números.</div>
+              <div *ngIf="TelefonoPersona.errors?.['pattern']">El teléfono debe contener solo números.</div>
+            </div>
+            <div *ngIf="TelefonoPersona.valid && TelefonoPersona.touched" class="valid-feedback">
+              Teléfono válido.
+            </div>
+          </div>
+          
         
         <div class="mb-3">
             <label for="typeDocument" class="form-label">Tipo de documento</label>
