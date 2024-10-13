@@ -23,9 +23,9 @@ import { state } from '@angular/animations';
 import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
 import { LoteService } from '../lote/lote.service';
-import { Lote } from '../lote/lote.module';
 import jsPDF from 'jspdf';
 import { EnumService } from '../../../shared/components/enum.service';
+import { Lote } from '../lote/lote.module';
 @Component({
   selector: 'app-animal',
   standalone: true,

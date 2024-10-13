@@ -13,15 +13,7 @@ export class AlertService {
     Swal.fire({
       title: `${message} con éxito!`,
       icon: 'success',
-      html: `
-        <button type="button" 
-                class="btn btn-primary px-4" 
-                data-bs-dismiss="modal">
-          OK
-        </button>
-      `,
-      showConfirmButton: false, // Desactivamos el botón predeterminado
-      buttonsStyling: false,
+      confirmButtonText: 'OK',
     });
   }
 

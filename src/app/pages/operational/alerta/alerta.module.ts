@@ -4,7 +4,7 @@ export interface Alerta{
   description:string,
   date: Date | string;  // Permitir que sea Date o string
   isRead:Boolean,
-  animalId:number,
+  animalId:number | null,
   categoryAlertId:number,
   usersId:number
 }
