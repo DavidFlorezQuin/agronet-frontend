@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Person } from '../../Security/person/person.module';
 import { CommonModule } from '@angular/common';
-import { FormsModule, NgForm } from '@angular/forms';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { EnumService } from '../../../shared/components/enum.service';
 import { PersonService } from '../../Security/person/person.service';
 import { AlertService } from '../../../shared/components/alert.service';
@@ -46,7 +46,14 @@ export class FormRegisterComponent implements OnInit {
       }
     }
   }
-
+  checkValidSelection(field: NgModel) {
+    if (field.value === '') {
+      field.control.setErrors({ required: true });
+    } else {
+      field.control.setErrors(null);
+    }
+    field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
+  }
   validateEmailDomain(email: string): boolean {
     const allowedDomains = ['gmail.com', 'hotmail.com'];
     const domain = email.split('@')[1];

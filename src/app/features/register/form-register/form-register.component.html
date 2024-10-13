@@ -92,20 +92,52 @@
         
         <div class="mb-3">
             <label for="typeDocument" class="form-label">Tipo de documento</label>
-            <select class="form-control" id="typeDocument" name="typeDocument" [(ngModel)]="newPerson.typeDocument" required>
+            <select class="form-control" id="typeDocument" name="typeDocument" [(ngModel)]="newPerson.typeDocument"
+             required #Tipo_de_documento="ngModel" (change)="checkValidSelection(Tipo_de_documento)" [ngClass]="{
+                'is-invalid': Tipo_de_documento.invalid && Tipo_de_documento.touched,
+                'is-valid': Tipo_de_documento.valid && Tipo_de_documento.touched
+              }">
+
+
               <option value="" disabled selected>Seleccione un tipo documento</option>
-              <option *ngFor="let typeDocument of typeDocuments" [value]="typeDocument">{{ typeDocument }}</option>
+              <ng-container *ngIf="typeDocuments.length > 0">
+                <option *ngFor="let typeDocument of typeDocuments" [value]="typeDocument">{{ typeDocument }}</option>
+
+              </ng-container>
+
+              <option *ngIf="typeDocuments.length === 0" disabled>No hay razas disponibles</option>
+            
             </select>
+            <!-- Mensajes de error -->
+            <div *ngIf="Tipo_de_documento.invalid && Tipo_de_documento.touched" class="invalid-feedback">
+              Seleccionar un tipo documento es obligatorio.
+            </div>
+            <div *ngIf="Tipo_de_documento.valid && Tipo_de_documento.touched" class="valid-feedback">
+                Tipo de documento seleccionado correctamente.
+            </div>
           </div>
         <div class="mb-3">
             <label for="document" class="form-label">Documento</label>
             <input type="text" class="form-control" id="document" name="document" [(ngModel)]="newPerson.document"
-                required>
+                required  maxlength="10"  minlength="10" #DocumentoPersona="ngModel" [ngClass]="{
+                    'is-invalid': DocumentoPersona.invalid && DocumentoPersona.touched,
+                    'is-valid': DocumentoPersona.valid && DocumentoPersona.touched
+                  }" />
+                 <!-- Mensajes de error -->
+                 <div *ngIf="DocumentoPersona.invalid && DocumentoPersona.touched" class="invalid-feedback">
+                   <div *ngIf="DocumentoPersona.errors?.['required']">El documento es obligatorio.</div>
+                   <div *ngIf="DocumentoPersona.errors?.['minlength']">El numero de documento de la persona debe tener al menos 10 numeros.
+                   </div>
+                 </div>
+     
+                 <div *ngIf="DocumentoPersona.valid && DocumentoPersona.touched" class="valid-feedback">
+                   Descripción válida.
+                 </div>
         </div>
         <div class="mb-3">
             <label for="birthday" class="form-label">Fecha de Nacimiento</label>
             <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday"
-            required>
+            required   >
         </div>
         <button type="submit" id="btn-forms" class="btn w-100 mt-4" [disabled]="!personForm.valid">Registrarme</button>
     </form>
