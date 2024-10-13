@@ -44,13 +44,13 @@ import { CategoriaAlerta } from '../../Parametro/categoria-alerta/categoria-aler
   styleUrl: './alerta.component.css'
 })
 export class AlertaComponent implements OnInit {
-  
-   // Fecha actual
+
+  // Fecha actual
   minDate: string = new Date().toISOString().split('T')[0];
 
   alerta: Alerta[] = [];
-  IdFarm: number | null = null; 
-  IdUser: number | null = null;  
+  IdFarm: number | null = null;
+  IdUser: number | null = null;
   animals: Animal[] = [];
   CategoriaAlerta: CategoriaAlerta[] = [];
 
@@ -201,13 +201,13 @@ export class AlertaComponent implements OnInit {
       this.newAlerta.date = dateObj.toISOString().split('T')[0]; // 'YYYY-MM-DD'
     }
   }
-  
+
   checkValidSelection(field: NgModel): void {
     const hasValue = field.value.trim() !== '';
     field.control.setErrors(hasValue ? null : { required: true });
     field.control.markAsTouched();
   }
-  
+
   onDelete(id: number): void {
     this.alertService.DeleteAlert().then((res) => {
       if (res.isConfirmed) {
@@ -232,7 +232,7 @@ export class AlertaComponent implements OnInit {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
       return;
     }
-  
+
     const formData = form.value;
     const alertaData: Alerta = {
       id: this.newAlerta.id, // Agrega el ID aquí
@@ -243,13 +243,15 @@ export class AlertaComponent implements OnInit {
       isRead: false,
       date: new Date(formData.date).toISOString()
     };
-  
+
     if (this.newAlerta.id > 0) {
       this.AlertaService.updateAlerta(alertaData, this.newAlerta.id).subscribe({
         next: () => {
           this.alertService.SuccessAlert('Actualizado correctamente');
           this.resetForm();
-          this.refreshAlertList();
+          if (this.IdFarm !== null) {
+            this.listAlerta(this.IdFarm);
+          }
         },
         error: (err) => {
           console.error(err);
@@ -261,6 +263,9 @@ export class AlertaComponent implements OnInit {
         next: () => {
           this.alertService.SuccessAlert('Creado correctamente');
           this.resetForm();
+          if (this.IdFarm !== null) {
+            this.listAlerta(this.IdFarm);
+          }
         },
         error: (err) => {
           console.error(err);
@@ -268,15 +273,15 @@ export class AlertaComponent implements OnInit {
         }
       });
     }
-  
+
   }
-  
-  
+
+
   resetForm(): void {
     this.newAlerta = { ...this.newAlerta, id: 0, name: '', description: '', date: new Date(), isRead: false };
   }
-  
-  
+
+
   private refreshAlertList(): void {
     if (this.IdFarm !== null) {
       this.listAlerta(this.IdFarm);
@@ -284,7 +289,7 @@ export class AlertaComponent implements OnInit {
       console.warn('No se pudo obtener el ID de la finca.');
     }
   }
-  
+
 
   aplicarFiltro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

@@ -6,7 +6,7 @@ export interface Animal {
     photo: string;
     race: string, 
     purpose: string;
-    birthDay: Date;
+    birthDay: Date | string;
     state:true;
     lotId: number;
   }

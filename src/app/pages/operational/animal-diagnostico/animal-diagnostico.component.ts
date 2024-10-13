@@ -168,31 +168,13 @@ export class AnimalDiagnosticoComponent implements OnInit {
     doc.save('animal-diagnostic.pdf');
   }
 
-  // listAnimals(): void {
-  //   this.animalService.getAnimals().subscribe({
-  //     next: (res: any) => {
-  //       this.animales = res.data;
-  //     },
-  //     error: () => {
-  //       this.alertaService.ErrorAlert('Error al obtener los animales');
-  //     }
-  //   });
-  // }
+
 
   onEdit(AnimalDiagnostic: AnimalDiagnostics) {
+    this.newDiagnostic = { ...AnimalDiagnostic };
 
   }
 
-  // listUsers(): void {
-  //   this.usersService.getUsers().subscribe({
-  //     next: (res: any) => {
-  //       this.usuarios = res.data;
-  //     },
-  //     error: () => {
-  //       this.alertaService.ErrorAlert('Error al obtener los usuarios');
-  //     }
-  //   });
-  // }
 
   aplicarFiltro(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -202,7 +184,15 @@ export class AnimalDiagnosticoComponent implements OnInit {
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newDiagnostic.id > 0) {
-        this.diagnosticsService.updateAnimalDiagnostics(this.newDiagnostic, this.newDiagnostic.id).subscribe({
+        const formData = form.value;
+        const diagnosticData: AnimalDiagnostics = {
+          id: this.newDiagnostic.id, // Agrega el ID aquí
+          ...formData,
+          name: this.newDiagnostic.name,
+          diagnosis: this.newDiagnostic.diagnosis,
+          animalId:this.newDiagnostic.animalId
+        };
+        this.diagnosticsService.updateAnimalDiagnostics(diagnosticData, this.newDiagnostic.id).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Actualizado correctamente');
             form.reset();
@@ -263,7 +253,7 @@ export class AnimalDiagnosticoComponent implements OnInit {
               console.warn('No se pudo obtener el ID de la finca.');
             }            },
           error: () => {
-            this.alertaService.ErrorAlert('Error al eliminar el animal');
+            this.alertaService.ErrorAlert('Error al eliminar el diagnostico');
           }
         });
       }

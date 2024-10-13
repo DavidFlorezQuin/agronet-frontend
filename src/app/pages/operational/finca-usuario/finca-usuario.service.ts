@@ -16,7 +16,7 @@ export class FarmUserService {
   }
 
   createFarmUsers(inventory: FarmUser): Observable<FarmUser> {
-    return this.http.post<FarmUser>(`${this._baseUrl}/FarmUser`, inventory);
+    return this.http.post<FarmUser>(`${this._baseUrl}/FarmUser/save`, inventory);
   }
 
   updateFarmUsers(inventory: FarmUser,  id: number): Observable<FarmUser> {

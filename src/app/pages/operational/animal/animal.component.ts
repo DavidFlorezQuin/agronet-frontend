@@ -45,7 +45,7 @@ import { Lote } from '../lote/lote.module';
 export class AnimalComponent implements OnInit {
 
   animales: Animal[] = [];
-  IdFarm: number | null = null; 
+  IdFarm: number | null = null;
   races: [] = [];
   newAnimales: Animal = {
     id: 0, name: '', weight: 0, photo: '', gender: '', purpose: '', birthDay: new Date(), state: true, lotId: 0, race: ''
@@ -62,12 +62,12 @@ export class AnimalComponent implements OnInit {
   constructor(private animalService: AnimalService, private alertaService: AlertService, private loteService: LoteService, private enumSevice: EnumService) { }
 
   maxDate: string = new Date().toISOString().split('T')[0];  // Fecha actual
-  minDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0]; 
+  minDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0];
   ngOnInit(): void {
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
 
     if (idFarmString && !isNaN(Number(idFarmString))) {
-      this.IdFarm = Number(idFarmString); 
+      this.IdFarm = Number(idFarmString);
     }
 
     if (this.IdFarm !== null) {
@@ -89,7 +89,7 @@ export class AnimalComponent implements OnInit {
   }
   preventNegative(event: KeyboardEvent): void {
     if (event.key === '-') {
-        event.preventDefault(); // Prevenir la entrada del símbolo de menos
+      event.preventDefault(); // Prevenir la entrada del símbolo de menos
     }
   }
   listRace(): void {
@@ -197,6 +197,11 @@ export class AnimalComponent implements OnInit {
 
   onEdit(animal: Animal): void {
     this.newAnimales = { ...animal };
+
+    if (this.newAnimales.birthDay) {
+      const dateObj = new Date(this.newAnimales.birthDay);
+      this.newAnimales.birthDay = dateObj.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    }
   }
 
   eliminar(id: number): void {
@@ -215,29 +220,43 @@ export class AnimalComponent implements OnInit {
 
   }
 
-
-  editar(form: NgForm): void {
-    if (form.valid) {
-      if (this.newAnimales.id > 0) {
-        this.animalService.updateAnimal(this.newAnimales, this.newAnimales.id).subscribe({
+  onDelete(id: number): void {
+    this.alertaService.DeleteAlert().then((res) => {
+      if (res.isConfirmed) {
+        this.animalService.deleteAnimal(id).subscribe({
           next: () => {
-            this.alertaService.SuccessAlert('Actualizado con éxito');
-            form.reset();
-          },
+            this.alertaService.SuccessAlert('Eliminado correctamente');
+            if (this.IdFarm !== null) {
+              this.listLot(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
           error: () => {
-            this.alertaService.ErrorAlert('Error al actualizar el animal');
+            this.alertaService.ErrorAlert('Error al eliminar');
           }
         });
       }
-    } else {
-      this.alertaService.ErrorAlert('Por favor, complete los datos requeridos');
-    }
+    });
   }
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newAnimales.id > 0) {
-        this.animalService.updateAnimal(this.newAnimales, this.newAnimales.id).subscribe({
+        const formData = form.value; 
+        const animalData:Animal = {
+          ...formData,
+            name: this.newAnimales.name,
+            race: this.newAnimales.race,
+            gender: this.newAnimales.gender,
+            weight: this.newAnimales.weight,
+            photo: this.newAnimales.photo,
+            purpose: this.newAnimales.purpose,
+            birthDay: this.newAnimales.birthDay,
+            lotId: this.newAnimales.lotId,
+            id: this.newAnimales.id,
+            state: this.newAnimales.state
+        }
+        this.animalService.updateAnimal(animalData, this.newAnimales.id).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Actualizado correctamente');
             if (this.IdFarm !== null) {
@@ -275,10 +294,6 @@ export class AnimalComponent implements OnInit {
 
     }
   }
-
-
-
-
-
-
 }
+
+

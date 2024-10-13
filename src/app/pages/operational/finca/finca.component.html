@@ -94,6 +94,11 @@
                 'is-invalid': nameField.invalid && nameField.touched,
                 'is-valid': nameField.valid && nameField.touched
               }" />
+              <div class="mb-3">
+                <label for="photo" class="form-label">Foto de la finca</label>
+                <input type="file" class="form-control" id="photo" name="photo" [(ngModel)]="newFinca.photo" 
+                 />
+              </div>
               <!-- Mensajes de error -->
             <div *ngIf="nameField.invalid && nameField.touched" class="invalid-feedback">
               <div *ngIf="nameField.errors?.['required']">El nombre es obligatorio.</div>
@@ -143,12 +148,12 @@
               Descripción válida.
             </div>
           </div>
-          <!-- <div class="mb-3">
+          <div class="mb-3">
                 <label for="cityId" class="form-label">Ciudad</label>
                 <select class="form-select" id="cityId" name="cityId" [(ngModel)]="newFinca.cityId" required>
-                  <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+                  <option *ngFor="let city of City" [value]="city.id">{{ city.name }}</option>
                 </select>
-              </div> -->
+              </div>
           <button type="submit" class="btn btn-primary" [disabled]="!fincaForm.valid">Guardar</button>
         </form>
       </div>

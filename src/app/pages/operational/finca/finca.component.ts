@@ -17,6 +17,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
 import jsPDF from 'jspdf';
 import { City } from '../../../features/Parameter/city/city.module';
+import { FarmUserService } from '../finca-usuario/finca-usuario.service';
+import { FarmUser } from '../finca-usuario/finca-usuario.module';
 
 @Component({
   selector: 'app-finca',
@@ -44,6 +46,7 @@ export class FincaComponent implements OnInit {
     id: 0,
     City: '',
     name: '',
+    photo:'',
     hectare: 0,
     description: '',
     cityId: 0
@@ -54,7 +57,7 @@ export class FincaComponent implements OnInit {
   City: City[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private fincaService: FincaService, private alertService: AlertService, private cityService: CityService, private userService: UserService) { }
+  constructor(private fincaService: FincaService, private alertService: AlertService, private cityService: CityService, private userFarmService: FarmUserService) { }
 
   ngOnInit(): void {
     const StorageId: string | null = localStorage.getItem('Usuario');
@@ -186,40 +189,61 @@ export class FincaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-
-            if (this.IdUser !== null) {
-              this.listFincas(this.IdUser);
-            }
+            if (this.IdUser !== null) this.listFincas(this.IdUser);
           },
-          error: () => {
-            this.alertService.ErrorAlert('Error al actualizar');
-          }
+          error: () => this.alertService.ErrorAlert('Error al actualizar')
         });
       } else {
-        this.fincaService.createFinca(this.newFinca).subscribe({
-          next: () => {
-            this.alertService.SuccessAlert('Creado correctamente');
+        const formData = form.value;
+        const fincaToCreate: Finca = { ...formData, id:0};
+  
+        // Crear la finca primero
+        this.fincaService.createFinca(fincaToCreate).subscribe({
+          next: (response: any) => {
+            this.alertService.SuccessAlert('Finca creada correctamente');
             form.reset();
-
+            const fincaId = response.data.id; // Acceso directo al ID
+            console.log(fincaId)
             if (this.IdUser !== null) {
+              this.createFarmUser(fincaId);
               this.listFincas(this.IdUser);
+              if (this.IdUser !== null) {
+                this.listFincas(this.IdUser);
+              }
             } else {
-              console.warn('No se pudo obtener el ID de la finca.');
+              console.warn('No se pudo obtener el ID del usuario.');
             }
           },
-          error: () => {
-            this.alertService.ErrorAlert('Error al crear');
-          }
+          error: () => this.alertService.ErrorAlert('Error al crear finca')
         });
       }
     } else {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
   }
-
+  
   aplicarFiltro(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
+  createFarmUser(farmId: number): void {
+    if (this.IdUser !== null) {
+      const userFarm: FarmUser = {
+        id: 0, 
+        FarmsId: farmId,
+        UsersId: this.IdUser
+      };
+  
+      this.userFarmService.createFarmUsers(userFarm).subscribe({
+        next: () => {
+        },
+      });
+    } else {
+      console.warn('ID de usuario no disponible para crear la relación.');
+    }
+  }
+  
+
+  
 }

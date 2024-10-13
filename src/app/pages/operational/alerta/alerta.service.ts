@@ -23,7 +23,7 @@ export class AlertaService {
   }
 
   deleteAlerta(id:number):Observable<void>{
-    return this.http.delete<void>(`${this._baseUrl}/Alert${id}`)
+    return this.http.delete<void>(`${this._baseUrl}/Alert/${id}`)
   }
 
   updateAlerta(Alerta:Alerta, id:number):Observable<Alerta>{

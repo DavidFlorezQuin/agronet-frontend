@@ -26,6 +26,6 @@ export class FincaService {
   }
 
   createFinca(finca: Finca): Observable<Finca> {
-    return this.http.post<Finca>(`${this._baseUrl}/Farm`, finca);
+    return this.http.post<Finca>(`${this._baseUrl}/Farm/save`, finca);
   }
 }

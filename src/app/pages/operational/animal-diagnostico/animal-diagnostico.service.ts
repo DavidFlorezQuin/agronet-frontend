@@ -18,7 +18,7 @@ export class AnimalDiagnosticsService {
   }
 
   deleteAnimalDiagnostics(id: number): Observable<void> {
-    return this.http.delete<void>(`${this._baseUrl}/AnimalDiagnostics/${id}`);
+    return this.http.delete<void>(`${this._baseUrl}/AnimalDiagnostic/${id}`);
   }
 
   updateAnimalDiagnostics(animal: AnimalDiagnostics, id: number): Observable<AnimalDiagnostics> {
