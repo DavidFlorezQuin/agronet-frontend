@@ -74,6 +74,7 @@ export class AlertaComponent implements OnInit {
   constructor(private AlertaService: AlertaService, private alertService: AlertService, private animalService: AnimalService, private CategoriaAlertaaService: CategoriaAlertaaService) { }
 
   ngOnInit(): void {
+    this.setDefaultSelections();
     const StorageId: string | null = localStorage.getItem('Usuario');
     this.IdUser = Number(StorageId);
     this.newAlerta.usersId = this.IdUser;
@@ -93,6 +94,7 @@ export class AlertaComponent implements OnInit {
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
+    
   }
 
 
@@ -101,6 +103,7 @@ export class AlertaComponent implements OnInit {
       next: (res: any) => {
         const data = res.data;
         this.animals = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los animales');
@@ -130,6 +133,7 @@ export class AlertaComponent implements OnInit {
 
         const data = res.data;
         this.CategoriaAlerta = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');

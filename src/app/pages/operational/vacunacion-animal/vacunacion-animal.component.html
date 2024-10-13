@@ -58,7 +58,7 @@
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
         <div class="d-flex gap-2 justify-content-center" id="icons-section">
-          <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
+          <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#vaccineAnimalModal" (click)="onEdit(element)"></i>
           <i class="bi bi-trash" (click)="onDelete(element)"></i>
         </div>
       </td>
@@ -86,24 +86,60 @@
 
             <div class="mb-3">
               <label for="animalId" class="form-label">Vacunas</label>
-              <select class="form-control" id="vaccinesId" name="vaccinesId" [(ngModel)]="newVaccineAnimal.vaccinesId" required>
+              <select class="form-control" id="vaccinesId" name="vaccinesId" [(ngModel)]="newVaccineAnimal.vaccinesId" 
+          
+              #vacunasId="ngModel" required
+              (change)="checkValidSelection(vacunasId)"
+              [ngClass]="{
+                'is-invalid': vacunasId.invalid && vacunasId.touched,
+                'is-valid': vacunasId.valid && vacunasId.touched
+              }">
                 <option value="" disabled selected>Seleccione una vacuna</option>
-                <option *ngFor="let vacuna of vacunas" [value]="vacuna.id">{{ vacuna.name }}</option>
+                <ng-container *ngIf="vacunas.length > 0">
+                  <option *ngFor="let vacuna of vacunas" [value]="vacuna.id">{{ vacuna.name }}</option>
+                </ng-container>
+                <option *ngIf="vacunas.length === 0" disabled>No hay vacunas disponibles</option>
+              
               </select>
+              <!-- Mensajes de error -->
+            <div *ngIf="vacunasId.invalid && vacunasId.touched" class="invalid-feedback">
+              Seleccionar una vacuna es obligatorio.
             </div>
-
+            <div *ngIf="vacunasId.valid && vacunasId.touched" class="valid-feedback">
+              Vacuna seleccionada correctamente.
+            </div>
+            </div>
+<!--777777777777777777777777777-->
             <div class="mb-3">
               <label for="animalId" class="form-label">Animales</label>
-              <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newVaccineAnimal.animalId" required>
+              <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newVaccineAnimal.animalId" 
+              #animalId="ngModel" required
+              (change)="checkValidSelection(animalId)"
+              [ngClass]="{
+                'is-invalid': animalId.invalid && animalId.touched,
+                'is-valid': animalId.valid && animalId.touched
+              }">
                 <option value="" disabled selected>Selecciona un animal</option>
-                <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
+                <ng-container *ngIf="animales.length > 0">
+                  <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
+                </ng-container>
+                <option *ngIf="animales.length === 0" disabled>No hay animales disponibles</option>
+
               </select>
+               <!-- Mensajes de error -->
+            <div *ngIf="animalId.invalid && animalId.touched" class="invalid-feedback">
+              Seleccionar un animal es obligatorio.
+            </div>
+            <div *ngIf="animalId.valid && animalId.touched" class="valid-feedback">
+              Animal seleccionado correctamente.
+            </div>
+
             </div>
 
             <div class="mb-3">
               <label for="dateApplied" class="form-label">Fecha de aplicación</label>
               <input type="date" class="form-control" id="dateApplied" name="dateApplied"
-                [(ngModel)]="newVaccineAnimal.dateApplied" required>
+                [(ngModel)]="newVaccineAnimal.dateApplied" required >
             </div>
 
             <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Enviar</button>

@@ -5,8 +5,8 @@ import { AlertService } from '../../../shared/components/alert.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { FormsModule, NgForm } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm, NgModel } from '@angular/forms';
+import { CommonModule, formatDate } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -38,7 +38,7 @@ import { AnimalDiagnostics } from '../animal-diagnostico/AnimalDiagnostics.modul
   templateUrl: './tratamiento.component.html'
 })
 export class TratamientoComponent implements OnInit {
-
+  minDate: string = new Date().toISOString().split('T')[0];
   IdFarm: number | null = null;
   diagnostics: AnimalDiagnostics[] = [];
   tratamiento: Treatments[] = [];
@@ -46,8 +46,8 @@ export class TratamientoComponent implements OnInit {
     id: 0,
     name:'',
     description: '',
-    finishiedDate: new Date(),
-    startDate: new Date(),
+    finishiedDate: new Date(this.minDate),
+    startDate: new Date(this.minDate),
     animalDiagnosticsId: 0
   }
 
@@ -76,13 +76,29 @@ export class TratamientoComponent implements OnInit {
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
+    this.setDefaultSelections();
   }
-
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.diagnostics.length > 0) {
+      this.newTratamiento.animalDiagnosticsId = this.diagnostics[0].id;
+    }
+    
+  }
+  checkValidSelection(diagnostico: NgModel) {
+    console.log('Valor seleccionado:', this.newTratamiento.animalDiagnosticsId);
+    if (diagnostico.invalid && diagnostico.touched) {
+      console.error('Selección inválida');
+    } else {
+      console.log('Selección válida');
+    } // Asegurarse de marcar el campo como tocado
+  }
   listDiagnostics(IdFarm: number): void {
     this.animalDiagnosticService.getAnimalDiagnostics(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.diagnostics = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los diagnósticos');
@@ -110,50 +126,62 @@ export class TratamientoComponent implements OnInit {
 
   }
 
-  onEdit(tratamiento:Treatments){
-
+  onEdit(tratamiento: Treatments): void {
+    this.newTratamiento = {
+      ...tratamiento,
+      // Asegúrate de que las fechas se mantengan como instancias de Date
+      startDate: new Date(tratamiento.startDate), // Asegúrate de que sea un objeto Date
+      finishiedDate: new Date(tratamiento.finishiedDate) // Asegúrate de que sea un objeto Date
+    };
   }
-
+  
+  
   eliminar(id: number): void {
+    // Mostrar un mensaje de confirmación antes de eliminar
     this.alertService.DeleteAlert().then((res) => {
       if (res.isConfirmed) {
+        // Llamar al servicio para eliminar el tratamiento
         this.treatmentsService.deleteTreatment(id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Eliminado correctamente');
+            // Verificar si el ID de la finca es válido para listar los tratamientos actualizados
             if (this.IdFarm !== null) {
-              this.listTratamiento(this.IdFarm);
+              this.listTratamiento(this.IdFarm);  // Refrescar la lista de tratamientos después de eliminar
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
           },
-          error: () => {
+          error: (err) => {
+            // Manejar errores y mostrar un mensaje en caso de fallo
+            console.error('Error al eliminar el tratamiento: ', err);
             this.alertService.ErrorAlert('Error al eliminar el tratamiento');
           }
-        })
+        });
       }
-    })
-
+    });
   }
+  
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
+      this.newTratamiento.startDate = new Date(this.newTratamiento.startDate);
+      this.newTratamiento.finishiedDate = new Date(this.newTratamiento.finishiedDate);
+  
+
       if (this.newTratamiento.id > 0) {
         this.treatmentsService.updateTreatment(this.newTratamiento, this.newTratamiento.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
-            form.reset();
+            
             if (this.IdFarm !== null) {
               this.listTratamiento(this.IdFarm);
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            } this.newTratamiento = {
-              id: 0,
-              name: '',
-              description: '',
-              finishiedDate: new Date(),
-              startDate: new Date(),
-              animalDiagnosticsId: 0
-            };
+            } 
+            form.reset(); 
+            this.resetTratamiento(); 
+            console.log('Formulario válido: ', form.valid);
+
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar el tratamiento');
@@ -167,7 +195,8 @@ export class TratamientoComponent implements OnInit {
               this.listTratamiento(this.IdFarm);
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            } form.reset();
+            } 
+            form.reset();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al agregar el tratamiento');
@@ -178,9 +207,34 @@ export class TratamientoComponent implements OnInit {
       this.alertService.ErrorAlert('Formulario incompleto');
     }
   }
-
+  
+  resetTratamiento(): void {
+    this.newTratamiento = {
+      id: 0,
+      name: '',
+      description: '',
+      finishiedDate: new Date(this.minDate),  // Resetear con minDate
+      startDate: new Date(this.minDate),  // Resetear con minDate
+      animalDiagnosticsId: 0
+    };
+  }
   onDelete(id: number) {
-
+    this.alertService.DeleteAlert().then((res) => {
+      if (res.isConfirmed) {
+        this.treatmentsService.deleteTreatment(id).subscribe({
+          next: () => {
+            this.alertService.SuccessAlert('Registro eliminado correctamente');
+            if (this.IdFarm !== null) {
+              this.listDiagnostics(this.IdFarm);
+            } else {
+              console.warn('No se pudo obtener el ID de la finca.');
+            }          },
+          error: () => {
+            this.alertService.ErrorAlert('Error al eliminar el registro');
+          }
+        });
+      }
+    });
   }
   aplicarFiltro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
