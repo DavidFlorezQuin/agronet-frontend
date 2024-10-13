@@ -148,30 +148,28 @@
             <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newAlerta.date" required 
             [min]="minDate" >
           </div>
+          
           <div class="mb-3">
             <label for="animalsId" class="form-label">Animal</label>
             <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newAlerta.animalId" 
-            #animalId="ngModel" required
+              #animalId="ngModel" 
               (change)="checkValidSelection(animalId)"
               [ngClass]="{
-                
-                'is-valid': animalId.valid && animalId.touched
+                'is-valid': animalId.value && animalId.touched
               }">
-              <option value=""  selected>Seleccione un animal</option>
+              <option value="" selected>Seleccione un animal</option>
               <ng-container *ngIf="animals.length > 0">
                 <option *ngFor="let animal of animals" [value]="animal.id">{{ animal.name }}</option>
-
               </ng-container>
               <option *ngIf="animals.length === 0" disabled>No hay animales disponibles</option>
-
             </select>
             
-            <!-- Mensajes de error -->
-           
-            <div *ngIf="animalId.valid && animalId.touched" class="valid-feedback">
-              Animal seleccionada correctamente.
+            <!-- Mensaje de confirmación -->
+            <div *ngIf="animalId.value && animalId.touched" class="valid-feedback">
+              Animal seleccionado correctamente.
             </div>
           </div>
+          
 
           <div class="mb-3">
             <label for="animalsId" class="form-label">Categoría Alerta</label>

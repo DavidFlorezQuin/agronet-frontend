@@ -53,7 +53,7 @@
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let element">
           <div class="d-flex gap-2 justify-content-center" id="icons-section">
-            <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
+            <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#treatmentsModal"(click)="onEdit(element)"></i>
             <i class="bi bi-trash" (click)="onDelete(element)"></i>
           </div>
         </td>
@@ -69,7 +69,7 @@
   
 <!-- Modal -->
 <div class="modal fade" id="treatmentsModal" tabindex="-1" aria-labelledby="categoriaAlertaModalLabel"
-aria-hidden="true">
+   aria-hidden="true">
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
@@ -81,30 +81,54 @@ aria-hidden="true">
         <div class="mb-3">
           <label for="Name" class="form-label">Nombre</label>
           <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newTreatmentMedicine.name"
-            required>
+          minlength="10" #tratamientoMedicinas="ngModel"
+          [ngClass]="{
+           'is-invalid': tratamientoMedicinas.invalid && tratamientoMedicinas.touched,
+           'is-valid': tratamientoMedicinas.valid && tratamientoMedicinas.touched
+         }" required/>
+          <!-- Mensajes de error -->
+         <div *ngIf="tratamientoMedicinas.invalid && tratamientoMedicinas.touched" class="invalid-feedback">
+           <div *ngIf="tratamientoMedicinas.errors?.['required']">La descripción es obligatoria.</div>
+           <div *ngIf="tratamientoMedicinas.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+         </div>
+
+         <div *ngIf="tratamientoMedicinas.valid && tratamientoMedicinas.touched" class="valid-feedback">
+           Descripción válida.
+         </div>
         </div>
         <div class="mb-3">
           <label for="Description" class="form-label">Descripción</label>
           <input type="text" class="form-control" id="description" name="description"
             [(ngModel)]="newTreatmentMedicine.description" minlength="10" #descriptionField="ngModel"
-            [ngClass]="{
-             'is-invalid': descriptionField.invalid && descriptionField.touched,
-             'is-valid': descriptionField.valid && descriptionField.touched
-           }"/>
-            <!-- Mensajes de error -->
-           <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
-             <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
-             <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
-           </div>
+             [ngClass]="{
+              'is-invalid': descriptionField.invalid && descriptionField.touched,
+              'is-valid': descriptionField.valid && descriptionField.touched
+            }" required/>
+             <!-- Mensajes de error -->
+            <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+              <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+            </div>
 
-           <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
-             Descripción válida.
-           </div>
+            <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
+              Descripción válida.
+            </div>
         </div>
         <div class="mb-3">
           <label for="periocityDay" class="form-label">Periocidad</label>
           <input type="number" class="form-control" id="periocityDay" name="periocityDay"
-            [(ngModel)]="newTreatmentMedicine.periocityDay" required>
+            [(ngModel)]="newTreatmentMedicine.periocityDay"  required min="1" pattern="^[1-9]\d*$*-" #animal="ngModel"
+            [ngClass]="{'is-invalid': animal.invalid && animal.touched, 'is-valid':
+             animal.valid && animal.touched}"  (keypress)="preventNegative($event)" />
+            
+             <!-- Mensajes de error -->
+            <div *ngIf="animal.invalid && animal.touched" class="invalid-feedback">
+                <div *ngIf="animal.errors?.['required']">La periocidad es obligatorio.</div>
+                <div *ngIf="animal.errors?.['pattern']">La periocidad debe ser un número positivo.</div>
+          </div>
+           <div *ngIf="animal.valid && animal.touched" class="valid-feedback">
+            La periocidad es válido.
+            </div>
         </div>
 
         

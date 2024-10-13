@@ -74,6 +74,7 @@ IdUser: number | null = null;
   constructor(private AlertaService: AlertaService, private alertService: AlertService, private animalService: AnimalService, private CategoriaAlertaaService: CategoriaAlertaaService) { }
 
   ngOnInit(): void {
+    this.setDefaultSelections();
     const StorageId: string | null = localStorage.getItem('Usuario');
     this.IdUser = Number(StorageId);
     this.newAlerta.usersId = this.IdUser;
@@ -93,7 +94,7 @@ IdUser: number | null = null;
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
-    this.setDefaultSelections();
+    
   }
 
 
@@ -132,6 +133,7 @@ IdUser: number | null = null;
 
         const data = res.data;
         this.CategoriaAlerta = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
@@ -210,7 +212,12 @@ IdUser: number | null = null;
       this.newAlerta.animalId= this.animals[0].id;
     }
     // Si hay vacas disponibles, seleccionar la primera como valor predeterminado
-    
+    /**
+     * 
+     */
+    if (this.CategoriaAlerta.length > 0) {
+      this.newAlerta.categoryAlertId= this.CategoriaAlerta[0].id;
+    }
   }
   
   checkValidSelection(field: NgModel) {

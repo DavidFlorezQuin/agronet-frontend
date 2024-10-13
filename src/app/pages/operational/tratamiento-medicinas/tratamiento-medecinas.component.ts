@@ -53,7 +53,7 @@ export class TratamientoMedecinasComponent implements OnInit {
   constructor(private treatmentMedicineService: TreatmentsMedicinesService, private alertService: AlertService, private treatmentService: TreatmentsService, private medicinesService:MedicinaService) { }
 
   ngOnInit(): void {
-
+    this.setDefaultSelections();
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
 
     if (idFarmString && !isNaN(Number(idFarmString))) {
@@ -72,7 +72,21 @@ export class TratamientoMedecinasComponent implements OnInit {
     this.listMedicinas();
 
   }
-
+  setDefaultSelections(): void {
+    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
+    if (this.tratamientos.length > 0) {
+      this.newTreatmentMedicine.treatmentId = this.tratamientos[0].id;
+    }
+    // Si hay vacas disponibles, seleccionar la primera como valor predeterminado
+    if (this.medicines.length > 0) {
+      this.newTreatmentMedicine.medicinesId = this.medicines[0].id;
+    }
+  }
+  preventNegative(event: KeyboardEvent): void {
+    if (event.key === '-') {
+        event.preventDefault(); // Prevenir la entrada del símbolo de menos
+    }
+  }
   getTreatmentsMedicines(IdFarm:number): void {
     this.treatmentMedicineService.getAllTreatmentsMedicinesService(IdFarm).subscribe({
       next: (res: any) => {
@@ -102,6 +116,7 @@ export class TratamientoMedecinasComponent implements OnInit {
       next: (res: any) => {
         const data = res.data;
         this.tratamientos = data;
+        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los tratamientos');
@@ -177,6 +192,7 @@ export class TratamientoMedecinasComponent implements OnInit {
   
         const data = res.data;
         this.medicines = data; 
+        this.setDefaultSelections();
       },
       error: (error) => {
         console.log(error);
