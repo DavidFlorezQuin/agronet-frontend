@@ -27,6 +27,11 @@ export class NewPasswordComponent implements OnInit {
       this.newSend.token = params['token'] || ''; // Si no hay token en la URL, asigna una cadena vacía
     });
   }
+  isPasswordValid(): boolean {
+    const password = this.newSend.newPassword;
+    const regex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*]).{8,}$/;
+    return regex.test(password);
+  }
   onSubmit(form: NgForm): void {
     if (form.valid) {
 

@@ -137,7 +137,7 @@
         <div class="mb-3">
             <label for="birthday" class="form-label">Fecha de Nacimiento</label>
             <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday"
-            required   >
+            required   min="1980-01-01" max="2006-12-31">
         </div>
         <button type="submit" id="btn-forms" class="btn w-100 mt-4" [disabled]="!personForm.valid">Registrarme</button>
     </form>

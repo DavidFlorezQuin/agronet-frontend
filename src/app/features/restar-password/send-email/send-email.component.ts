@@ -36,9 +36,23 @@ export class SendEmailComponent implements OnInit {
   constructor(private sendService: SendEmailService, private alertService: AlertService) { }
   email: Email[] = [];
   newEmail: Email = { email: '' }
-
+  emailError: string = ''; 
   ngOnInit(): void {
 
+  }
+  validateEmail(): void {
+    this.emailError = '';
+    if (this.newEmail.email) {
+      const isValid = this.validateEmailDomain(this.newEmail.email);
+      if (!isValid) {
+        this.emailError = 'Solo se permiten correos de Gmail y Hotmail.';
+      }
+    }
+  }
+  validateEmailDomain(email: string): boolean {
+    const allowedDomains = ['gmail.com', 'hotmail.com'];
+    const domain = email.split('@')[1];
+    return allowedDomains.includes(domain);
   }
   onSubmit(form: NgForm): void {
     if (form.valid) {
