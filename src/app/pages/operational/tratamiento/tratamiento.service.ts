@@ -25,6 +25,6 @@ export class TreatmentsService {
     return this.http.put<Treatments>(url,treatment);  }
 
   deleteTreatment(id: number): Observable<void> {
-    return this.http.delete<void>(`${this._baseUrl}/Treatment${id}`)
+    return this.http.delete<void>(`${this._baseUrl}/Treatment/${id}`)
   }
 }

@@ -49,7 +49,7 @@ export class InseminationComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  displayedColumns: string[] = ['id', 'description', 'semen', 'mother', 'result', 'inseminationType', 'state', 'acciones'];
+  displayedColumns: string[] = ['id', 'description', 'semen', 'mother', 'result', 'inseminationType','estado', 'acciones'];
 
   inseminations: Insemination[] = [];
 
@@ -63,7 +63,7 @@ export class InseminationComponent implements OnInit {
   };
 
   constructor(private animalesService: AnimalService, private inseminationService: InseminationService, private alertService: AlertService) { }
-  
+
 
   ngOnInit(): void {
 
@@ -88,7 +88,7 @@ export class InseminationComponent implements OnInit {
   /** el isValidOption sirve para la parte de padre de semental no de la finca*/
   isValidOption(value: string): boolean {
     return value !== '' && value !== 'no-propiedad'; // Cambia 'no-propiedad' al valor que hayas asignado
-}
+  }
   listInseminations(IdFarm: number): void {
     this.inseminationService.getInseminations(IdFarm).subscribe({
       next: (res: any) => {
@@ -141,7 +141,7 @@ export class InseminationComponent implements OnInit {
       field.control.setErrors({ required: true });
       field.control.markAsTouched();
     }
-  
+
   }
   listBulls(IdFarm: number): void {
     this.animalesService.getAnimalsBulls(IdFarm).subscribe({
@@ -212,6 +212,7 @@ export class InseminationComponent implements OnInit {
 
   onEdit(insemination: Insemination): void {
     this.newInsemination = { ...insemination };
+    // Verificar si la vaca seleccionada (motherId) existe en la lista de vacas
   }
 
   onDelete(id: number): void {
@@ -235,7 +236,18 @@ export class InseminationComponent implements OnInit {
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newInsemination.id > 0) {
-        this.inseminationService.updateInsemination(this.newInsemination, this.newInsemination.id).subscribe({
+
+        const formData = form.value;
+        const Data: Insemination = {
+          ...formData,
+          id: this.newInsemination.id,
+          semenId: this.newInsemination.semenId ?? null,
+          result: this.newInsemination.result,
+          description: this.newInsemination.description,
+          inseminationType: this.newInsemination.inseminationType,
+          motherId: this.newInsemination.motherId
+        }
+        this.inseminationService.updateInsemination(Data, this.newInsemination.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
@@ -248,8 +260,18 @@ export class InseminationComponent implements OnInit {
           }
         });
       } else {
-        this.inseminationService.createInsemination(this.newInsemination).subscribe({
+
+        const formData = form.value;
+        const Data: Insemination = {
+          ...formData,
+          semenId: this.newInsemination.semenId ?? null,
+          result: this.newInsemination.result,
+          motherId: this.newInsemination.motherId
+        }
+
+        this.inseminationService.createInsemination(Data).subscribe({
           next: () => {
+
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.newInsemination = {

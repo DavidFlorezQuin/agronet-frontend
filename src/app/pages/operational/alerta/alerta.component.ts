@@ -65,7 +65,7 @@ export class AlertaComponent implements OnInit {
     usersId: 0,
   };
 
-  displayedColumns: string[] = ['id', 'name', 'date', 'isRead', 'animal', 'categoryAlert', 'users', 'acciones'];
+  displayedColumns: string[] = ['id', 'name', 'date', 'isRead', 'animal', 'categoryAlert', 'estado','acciones'];
   dataSource!: MatTableDataSource<Alerta>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -235,7 +235,7 @@ export class AlertaComponent implements OnInit {
 
     const formData = form.value;
     const alertaData: Alerta = {
-      id: this.newAlerta.id, // Agrega el ID aquí
+      id: this.newAlerta.id, 
       ...formData,
       animalId: Number(formData.animalId) !== 0 ? Number(formData.animalId) : null,
       categoryAlertId: Number(formData.categoryAlertId),

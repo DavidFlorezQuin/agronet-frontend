@@ -47,7 +47,7 @@ export class AnimalDiagnosticoComponent implements OnInit {
 
   };
 
-  displayedColumns: string[] = ['id', 'name','diagnosis', 'animal', 'users', 'acciones'];
+  displayedColumns: string[] = ['id', 'name','diagnosis', 'animal', 'users', 'estado', 'acciones'];
   dataSource: MatTableDataSource<AnimalDiagnostics> = new MatTableDataSource<AnimalDiagnostics>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

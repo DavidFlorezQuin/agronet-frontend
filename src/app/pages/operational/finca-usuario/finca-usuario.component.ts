@@ -56,7 +56,7 @@ export class FincaUsuarioComponent implements OnInit {
 
   ngOnInit(): void {
     this.listFarmUsers();
-    this.loadFarms();
+    // this.loadFarms();
     this.loadUsers();
   }
 
@@ -75,16 +75,16 @@ export class FincaUsuarioComponent implements OnInit {
   }
 
   
-  loadFarms(): void {
-    this.fincaService.getFincas().subscribe({
-      next: (Fincas: Finca[]) => {
-        this.farms=Fincas;
-      },
-      error: (error)=>{
-        console.log(error);
-        this.alertService.ErrorAlert('Error al cargar');
-      }
-    });    }
+  // loadFarms(): void {
+  //   this.fincaService.getFincas().subscribe({
+  //     next: (Fincas: Finca[]) => {
+  //       this.farms=Fincas;
+  //     },
+  //     error: (error)=>{
+  //       console.log(error);
+  //       this.alertService.ErrorAlert('Error al cargar');
+  //     }
+  //   });    }
 
   loadUsers(): void {
     this.userService.getUsers().subscribe({

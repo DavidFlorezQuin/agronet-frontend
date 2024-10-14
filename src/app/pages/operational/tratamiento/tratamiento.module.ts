@@ -1,8 +1,9 @@
 export interface Treatments {
   id: number,
   description: string ,
-  finishiedDate: Date ,
-  startDate: Date ,
+  finishiedDate: Date | string ,
+  startDate: Date | string,
   animalDiagnosticsId: number,
-  name: string
+  name: string,
+  state:boolean
 }

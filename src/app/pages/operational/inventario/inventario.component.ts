@@ -182,7 +182,16 @@ export class InventarioComponent implements OnInit {
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newInventory.id > 0) {
-        this.inventoriesService.updateInventory(this.newInventory, this.newInventory.id).subscribe({
+        const formData = form.value;
+        const Data: Inventories = {
+          ...formData,
+          id: this.newInventory.id,
+          name: this.newInventory.name,
+          description: this.newInventory.description,
+          farmId:this.newInventory.farmId
+        }
+
+        this.inventoriesService.updateInventory(Data, this.newInventory.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Inventario actualizado correctamente');
             form.reset();

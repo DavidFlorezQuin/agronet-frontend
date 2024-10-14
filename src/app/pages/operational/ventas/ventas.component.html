@@ -69,7 +69,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
-
+  
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
@@ -79,12 +79,18 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="ventaModalLabel">{{ newSale.id ? 'Editar Inventario' : 'Agregar Inventario'
-          }}</h5>
+        <h5 class="modal-title" id="ventaModalLabel">{{ newSale.id ? 'Editar ventas' : 'Agregar ventas'
+        }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form #inventoryForm="ngForm" (ngSubmit)="onSubmit(inventoryForm)">
+          <div class="mb-3">
+            <label for="productionId" class="form-label">Producción</label>
+            <select class="form-control" id="productionId" name="productionId" [(ngModel)]="newSale.productionId" required>
+              <option *ngFor="let production of productions" [value]="production.id">{{ production.animal }} - {{ production.typeProduction }} {{ production.stock }} {{ production.measurement }}</option>
+            </select>
+          </div> 
           <div class="mb-3">
             <label for="price" class="form-label">Precio</label>
             <input type="number" id="price" class="form-control" name="price" [(ngModel)]="newSale.price" required />
@@ -113,12 +119,6 @@
           </div>
 
           
-          <div class="mb-3">
-            <label for="productionId" class="form-label">Producción</label>
-            <select class="form-control" id="productionId" name="productionId" [(ngModel)]="newSale.productionId" required>
-              <option *ngFor="let production of productions" [value]="production.id">{{ production.animal }} - {{ production.typeProduction }} {{ production.stock }} {{ production.measurement }}</option>
-            </select>
-          </div> 
 
           <button type="submit" class="btn btn-success">{{ newSale.id ? 'Actualizar' : 'Agregar' }}</button>
         </form>

@@ -136,7 +136,7 @@
               required [min]="minDate" [max]="maxDate">
           </div>
 
-          <button type="submit" class="btn btn-primary" [disabled]="!inventarioForm.valid">
+          <button type="submit" class="btn btn-success w-100" [disabled]="!inventarioForm.valid">
             {{ newInventarioHistorias.id ? 'Actualizar' : 'Guardar' }}
           </button>
         </form>

@@ -50,7 +50,7 @@ export class AnimalComponent implements OnInit {
   newAnimales: Animal = {
     id: 0, name: '', weight: 0, photo: '', gender: '', purpose: '', birthDay: new Date(), state: true, lotId: 0, race: ''
   };
-  displayedColumns: string[] = ['id', 'animal', 'weight', 'gender', 'race', 'purpose', 'birthDay', 'lotId', 'acciones'];
+  displayedColumns: string[] = ['id', 'animal', 'weight', 'gender', 'race', 'purpose', 'birthDay', 'lotId','estado', 'acciones'];
 
   dataSource!: MatTableDataSource<Animal>;
 
@@ -100,6 +100,20 @@ export class AnimalComponent implements OnInit {
     })
   }
 
+  purposeOptions: { value: string, label: string }[] = [];
+
+  onGenderChange() {
+    if (this.newAnimales.gender === 'Male') {
+      this.purposeOptions = [{ value: 'venta', label: 'Venta' }];
+    } else if (this.newAnimales.gender === 'Female') {
+      this.purposeOptions = [
+        { value: 'leche', label: 'Leche' },
+        { value: 'doble', label: 'Doble propósito' }
+      ];
+    }
+    // Reiniciar el propósito seleccionado si cambia el género
+    this.newAnimales.purpose = '';
+  }
   listLot(IdFarm: number): void {
     this.loteService.getLote(IdFarm).subscribe({
       next: (res: any) => {
@@ -186,7 +200,6 @@ export class AnimalComponent implements OnInit {
       }
     });
   }
-
 
   aplicarFiltro(event: Event): void {
 

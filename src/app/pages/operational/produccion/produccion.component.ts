@@ -73,6 +73,7 @@ export class ProduccionComponent implements OnInit {
     'QuantityTotal',
     'expirateDate',
     'AnimalId',
+    'estado',
     'accions']
 
   dataSource!: MatTableDataSource<Productions>;
@@ -125,6 +126,8 @@ export class ProduccionComponent implements OnInit {
       }
     });
   }
+
+  
 
   listProductions(farmId: number): void {
     this.productionsService.getProductions(farmId).subscribe({
@@ -221,7 +224,22 @@ export class ProduccionComponent implements OnInit {
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newProduction.id > 0) {
-        this.productionsService.updateProduction(this.newProduction, this.newProduction.id).subscribe({
+
+        const formData = form.value;
+        const Data: Productions = {
+          ...formData,
+          id:this.newProduction.id,
+          animalId: this.newProduction.animalId,
+          description: this.newProduction.description,
+          expirateDate: this.newProduction.expirateDate,
+          measurement: this.newProduction.measurement,
+          quantityTotal: this.newProduction.quantityTotal,
+          typeProduction:this.newProduction.typeProduction,
+          stock:this.newProduction.stock
+      
+        }
+
+        this.productionsService.updateProduction(Data, this.newProduction.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
@@ -278,8 +296,25 @@ export class ProduccionComponent implements OnInit {
     }
     
   }
+
+  
+  resetForm(): void {
+    this.newProduction = {
+      id: 0, typeProduction: '',
+      stock: 0,
+      measurement: '',
+      description: '',
+      quantityTotal: 0,
+      expirateDate: new Date(),
+      animalId: 0,
+    };
+  }
   onEdit(production: Productions): void {
     this.newProduction = { ...production };
+    if (this.newProduction.expirateDate) {
+      const dateObj = new Date(this.newProduction.expirateDate);
+      this.newProduction.expirateDate = dateObj.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    }
   }
 
   onDelete(id: number): void {

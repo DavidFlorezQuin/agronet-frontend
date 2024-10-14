@@ -1,5 +1,6 @@
 main{
     background-color: #fffafa; /* Beige claro */
+    height: 100vh !important;
 }
 .card{
     padding: 100px;

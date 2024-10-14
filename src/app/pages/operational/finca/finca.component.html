@@ -4,7 +4,7 @@
 
     <section class="d-flex align-items-center gap-3">
       <h2 class="fw-normal mb-0">Fincas</h2>
-      <button type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50">
+      <button type="button" data-bs-toggle="modal" (click)="resetForm()" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50">
         <i class="bi bi-plus-circle mx-2"></i>
         Agregar Finca
       </button>
@@ -60,8 +60,8 @@
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
         <div class="d-flex gap-2 justify-content-center" id="icons-section">
-          <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
-          <i class="bi bi-trash" (click)="onDelete(element)"></i>
+            <i class="bi bi-pencil-square" (click)="onEdit(element)" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
+          <i class="bi bi-trash" (click)="onDelete(element.id)"></i>
         </div>
       </td>
     </ng-container>
@@ -154,15 +154,9 @@
                   <option *ngFor="let city of City" [value]="city.id">{{ city.name }}</option>
                 </select>
               </div>
-          <button type="submit" class="btn btn-primary" [disabled]="!fincaForm.valid">Guardar</button>
+          <button type="submit" class="btn btn-success w-100" [disabled]="!fincaForm.valid">Guardar</button>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
       </div>
     </div>
   </div>
 </div>
-
-<!-- Modal -->
-<!-- Aquí puedes agregar tu modal para editar/crear Fincas -->

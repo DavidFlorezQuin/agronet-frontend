@@ -138,14 +138,14 @@ section{
 
       .funcionesagro{
         text-align: center;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         color: #000;
         display: flex;
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
-        padding: 50px 20px;
-        font-size: 24px;   /* Tamaño del texto */
+        margin-top: 30px;
+        font-size: 32px;   /* Tamaño del texto */
         font-weight: bold; /* Grosor del texto */
       }
       /*//////////////////////////*/

@@ -5,8 +5,8 @@
 
       <h2 class="fw-normal mb-0 ">Tratamiento</h2>
       <!-- Botón para abrir el modal -->
-      <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#treatmentsModal"
-        id="btn-forms">
+      <button type="button" class="btn h-50" data-bs-toggle="modal" (click)="resetForm()"
+        data-bs-target="#treatmentsModal" id="btn-forms">
         <i class="bi bi-plus-circle mx-2"></i>
         Registrar Tratamiento
       </button>
@@ -25,105 +25,122 @@
 
   <div *ngIf="tratamiento.length === 0">No hay tratamientos activos.</div>
 
-    <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
-      <!-- ID Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.id }} </td>
-      </ng-container>
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.id }} </td>
+    </ng-container>
 
-      <!-- Diagnóstico Column -->
-      <ng-container matColumnDef="diagnostico">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnostico </th>
-        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.animalDiagnostics }} </td>
-      </ng-container>
-      <!-- Diagnóstico Column -->
-      <ng-container matColumnDef="description">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
-        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.description }} </td>
-      </ng-container>
+    <!-- Diagnóstico Column -->
+    <ng-container matColumnDef="diagnostico">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Diagnostico </th>
+      <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.animalDiagnostics }} </td>
+    </ng-container>
+    <!-- Diagnóstico Column -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+      <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.description }} </td>
+    </ng-container>
 
-      <!-- Animal Column -->
-      <ng-container matColumnDef="finishiedDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha final </th>
-        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.finishiedDate}} </td>
-      </ng-container>
+    <!-- Animal Column -->
+    <ng-container matColumnDef="finishiedDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha final </th>
+      <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.finishiedDate}} </td>
+    </ng-container>
 
-      <!-- User Column -->
-      <ng-container matColumnDef="startDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de inicio </th>
-        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.startDate}} </td>
-      </ng-container>
+    <!-- User Column -->
+    <ng-container matColumnDef="startDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de inicio </th>
+      <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.startDate}} </td>
+    </ng-container>
 
-      <!-- Estado Column -->
-      <ng-container matColumnDef="state">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
-        <td mat-cell *matCellDef="let diagnostico"> {{ diagnostico.state ? 'activo' : 'inactivo'}} </td>
-      </ng-container>
+    <!-- Estado Column -->
+    <ng-container matColumnDef="state">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width: 150px;"> Estado</th>
+      <td mat-cell *matCellDef="let element">
+        <span [ngStyle]="{'color': element.state ? 'green' : 'red'}">
+          ●
+        </span>
+        {{ element.state ? ' ACTIVO' : ' INACTIVO' }}
+      </td>
+    </ng-container>
+      
 
-      <!-- Actions Column -->
-      <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef> Acciones </th>
-        <td mat-cell *matCellDef="let element">
-          <div class="d-flex gap-2 justify-content-center" id="icons-section">
-            <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
-            <i class="bi bi-trash" (click)="onDelete(element)"></i>
-          </div>
-        </td>
-      </ng-container>
-
-      <!-- Header and Row Declarations -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-  </div>
-
-
-  <!-- Modal -->
-  <div class="modal fade" id="treatmentsModal" tabindex="-1" aria-labelledby="treatmentsModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="treatmentsModalLabel">Agregar Tratamiento</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- Actions Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="d-flex gap-2 justify-content-center" id="icons-section">
+          <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#treatmentsModal"
+            (click)="onEdit(element)"></i>
+          <i class="bi bi-trash" (click)="onDelete(element.id)"></i>
         </div>
-        <div class="modal-body">
-          <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
+      </td>
+    </ng-container>
 
-            <div class="mb-3">
-              <label for="name" class="form-label">Nombre</label>
-              <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newTratamiento.name"
-                required>
-            </div>
-            <div class="mb-3">
-              <label for="description" class="form-label">Descripción</label>
-              <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newTratamiento.description"
-                required>
-            </div>
+    <!-- Header and Row Declarations -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="treatmentsModal" tabindex="-1" aria-labelledby="treatmentsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="treatmentsModalLabel">Agregar Tratamiento</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #productForm="ngForm" class="p-3" (ngSubmit)="onSubmit(productForm)">
+          <div class="mb-3">
+            <label for="animalDiagnosticsId" class="form-label">Diagnóstico a tratar</label>
+            <select class="form-control" id="animalDiagnosticsId" name="animalDiagnosticsId"
+              [(ngModel)]="newTratamiento.animalDiagnosticsId" required>
+              <option value="" disabled selected>Selecciona un animal</option>
+              <option *ngFor="let diagnostic of diagnostics" [value]="diagnostic.id">{{ diagnostic.name }}</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="name" class="form-label">Tratamiento</label>
+            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newTratamiento.name" required>
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <textarea type="text" class="form-control" id="description" name="description"
+              [(ngModel)]="newTratamiento.description" required></textarea>
+          </div>
+          <div class="d-flex justify-content-around mb-3">
+
             <div class="mb-3">
               <label for="startDate" class="form-label">Fecha inicio</label>
-              <input type="date" class="form-control" id="startDate" name="startDate" [(ngModel)]="newTratamiento.startDate"
-                required>
+              <input type="date" class="form-control" id="startDate" name="startDate"
+                [(ngModel)]="newTratamiento.startDate" required>
             </div>
             <div class="mb-3">
               <label for="finishiedDate" class="form-label">Fecha Fin</label>
-              <input type="date" class="form-control" id="finishiedDate" name="finishiedDate" [(ngModel)]="newTratamiento.finishiedDate"
-                required>
+              <input type="date" class="form-control" id="finishiedDate" name="finishiedDate"
+                [(ngModel)]="newTratamiento.finishiedDate" required>
             </div>
-            <div class="mb-3">
-              <label for="animalDiagnosticsId" class="form-label">Diagnósticos</label>
-              <select class="form-control" id="animalDiagnosticsId" name="animalDiagnosticsId" [(ngModel)]="newTratamiento.animalDiagnosticsId" required>
-                <option value="" disabled selected>Selecciona un animal</option>
-                <option *ngFor="let diagnostic of diagnostics" [value]="diagnostic.id">{{ diagnostic.name }}</option>
-              </select>
+          </div>
+          <div class="mb-3 d-flex gap-3">
+            <label for="state" class="form-label">Estado del tratamiento </label>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="state"
+                [(ngModel)]="newTratamiento.state" [ngModelOptions]="{standalone: true}"
+              checked>
             </div>
-
-            <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Enviar</button>
-          </form>
-        </div>
+          </div>
+          <button type="submit" class="btn btn-success w-100" [disabled]="!productForm.valid">Enviar</button>
+        </form>
       </div>
     </div>
   </div>
+</div>

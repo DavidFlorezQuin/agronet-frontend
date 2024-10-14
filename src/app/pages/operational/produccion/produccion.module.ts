@@ -5,6 +5,6 @@ export interface Productions {
   measurement: string ,
   description: string ,
   quantityTotal: number ,
-  expirateDate?: Date;
+  expirateDate?: Date | string;
   animalId: number 
 }

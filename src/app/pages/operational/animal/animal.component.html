@@ -80,6 +80,17 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Lote </th>
       <td mat-cell *matCellDef="let element"> {{element.lot }} </td>
     </ng-container>
+    
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado</th>
+      <td mat-cell *matCellDef="let element">
+        <span [ngStyle]="{'color': element.state ? 'green' : 'red'}">
+          ●
+        </span>
+        {{ element.state ? ' ACTIVO' : ' INACTIVO' }}
+      </td>
+    </ng-container>
+      
 
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
@@ -171,34 +182,14 @@
               Raza seleccionada correctamente.
             </div>
           </div>
-
-          <div class="mb-3">
-            <label for="purpose" class="form-label">Propósito</label>
-            <select class="form-control" id="purpose" name="purpose" [(ngModel)]="newAnimales.purpose"
-              #propositoId="ngModel" required [ngClass]="{
-              'is-invalid': propositoId.invalid && propositoId.touched,
-              'is-valid': propositoId.valid && propositoId.touched
-          }">
-              <option value="" disabled selected>Selecciona un propósito</option>
-              <option value="leche">Leche</option>
-              <option value="carne">Carne</option>
-            </select>
-            <div *ngIf="propositoId.invalid && propositoId.touched" class="invalid-feedback">
-              <div *ngIf="propositoId.errors?.['required']">El resultado es obligatorio.</div>
-            </div>
-            <div *ngIf="propositoId.valid && propositoId.touched" class="valid-feedback">
-              Selección válida.
-            </div>
-          </div>
-
           <div class="mb-3">
             <label for="gender" class="form-label">Sexo</label>
             <select class="form-control" id="gender" name="gender" [(ngModel)]="newAnimales.gender" required
               #sexoId="ngModel" required [ngClass]="{
               'is-invalid': sexoId.invalid && sexoId.touched,
               'is-valid': sexoId.valid && sexoId.touched
-          }">
-              <option value="" disabled selected>Selecciona un propósito</option>
+            }" (change)="onGenderChange()">
+              <option value="" disabled selected>Selecciona un sexo</option>
               <option value="Male">Macho</option>
               <option value="Female">Hembra</option>
             </select>
@@ -209,6 +200,25 @@
               Selección válida.
             </div>
           </div>
+          
+          <div class="mb-3">
+            <label for="purpose" class="form-label">Propósito</label>
+            <select class="form-control" id="purpose" name="purpose" [(ngModel)]="newAnimales.purpose"
+              #propositoId="ngModel" required [ngClass]="{
+              'is-invalid': propositoId.invalid && propositoId.touched,
+              'is-valid': propositoId.valid && propositoId.touched
+            }">
+              <option value="" disabled selected>Selecciona un propósito</option>
+              <option *ngFor="let option of purposeOptions" [value]="option.value">{{ option.label }}</option>
+            </select>
+            <div *ngIf="propositoId.invalid && propositoId.touched" class="invalid-feedback">
+              <div *ngIf="propositoId.errors?.['required']">El resultado es obligatorio.</div>
+            </div>
+            <div *ngIf="propositoId.valid && propositoId.touched" class="valid-feedback">
+              Selección válida.
+            </div>
+          </div>
+          
 
           <div class="mb-3">
             <label for="birthDay" class="form-label">Nacimiento</label>
@@ -242,7 +252,7 @@
             </div>
           </div>
 
-          <button type="submit" class="btn btn-success" [disabled]="!animalForm.valid">Guardar</button>
+          <button type="submit" class="btn btn-success w-100" [disabled]="!animalForm.valid">Guardar</button>
         </form>
       </div>
     </div>

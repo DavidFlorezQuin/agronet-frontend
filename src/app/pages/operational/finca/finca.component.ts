@@ -46,7 +46,7 @@ export class FincaComponent implements OnInit {
     id: 0,
     City: '',
     name: '',
-    photo:'',
+    photo: '',
     hectare: 0,
     description: '',
     cityId: 0
@@ -87,7 +87,7 @@ export class FincaComponent implements OnInit {
   }
   preventNegative(event: KeyboardEvent): void {
     if (event.key === '-') {
-        event.preventDefault(); // Prevenir la entrada del símbolo de menos
+      event.preventDefault(); // Prevenir la entrada del símbolo de menos
     }
   }
   listFincas(IdFarm: number): void {
@@ -172,7 +172,7 @@ export class FincaComponent implements OnInit {
 
             if (this.IdUser !== null) {
               this.listFincas(this.IdUser);
-            } 
+            }
           },
           error: () => {
             this.alertService.ErrorAlert('Error al eliminar');
@@ -184,8 +184,18 @@ export class FincaComponent implements OnInit {
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
+      const formData = form.value;
+      const fincaData: Finca = {
+        ...formData,
+        id: this.newFinca.id,
+        name: this.newFinca.name,
+        photo:this.newFinca.photo,
+        hectare: this.newFinca.hectare,
+        description: this.newFinca.description,
+        cityId: this.newFinca.cityId 
+      };
       if (this.newFinca.id > 0) {
-        this.fincaService.updateFinca(this.newFinca, this.newFinca.id).subscribe({
+        this.fincaService.updateFinca(fincaData, this.newFinca.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
@@ -195,8 +205,8 @@ export class FincaComponent implements OnInit {
         });
       } else {
         const formData = form.value;
-        const fincaToCreate: Finca = { ...formData, id:0};
-  
+        const fincaToCreate: Finca = { ...formData, id: 0 };
+
         // Crear la finca primero
         this.fincaService.createFinca(fincaToCreate).subscribe({
           next: (response: any) => {
@@ -221,7 +231,7 @@ export class FincaComponent implements OnInit {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
     }
   }
-  
+
   aplicarFiltro(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -230,11 +240,11 @@ export class FincaComponent implements OnInit {
   createFarmUser(farmId: number): void {
     if (this.IdUser !== null) {
       const userFarm: FarmUser = {
-        id: 0, 
+        id: 0,
         FarmsId: farmId,
         UsersId: this.IdUser
       };
-  
+
       this.userFarmService.createFarmUsers(userFarm).subscribe({
         next: () => {
         },
@@ -243,7 +253,17 @@ export class FincaComponent implements OnInit {
       console.warn('ID de usuario no disponible para crear la relación.');
     }
   }
-  
 
-  
+  resetForm(): void {
+    this.newFinca = {
+      id: 0,
+      City: '',
+      name: '',
+      photo: '',
+      hectare: 0,
+      description: '',
+      cityId: 0
+    }
+  }
+
 }

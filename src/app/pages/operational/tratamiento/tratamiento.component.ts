@@ -44,7 +44,8 @@ export class TratamientoComponent implements OnInit {
   tratamiento: Treatments[] = [];
   newTratamiento: Treatments = {
     id: 0,
-    name:'',
+    name: '',
+    state: false,
     description: '',
     finishiedDate: new Date(),
     startDate: new Date(),
@@ -65,9 +66,9 @@ export class TratamientoComponent implements OnInit {
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
 
     if (idFarmString && !isNaN(Number(idFarmString))) {
-      this.IdFarm = Number(idFarmString); 
+      this.IdFarm = Number(idFarmString);
     } else {
-      this.IdFarm = null; 
+      this.IdFarm = null;
     }
 
     if (this.IdFarm !== null) {
@@ -110,7 +111,17 @@ export class TratamientoComponent implements OnInit {
 
   }
 
-  onEdit(tratamiento:Treatments){
+  onEdit(tratamiento: Treatments) {
+    this.newTratamiento = { ...tratamiento };
+
+    if (this.newTratamiento.startDate) {
+      const dateObj = new Date(this.newTratamiento.startDate);
+      this.newTratamiento.startDate = dateObj.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    }
+    if (this.newTratamiento.finishiedDate) {
+      const dateObj = new Date(this.newTratamiento.finishiedDate);
+      this.newTratamiento.finishiedDate = dateObj.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    }
 
   }
 
@@ -135,10 +146,34 @@ export class TratamientoComponent implements OnInit {
 
   }
 
+  resetForm() {
+    this.newTratamiento = {
+      id: 0,
+      name: '',
+      state: false,
+      description: '',
+      finishiedDate: new Date(),
+      startDate: new Date(),
+      animalDiagnosticsId: 0
+    };
+  }
+
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newTratamiento.id > 0) {
-        this.treatmentsService.updateTreatment(this.newTratamiento, this.newTratamiento.id).subscribe({
+        const formData = form.value;
+        const Data: Treatments = {
+          ...formData,
+          id: this.newTratamiento.id,
+          description: this.newTratamiento.description,
+          finishiedDate: this.newTratamiento.finishiedDate,
+          startDate: this.newTratamiento.startDate,
+          animalDiagnosticsId: this.newTratamiento.animalDiagnosticsId,
+          name: this.newTratamiento.name,
+          state: this.newTratamiento.state  // Usando el valor vinculado
+        }
+
+        this.treatmentsService.updateTreatment(Data, this.newTratamiento.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
@@ -146,14 +181,8 @@ export class TratamientoComponent implements OnInit {
               this.listTratamiento(this.IdFarm);
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            } this.newTratamiento = {
-              id: 0,
-              name: '',
-              description: '',
-              finishiedDate: new Date(),
-              startDate: new Date(),
-              animalDiagnosticsId: 0
-            };
+            }
+            this.resetForm();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar el tratamiento');
@@ -179,8 +208,22 @@ export class TratamientoComponent implements OnInit {
     }
   }
 
-  onDelete(id: number) {
-
+  onDelete(id: number):void{
+    this.alertService.DeleteAlert().then((res) => {
+      if (res.isConfirmed) {
+        this.treatmentsService.deleteTreatment(id).subscribe({
+          next: () => {
+            this.alertService.SuccessAlert('Producción eliminada correctamente');
+            if (this.IdFarm !== null) {
+              this.listTratamiento(this.IdFarm);
+            }
+          },
+          error: () => {
+            this.alertService.ErrorAlert('Error al eliminar producción');
+          }
+        });
+      }
+    });
   }
   aplicarFiltro(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

@@ -52,6 +52,17 @@
       <td mat-cell *matCellDef="let element"> {{element.users}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="estado">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado</th>
+      <td mat-cell *matCellDef="let element">
+        <span [ngStyle]="{'color': element.state ? 'green' : 'red'}">
+          ●
+        </span>
+        {{ element.state ? ' ACTIVO' : ' INACTIVO' }}
+      </td>
+    </ng-container>
+      
+
     <!-- Columna Acciones -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
@@ -155,7 +166,7 @@
             </div>
             </div>
   
-            <button type="submit" class="btn btn-primary" [disabled]="!diagnosticsForm.valid">Guardar</button>
+            <button type="submit" class="btn btn-success w-100" [disabled]="!diagnosticsForm.valid">Guardar</button>
           </form>
         </div>
       </div>
