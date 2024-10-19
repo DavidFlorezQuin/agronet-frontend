@@ -12,6 +12,10 @@
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
         Descargar PDF
       </button>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        <i class="bi bi-file-spreadsheet"></i>
+        Descargar Excel
+      </button>
     </section>
 
     <!-- Tabla con MatTable -->
@@ -22,7 +26,9 @@
 
   </div>
 
-  <div *ngIf="inseminations.length === 0">No hay inseminación activas.</div>
+  <div *ngIf="inseminations.length === 0"><div class="alert alert-warning" role="alert">
+    No hay inseminación activas.
+  </div></div>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 

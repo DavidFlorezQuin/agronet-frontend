@@ -12,6 +12,10 @@
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
         Descargar PDF
       </button>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        <i class="bi bi-file-spreadsheet"></i>
+        Descargar Excel
+      </button>
     </section>
 
     <!-- Tabla con MatTable -->
@@ -21,9 +25,14 @@
     </mat-form-field>
 
 
-  </div>
-  <div *ngIf="animales.length === 0">No hay animales agregados.</div>
 
+    
+  </div>
+  <div *ngIf="animales.length === 0">
+    <div class="alert alert-warning" role="alert">
+      Aún no hay animales agregados!
+    </div>
+  </div>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 

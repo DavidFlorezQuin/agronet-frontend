@@ -14,6 +14,10 @@
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
         Descargar PDF
       </button>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        <i class="bi bi-file-spreadsheet"></i>
+        Descargar Excel
+      </button>
     </section>
 
     <mat-form-field appearance="fill">
@@ -23,7 +27,9 @@
 
   </div>
 
-  <div *ngIf="tratamiento.length === 0">No hay tratamientos activos.</div>
+  <div *ngIf="tratamiento.length === 0"><div class="alert alert-warning" role="alert">
+    No hay tratamientos activos.
+  </div></div>
 
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 

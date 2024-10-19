@@ -12,6 +12,10 @@
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
         Descargar PDF
       </button>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        <i class="bi bi-file-spreadsheet"></i>
+        Descargar Excel
+      </button>
     </section>
 
     <mat-form-field appearance="fill">
@@ -21,7 +25,9 @@
 
   </div>
 
-  <div *ngIf="fincas.length === 0">No hay fincas activas.</div>
+  <div *ngIf="fincas.length === 0"><div class="alert alert-warning" role="alert">
+    No hay fincas activas.
+  </div></div>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
     <!-- ID Column -->

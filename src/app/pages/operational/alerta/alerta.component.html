@@ -13,15 +13,22 @@
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
         Descargar PDF
       </button>
-
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        <i class="bi bi-file-spreadsheet"></i>
+        Descargar Excel
+      </button>
     </section>
     <mat-form-field appearance="fill">
       <mat-label>Buscar</mat-label>
       <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
     </mat-form-field>
   </div>
+  <div *ngIf="alerta.length === 0">
+    <div class="alert alert-warning" role="alert">
+      ¡Aún no hay alertas agregadas!
+    </div>
+  </div>
 
-  <div *ngIf="alerta.length === 0">No hay alertas activas.</div>
   <!-- Tabla con MatTable -->
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 

@@ -11,6 +11,10 @@
     <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
       Descargar PDF
     </button>
+    <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+      <i class="bi bi-file-spreadsheet"></i>
+      Descargar Excel
+    </button>
   </section>
 
   <!-- Campo de búsqueda -->
@@ -20,7 +24,9 @@
   </mat-form-field>
 </div>
 
-<div *ngIf="vaccineAnimals.length === 0">No hay vacunación para anivales activos.</div>
+<div *ngIf="vaccineAnimals.length === 0"><div class="alert alert-warning" role="alert">
+  No hay vacunación para animales activos.
+</div></div>
 
   <!-- Tabla de datos -->
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2 mt-4" matSort>

@@ -13,6 +13,10 @@
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
         Descargar PDF
       </button>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        <i class="bi bi-file-spreadsheet"></i>
+        Descargar Excel
+      </button>
     </section>
 
     <mat-form-field appearance="fill">
@@ -22,7 +26,9 @@
 
 </div>
 
-<div *ngIf="nacimiento.length === 0">No hay nacimientos activos.</div>
+<div *ngIf="nacimiento.length === 0"> <div class="alert alert-warning" role="alert">
+  No hay nacimientos activos.
+</div></div>
 
 <!-- Tabla de Nacimientos -->
 <table mat-table [dataSource]="dataSource" matSort class="table table-striped">
