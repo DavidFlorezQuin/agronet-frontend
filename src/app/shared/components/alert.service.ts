@@ -11,7 +11,7 @@ export class AlertService {
 
   SuccessAlert(message: string) {
     Swal.fire({
-      title: `${message} con éxito!`,
+      title: `¡${message}!`,
       icon: 'success',
       confirmButtonText: 'OK',
     });

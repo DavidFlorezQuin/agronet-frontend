@@ -216,7 +216,6 @@ export class FincaComponent implements OnInit {
             console.log(fincaId)
             if (this.IdUser !== null) {
               this.createFarmUser(fincaId);
-              this.listFincas(this.IdUser);
               if (this.IdUser !== null) {
                 this.listFincas(this.IdUser);
               }

@@ -10,7 +10,12 @@
       </button>
 
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        <i class="bi bi-file-earmark-pdf-fill"></i>
         Descargar PDF
+      </button>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        <i class="bi bi-file-spreadsheet"></i>
+        Descargar Excel
       </button>
     </section>
 
@@ -22,7 +27,11 @@
 
 
   </div>
-  <div *ngIf="animales.length === 0">No hay animales agregados.</div>
+  <div *ngIf="animales.length === 0">
+    <div class="alert alert-warning" role="alert">
+      Aún no hay animales agregados!
+    </div>
+  </div>
 
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
@@ -80,7 +89,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Lote </th>
       <td mat-cell *matCellDef="let element"> {{element.lot }} </td>
     </ng-container>
-    
+
     <ng-container matColumnDef="estado">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado</th>
       <td mat-cell *matCellDef="let element">
@@ -90,7 +99,7 @@
         {{ element.state ? ' ACTIVO' : ' INACTIVO' }}
       </td>
     </ng-container>
-      
+
 
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
@@ -123,114 +132,114 @@
       <div class="modal-body">
         <form #animalForm="ngForm" (ngSubmit)="onSubmit(animalForm)">
 
-          <div class="mb-3">
-            <label for="animalName" class="form-label">Nombre del Animal</label>
-            <input type="text" class="form-control" id="animalName" name="animal" [(ngModel)]="newAnimales.name"
-              required minlength="4" #NombreDelAnimal="ngModel" [ngClass]="{
+          <div class="d-flex gap-3">
+
+            <div class="mb-3 w-50">
+              <label for="animalName" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="animalName" name="animal" [(ngModel)]="newAnimales.name"
+                required minlength="4" #NombreDelAnimal="ngModel" [ngClass]="{
                'is-invalid': NombreDelAnimal.invalid && NombreDelAnimal.touched,
                'is-valid': NombreDelAnimal.valid && NombreDelAnimal.touched
              }" />
-            <!-- Mensajes de error -->
-            <div *ngIf="NombreDelAnimal.invalid && NombreDelAnimal.touched" class="invalid-feedback">
-              <div *ngIf="NombreDelAnimal.errors?.['required']">El nombre del animal es obligatoria.</div>
-              <div *ngIf="NombreDelAnimal.errors?.['minlength']">El nombre del animal debe tener al menos 4 caracteres.
+              <!-- Mensajes de error -->
+              <div *ngIf="NombreDelAnimal.invalid && NombreDelAnimal.touched" class="invalid-feedback">
+                <div *ngIf="NombreDelAnimal.errors?.['required']">El nombre del animal es obligatoria.</div>
+                <div *ngIf="NombreDelAnimal.errors?.['minlength']">El nombre del animal debe tener al menos 4
+                  caracteres.
+                </div>
               </div>
+
+
             </div>
 
-            <div *ngIf="NombreDelAnimal.valid && NombreDelAnimal.touched" class="valid-feedback">
-              Descripción válida.
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label for="weight" class="form-label">Peso (kg)</label>
-            <input type="number" class="form-control" id="weight" name="weight" [(ngModel)]="newAnimales.weight"
-              required min="35" max="1700" required min="1" pattern="^[1-9]\d*$*-" #animal="ngModel" [ngClass]="{'is-invalid': animal.invalid && animal.touched, 'is-valid':
+            <div class="mb-3 w-50">
+              <label for="weight" class="form-label">Peso (kg)</label>
+              <input type="number" class="form-control" id="weight" name="weight" [(ngModel)]="newAnimales.weight"
+                required min="35" max="1700" required min="1" pattern="^[1-9]\d*$*-" #animal="ngModel" [ngClass]="{'is-invalid': animal.invalid && animal.touched, 'is-valid':
                animal.valid && animal.touched}" (keypress)="preventNegative($event)" />
 
-            <!-- Mensajes de error -->
-            <div *ngIf="animal.invalid && animal.touched" class="invalid-feedback">
-              <div *ngIf="animal.errors?.['required']">El peso es obligatorio.</div>
-              <div *ngIf="animal.errors?.['min']">El peso debe ser mayor a 0.</div>
-              <div *ngIf="animal.errors?.['max']">El peso excede el limite de 1700</div>
-              <div *ngIf="animal.errors?.['pattern']">El peso debe ser un número positivo.</div>
-            </div>
-            <div *ngIf="animal.valid && animal.touched" class="valid-feedback">
-              Peso válido.
+              <!-- Mensajes de error -->
+              <div *ngIf="animal.invalid && animal.touched" class="invalid-feedback">
+                <div *ngIf="animal.errors?.['required']">El peso es obligatorio.</div>
+                <div *ngIf="animal.errors?.['min']">El peso debe ser mayor a 0.</div>
+                <div *ngIf="animal.errors?.['max']">El peso excede el limite de 1700</div>
+                <div *ngIf="animal.errors?.['pattern']">El peso debe ser un número positivo.</div>
+              </div>
             </div>
           </div>
-          <div class="mb-3">
-            <label for="raceId" class="form-label">Raza</label>
-            <select class="form-control" id="race" name="race" [(ngModel)]="newAnimales.race" #razaId="ngModel" required
-              (change)="checkValidSelection(razaId)" [ngClass]="{
+          <div class="d-flex gap-3">
+
+            <div class="mb-3 w-50">
+              <label for="raceId" class="form-label">Raza</label>
+              <select class="form-control" id="race" name="race" [(ngModel)]="newAnimales.race" #razaId="ngModel"
+                required (change)="checkValidSelection(razaId)" [ngClass]="{
                 'is-invalid': razaId.invalid && razaId.touched,
                 'is-valid': razaId.valid && razaId.touched
               }">
 
-              <option value="" disabled selected>Seleccione una raza</option>
-              <ng-container *ngIf="races.length > 0">
-                <option *ngFor="let race of races" [value]="race">{{ race }}</option>
-              </ng-container>
+                <option value="" disabled selected>Seleccione una raza</option>
+                <ng-container *ngIf="races.length > 0">
+                  <option *ngFor="let race of races" [value]="race">{{ race }}</option>
+                </ng-container>
 
-              <option *ngIf="races.length === 0" disabled>No hay razas disponibles</option>
-            </select>
-            <!-- Mensajes de error -->
-            <div *ngIf="razaId.invalid && razaId.touched" class="invalid-feedback">
-              Seleccionar una raza es obligatorio.
+                <option *ngIf="races.length === 0" disabled>No hay razas disponibles</option>
+              </select>
+              <!-- Mensajes de error -->
+              <div *ngIf="razaId.invalid && razaId.touched" class="invalid-feedback">
+                Seleccionar una raza es obligatorio.
+              </div>
             </div>
-            <div *ngIf="razaId.valid && razaId.touched" class="valid-feedback">
-              Raza seleccionada correctamente.
-            </div>
-          </div>
-          <div class="mb-3">
-            <label for="gender" class="form-label">Sexo</label>
-            <select class="form-control" id="gender" name="gender" [(ngModel)]="newAnimales.gender" required
-              #sexoId="ngModel" required [ngClass]="{
+            <div class="mb-3 w-50">
+              <label for="gender" class="form-label">Sexo</label>
+              <select class="form-control" id="gender" name="gender" [(ngModel)]="newAnimales.gender" required
+                #sexoId="ngModel" required [ngClass]="{
               'is-invalid': sexoId.invalid && sexoId.touched,
               'is-valid': sexoId.valid && sexoId.touched
             }" (change)="onGenderChange()">
-              <option value="" disabled selected>Selecciona un sexo</option>
-              <option value="Male">Macho</option>
-              <option value="Female">Hembra</option>
-            </select>
-            <div *ngIf="sexoId.invalid && sexoId.touched" class="invalid-feedback">
-              <div *ngIf="sexoId.errors?.['required']">El resultado es obligatorio.</div>
-            </div>
-            <div *ngIf="sexoId.valid && sexoId.touched" class="valid-feedback">
-              Selección válida.
+                <option value="" disabled selected>Selecciona un sexo</option>
+                <option value="Male">Macho</option>
+                <option value="Female">Hembra</option>
+              </select>
+              <div *ngIf="sexoId.invalid && sexoId.touched" class="invalid-feedback">
+                <div *ngIf="sexoId.errors?.['required']">El resultado es obligatorio.</div>
+              </div>
             </div>
           </div>
-          
-          <div class="mb-3">
-            <label for="purpose" class="form-label">Propósito</label>
-            <select class="form-control" id="purpose" name="purpose" [(ngModel)]="newAnimales.purpose"
-              #propositoId="ngModel" required [ngClass]="{
+
+          <div class="d-flex gap-3">
+
+            <div class="mb-3 w-50">
+              <label for="purpose" class="form-label">Propósito</label>
+              <select class="form-control" id="purpose" name="purpose" [(ngModel)]="newAnimales.purpose"
+                #propositoId="ngModel" required [ngClass]="{
               'is-invalid': propositoId.invalid && propositoId.touched,
               'is-valid': propositoId.valid && propositoId.touched
             }">
-              <option value="" disabled selected>Selecciona un propósito</option>
-              <option *ngFor="let option of purposeOptions" [value]="option.value">{{ option.label }}</option>
-            </select>
-            <div *ngIf="propositoId.invalid && propositoId.touched" class="invalid-feedback">
-              <div *ngIf="propositoId.errors?.['required']">El resultado es obligatorio.</div>
+                <option value="" disabled selected>Selecciona un propósito</option>
+                <option *ngFor="let option of purposeOptions" [value]="option.value">{{ option.label }}</option>
+              </select>
+              <div *ngIf="propositoId.invalid && propositoId.touched" class="invalid-feedback">
+                <div *ngIf="propositoId.errors?.['required']">El resultado es obligatorio.</div>
+              </div>
+  
             </div>
-            <div *ngIf="propositoId.valid && propositoId.touched" class="valid-feedback">
-              Selección válida.
-            </div>
-          </div>
-          
 
-          <div class="mb-3">
-            <label for="birthDay" class="form-label">Nacimiento</label>
-            <input type="date" class="form-control" id="birthDay" name="birthDay" [(ngModel)]="newAnimales.birthDay"
-              required [min]="minDate" [max]="maxDate">
+
+            <div class="mb-3 w-50">
+              <label for="birthDay" class="form-label">Nacimiento</label>
+              <input type="date" class="form-control" id="birthDay" name="birthDay" [(ngModel)]="newAnimales.birthDay"
+                required [min]="minDate" [max]="maxDate">
+            </div>
           </div>
-          <div class="mb-3">
-            <label for="file-upload" class="form-label">Subir una Foto</label>
+
+          <div class="d-flex gap-3">
+
+            <div class="mb-3 w-50">
+              <label for="file-upload" class="form-label">Subir una Foto</label>
             <input type="file" class="form-control" id="file-upload" name="file-upload" accept="image/*, .pdf">
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3 w-50">
             <label for="lotId" class="form-label">Lote</label>
             <select class="form-control" id="lotId" name="lotId" [(ngModel)]="newAnimales.lotId" #motherId="ngModel"
               required (change)="checkValidSelection(motherId)" [ngClass]="{
@@ -238,7 +247,7 @@
                 'is-valid': motherId.valid && motherId.touched
               }">
               <option value="" selected>Seleccione un lote</option>
-
+              
               <ng-container *ngIf="lote.length > 0">
                 <option *ngFor="let lot of lote" [value]="lot.id">{{ lot.name }}</option>
               </ng-container>
@@ -247,10 +256,9 @@
             <div *ngIf="motherId.invalid && motherId.touched" class="invalid-feedback">
               Seleccionar lote es obligatorio.
             </div>
-            <div *ngIf="motherId.valid && motherId.touched" class="valid-feedback">
-              Lote seleccionada correctamente.
-            </div>
+
           </div>
+        </div>
 
           <button type="submit" class="btn btn-success w-100" [disabled]="!animalForm.valid">Guardar</button>
         </form>

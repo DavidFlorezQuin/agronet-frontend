@@ -25,7 +25,7 @@ export class LoginComponent {
   onSubmit(form: NgForm) {
     this.serviceAuth.login(this.newAuth).subscribe({
       next: (res) => {
-        const id = res.id;
+        const id = res.data.id;
         localStorage.setItem('Usuario', id.toString());
         console.log(res);
         this.serviceAuth.setRoleMenu(id)
