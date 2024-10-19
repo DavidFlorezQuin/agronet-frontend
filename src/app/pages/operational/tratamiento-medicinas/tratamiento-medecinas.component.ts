@@ -72,7 +72,11 @@ export class TratamientoMedecinasComponent implements OnInit {
     this.listMedicinas();
 
   }
-
+  preventNegative(event: KeyboardEvent): void {
+    if (event.key === '-') {
+        event.preventDefault(); // Prevenir la entrada del símbolo de menos
+    }
+  }
   getTreatmentsMedicines(IdFarm:number): void {
     this.treatmentMedicineService.getAllTreatmentsMedicinesService(IdFarm).subscribe({
       next: (res: any) => {

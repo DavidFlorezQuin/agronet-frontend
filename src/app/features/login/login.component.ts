@@ -29,7 +29,7 @@ export class LoginComponent {
         localStorage.setItem('Usuario', id.toString());
         console.log(res);
         this.serviceAuth.setRoleMenu(id)
-        this.serviceAuth.setLoggedIn(true)
+        this.serviceAuth.setLoggedIn(true)  
         this.router.navigate(['/dashboard/'])
 
       },

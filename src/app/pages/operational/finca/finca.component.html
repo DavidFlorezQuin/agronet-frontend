@@ -105,9 +105,7 @@
               <div *ngIf="nameField.errors?.['minlength']">El nombre debe tener al menos 10 caracteres.</div>
               <div *ngIf="nameField.errors?.['maxlength']">El nombre no puede tener más de 29 caracteres.</div>
             </div>
-            <div *ngIf="nameField.valid && nameField.touched" class="valid-feedback">
-              Nombre válido.
-            </div>
+            
           </div>
 
           <div class="mb-3">
@@ -125,9 +123,7 @@
                 <div *ngIf="hectare.errors?.['min']">La dimención de la hectarea debe ser mayor o igual a 0.</div>
                 <div *ngIf="hectare.errors?.['pattern']">La dimención de la hectarea debe ser un número positivo.</div>
           </div>
-           <div *ngIf="hectare.valid && hectare.touched" class="valid-feedback">
-             Peso válido.
-            </div>
+           
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Descripción</label>
@@ -144,9 +140,7 @@
               <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
             </div>
 
-            <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
-              Descripción válida.
-            </div>
+           
           </div>
           <div class="mb-3">
                 <label for="cityId" class="form-label">Ciudad</label>

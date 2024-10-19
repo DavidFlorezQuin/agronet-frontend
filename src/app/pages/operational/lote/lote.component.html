@@ -92,12 +92,8 @@
               />
               <!-- Mensajes de error -->
            <div *ngIf="NombreDelAnimalDiagnostico.invalid && NombreDelAnimalDiagnostico.touched" class="invalid-feedback">
-             <div *ngIf="NombreDelAnimalDiagnostico.errors?.['required']">El nombre del animal diagnostico es obligatoria.</div>
-             <div *ngIf="NombreDelAnimalDiagnostico.errors?.['minlength']">El nombre del animal diagnostico debe tener al menos 4 caracteres.</div>
-           </div>
-
-           <div *ngIf="NombreDelAnimalDiagnostico.valid && NombreDelAnimalDiagnostico.touched" class="valid-feedback">
-             Descripción válida.
+             <div *ngIf="NombreDelAnimalDiagnostico.errors?.['required']">El nombre del lote diagnostico es obligatoria.</div>
+             <div *ngIf="NombreDelAnimalDiagnostico.errors?.['minlength']">El nombre del lote diagnostico debe tener al menos 4 caracteres.</div>
            </div>
             </div>
 
@@ -110,24 +106,18 @@
               
                <!-- Mensajes de error -->
               <div *ngIf="hectareas.invalid && hectareas.touched" class="invalid-feedback">
-                  <div *ngIf="hectareas.errors?.['required']">El peso es obligatorio.</div>
-                  <div *ngIf="hectareas.errors?.['min']">El peso debe ser mayor a 0.</div>
-                  <div *ngIf="hectareas.errors?.['max']" >El peso excede el limite de 1700</div>
-                  <div *ngIf="hectareas.errors?.['pattern']">El peso debe ser un número positivo.</div>
+                  <div *ngIf="hectareas.errors?.['required']">La hectárea es obligatorio.</div>
+                  <div *ngIf="hectareas.errors?.['min']">La hectárea debe ser mayor a 0.</div>
+                  <div *ngIf="hectareas.errors?.['max']" >La hectárea excede el limite de 1700</div>
+                  <div *ngIf="hectareas.errors?.['pattern']">La hectárea debe ser un número positivo.</div>
             </div>
-             <div *ngIf="hectareas.valid && hectareas.touched" class="valid-feedback">
-               Peso válido.
-              </div>
             </div>
             <div class="mb-3">
               <label for="farmId" class="form-label">Finca</label>
               <select class="form-control" id="farmId" name="farmId" [(ngModel)]="newLote.farmId" 
-              #semenId="ngModel" required
-                (change)="checkValidSelection(semenId)"
-                [ngClass]="{
-                  'is-invalid': semenId.invalid && semenId.touched,
-                  'is-valid': semenId.valid && semenId.touched
-                }">
+               required
+               
+                >
                 <option value="" selected>Seleccione una Finca</option>
                 <ng-container *ngIf="fincas.length > 0">
                   <option *ngFor="let finca of fincas" [value]="finca.id">{{ finca.name }}</option>
@@ -136,13 +126,7 @@
                 <option *ngIf="fincas.length === 0" disabled>No hay fincas disponibles</option>
              
               </select>
-              <!-- Mensajes de error -->
-              <div *ngIf="semenId.invalid && semenId.touched" class="invalid-feedback">
-                Seleccionar una finca es obligatorio.
-              </div>
-              <div *ngIf="semenId.valid && semenId.touched" class="valid-feedback">
-                Finca seleccionado correctamente.
-              </div>
+             
             </div>
             <button type="submit" class="btn btn-success w-100">{{ newLote.id ? 'Actualizar' : 'Agregar' }}</button>
           </form>

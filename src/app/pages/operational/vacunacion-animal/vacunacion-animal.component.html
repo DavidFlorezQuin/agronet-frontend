@@ -89,6 +89,8 @@
               <select class="form-control" id="vaccinesId" name="vaccinesId" [(ngModel)]="newVaccineAnimal.vaccinesId" required>
                 <option value="" disabled selected>Seleccione una vacuna</option>
                 <option *ngFor="let vacuna of vacunas" [value]="vacuna.id">{{ vacuna.name }}</option>
+                <option *ngIf="vacunas.length === 0" disabled>No hay vacunas disponibles</option>
+              
               </select>
             </div>
 
@@ -97,6 +99,7 @@
               <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newVaccineAnimal.animalId" required>
                 <option value="" disabled selected>Selecciona un animal</option>
                 <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
+                <option *ngIf="animales.length === 0" disabled>No hay animales disponibles</option>
               </select>
             </div>
 

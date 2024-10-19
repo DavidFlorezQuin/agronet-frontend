@@ -7,40 +7,114 @@
             <div class="mb-3">
             <label for="firstName" class="form-label">Nombre</label>
             <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="newPerson.firstName"
-                required>
+
+            required minlength="10" #NombreDelaPersona="ngModel" [ngClass]="{
+                    'is-invalid': NombreDelaPersona.invalid && NombreDelaPersona.touched,
+                    'is-valid': NombreDelaPersona.valid && NombreDelaPersona.touched
+                  }" />
+                 <!-- Mensajes de error -->
+                 <div *ngIf="NombreDelaPersona.invalid && NombreDelaPersona.touched" class="invalid-feedback">
+                   <div *ngIf="NombreDelaPersona.errors?.['required']">El nombre es obligatorio.</div>
+                   <div *ngIf="NombreDelaPersona.errors?.['minlength']">El nombre de la persona debe tener al menos 10 caracteres.
+                   </div>
+                 </div>
         </div>
 
         <div class="mb-3">
             <label for="lastName" class="form-label">Apellido</label>
-            <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="newPerson.lastName"
-                required>
+            <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="newPerson.lastName" required
+            minlength="10" #ApellidoDelaPersona="ngModel" [ngClass]="{
+                'is-invalid': ApellidoDelaPersona.invalid && ApellidoDelaPersona.touched,
+                'is-valid': ApellidoDelaPersona.valid && ApellidoDelaPersona.touched
+              }" />
+             <!-- Mensajes de error -->
+             <div *ngIf="ApellidoDelaPersona.invalid && ApellidoDelaPersona.touched" class="invalid-feedback">
+               <div *ngIf="ApellidoDelaPersona.errors?.['required']">El apellido es obligatorio.</div>
+               <div *ngIf="ApellidoDelaPersona.errors?.['minlength']">El apellido de la persona debe tener al menos 10 caracteres.
+               </div>
+            </div>
         </div>
+
         <div class="mb-3">
             <label for="email" class="form-label">Correo Electrónico</label>
-            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newPerson.email" required>
+            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newPerson.email" 
+            (blur)="validateEmail()"
+             required
+             #CorreoPersona="ngModel" [ngClass]="{
+                'is-invalid': CorreoPersona.invalid && CorreoPersona.touched,
+                'is-valid': CorreoPersona.valid && CorreoPersona.touched
+              }">
+              <!-- Mensajes de error -->
+              <div *ngIf="CorreoPersona.invalid && CorreoPersona.touched" class="invalid-feedback">
+                <div *ngIf="CorreoPersona.errors?.['required']">El correo es obligatorio.</div>
+                
+                </div>
+
+             <div *ngIf="emailError" class="text-danger">{{ emailError }}</div>
+
         </div>
         <div class="mb-3">
             <label for="phone" class="form-label">Teléfono</label>
-            <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="newPerson.phone" required>
+            <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="newPerson.phone" 
+            required
+            minlength="10" 
+            maxlength="10" 
+            pattern="[0-9]*" 
+            #TelefonoPersona="ngModel" 
+            [ngClass]="{
+              'is-invalid': TelefonoPersona.invalid && TelefonoPersona.touched,
+              'is-valid': TelefonoPersona.valid && TelefonoPersona.touched
+            }" />
+     <!-- Mensajes de error -->
+     <div *ngIf="TelefonoPersona.invalid && TelefonoPersona.touched" class="invalid-feedback">
+       <div *ngIf="TelefonoPersona.errors?.['required']">El teléfono es obligatorio.</div>
+       <div *ngIf="TelefonoPersona.errors?.['minlength']">El teléfono debe tener al menos 10 números.</div>
+       <div *ngIf="TelefonoPersona.errors?.['maxlength']">El teléfono no puede tener más de 10 números.</div>
+       <div *ngIf="TelefonoPersona.errors?.['pattern']">El teléfono debe contener solo números.</div>
+     </div>
         </div>
         
         <div class="mb-3">
             <label for="typeDocument" class="form-label">Tipo de documento</label>
-            <select class="form-control" id="typeDocument" name="typeDocument" [(ngModel)]="newPerson.typeDocument" required>
+            <select class="form-control" id="typeDocument" name="typeDocument" [(ngModel)]="newPerson.typeDocument" required
+            #Tipo_de_documento="ngModel" (change)="checkValidSelection(Tipo_de_documento)" [ngClass]="{
+                'is-invalid': Tipo_de_documento.invalid && Tipo_de_documento.touched,
+                'is-valid': Tipo_de_documento.valid && Tipo_de_documento.touched
+              }">
               <option value="" disabled selected>Seleccione un tipo documento</option>
-              <option *ngFor="let typeDocument of typeDocuments" [value]="typeDocument">{{ typeDocument }}</option>
+              <ng-container *ngIf="typeDocuments.length > 0">
+                <option *ngFor="let typeDocument of typeDocuments" [value]="typeDocument">{{ typeDocument }}</option>
+
+              </ng-container>
+
+              <option *ngIf="typeDocuments.length === 0" disabled>No hay documentos disponibles</option>
             </select>
+            <!-- Mensajes de error -->
+            <div *ngIf="Tipo_de_documento.invalid && Tipo_de_documento.touched" class="invalid-feedback">
+                Seleccionar un tipo documento es obligatorio.
+              </div>
           </div>
+
         <div class="mb-3">
             <label for="document" class="form-label">Documento</label>
             <input type="text" class="form-control" id="document" name="document" [(ngModel)]="newPerson.document"
-                required>
+            required  maxlength="10"  minlength="10" #DocumentoPersona="ngModel" [ngClass]="{
+                'is-invalid': DocumentoPersona.invalid && DocumentoPersona.touched,
+                'is-valid': DocumentoPersona.valid && DocumentoPersona.touched
+              }" />
+             <!-- Mensajes de error -->
+             <div *ngIf="DocumentoPersona.invalid && DocumentoPersona.touched" class="invalid-feedback">
+               <div *ngIf="DocumentoPersona.errors?.['required']">El documento es obligatorio.</div>
+               <div *ngIf="DocumentoPersona.errors?.['minlength']">El numero de documento de la persona debe tener al menos 10 numeros.
+               </div>
+             </div>
         </div>
         <div class="mb-3">
             <label for="birthday" class="form-label">Fecha de Nacimiento</label>
-            <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday"
-            required>
-        </div>
+            <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday" required >
+            <div *ngIf="ageError" class="text-danger">{{ ageError }}</div>
+          </div>
+          
         <button type="submit" id="btn-forms" class="btn w-100 mt-4" [disabled]="!personForm.valid">Registrarme</button>
     </form>
 </div>

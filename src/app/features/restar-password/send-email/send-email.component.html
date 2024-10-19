@@ -13,8 +13,20 @@
             placeholder="Correo electrónico" 
             class="form-control my-4" 
             id="email" 
+            (blur)="validateEmail()"
             required
-          >
+            #sendEmail="ngModel" [ngClass]="{
+               'is-invalid': (sendEmail.invalid && sendEmail.touched) || emailError,
+               'is-valid': sendEmail.valid && sendEmail.touched
+             }">
+             <!-- Mensajes de error -->
+             <div *ngIf="sendEmail.invalid && sendEmail.touched" class="invalid-feedback">
+               <div *ngIf="sendEmail.errors?.['required']">El correo es obligatorio.</div>
+               
+               </div>
+
+            <div *ngIf="emailError" class="text-danger">{{ emailError }}</div>
+
           <button type="submit" class="btn btn-form w-100 mb-5" id="btn-forms">Enviar</button>
         </div>
         <div class="footer-card">

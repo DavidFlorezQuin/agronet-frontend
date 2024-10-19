@@ -102,7 +102,7 @@
                       'is-invalid': resultadoId.invalid && resultadoId.touched,
                       'is-valid': resultadoId.valid && resultadoId.touched
                     }">
-              <option value="">Selecciona un respuesta</option>
+              <option value="" disabled>Selecciona un respuesta</option>
               <option value="1">Efectiva</option>
               <option value="0">Negativa</option>
             </select>
@@ -127,28 +127,24 @@
               <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
               <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
             </div>
-            <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
-              Descripción válida.
-            </div>
+            
           </div>
           
 
           <div class="mb-3">
-            <label for="BirthWeight" class="form-label">Peso al Nacer</label>
+            <label for="BirthWeight" class="form-label">Peso al Nacer (Kg)</label>
             <input type="number" id="BirthWeight" class="form-control" [(ngModel)]="newNacimiento.birthWeight"
-              name="BirthWeight" required min="1" pattern="^[1-9]\d*$*-" #birthWeightField="ngModel"
+              name="BirthWeight" required min="1" max="100" pattern="^[1-9]\d*$*-" #birthWeightField="ngModel"
               [ngClass]="{'is-invalid': birthWeightField.invalid && birthWeightField.touched, 'is-valid':
-               birthWeightField.valid && birthWeightField.touched}"  (keypress)="preventNegative($event)" />
+               birthWeightField.valid && birthWeightField.touched}"  (keypress)="preventNegative($event)"  />
               
                <!-- Mensajes de error -->
               <div *ngIf="birthWeightField.invalid && birthWeightField.touched" class="invalid-feedback">
                   <div *ngIf="birthWeightField.errors?.['required']">El peso es obligatorio.</div>
                   <div *ngIf="birthWeightField.errors?.['min']">El peso debe ser mayor o igual a 0.</div>
+                  <div *ngIf="birthWeightField.errors?.['max']">El peso no debe superar los 100 kg.</div>
                   <div *ngIf="birthWeightField.errors?.['pattern']">El peso debe ser un número positivo.</div>
             </div>
-             <div *ngIf="birthWeightField.valid && birthWeightField.touched" class="valid-feedback">
-               Peso válido.
-              </div>
           </div>
 
           <div class="mb-3">

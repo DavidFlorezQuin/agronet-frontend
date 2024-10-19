@@ -95,10 +95,6 @@
            <div *ngIf="NombreDelInventario.errors?.['required']">El nombre del animal diagnostico es obligatoria.</div>
            <div *ngIf="NombreDelInventario.errors?.['minlength']">El nombre del animal diagnostico debe tener al menos 4 caracteres.</div>
          </div>
-
-         <div *ngIf="NombreDelInventario.valid && NombreDelInventario.touched" class="valid-feedback">
-           Descripción válida.
-         </div>
           </div>
 
           <div class="mb-3">
@@ -116,10 +112,6 @@
             <div *ngIf="inventario.invalid && inventario.touched" class="invalid-feedback">
               <div *ngIf="inventario.errors?.['required']">La descripción es obligatoria.</div>
               <div *ngIf="inventario.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
-            </div>
-
-            <div *ngIf="inventario.valid && inventario.touched" class="valid-feedback">
-              Descripción válida.
             </div>
           </div>
 
@@ -143,9 +135,6 @@
             <!-- Mensajes de error -->
             <div *ngIf="semenId.invalid && semenId.touched" class="invalid-feedback">
               Seleccionar una finca es obligatorio.
-            </div>
-            <div *ngIf="semenId.valid && semenId.touched" class="valid-feedback">
-              Finca seleccionado correctamente.
             </div>
           </div>
 

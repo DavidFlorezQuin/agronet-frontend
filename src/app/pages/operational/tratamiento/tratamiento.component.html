@@ -105,31 +105,55 @@
               [(ngModel)]="newTratamiento.animalDiagnosticsId" required>
               <option value="" disabled selected>Selecciona un animal</option>
               <option *ngFor="let diagnostic of diagnostics" [value]="diagnostic.id">{{ diagnostic.name }}</option>
+              <option *ngIf="diagnostics.length === 0" disabled>No hay animales disponibles</option>
             </select>
           </div>
 
           <div class="mb-3">
             <label for="name" class="form-label">Tratamiento</label>
-            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newTratamiento.name" required>
+            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="newTratamiento.name" required minlength="8" #tratamientofiel="ngModel"
+            [ngClass]="{
+              'is-invalid': tratamientofiel.invalid && tratamientofiel.touched,
+              'is-valid': tratamientofiel.valid && tratamientofiel.touched
+            }">
+          
+          <!-- Mensajes de error -->
+          <div *ngIf="tratamientofiel.invalid && tratamientofiel.touched" class="invalid-feedback">
+            <div *ngIf="tratamientofiel.errors?.['required']">El tratamiento es obligatoria.</div>
+            <div *ngIf="tratamientofiel.errors?.['minlength']">El tratamiento debe tener al menos 8 caracteres.</div>
+          </div>
+
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Descripción</label>
             <textarea type="text" class="form-control" id="description" name="description"
-              [(ngModel)]="newTratamiento.description" required></textarea>
+              [(ngModel)]="newTratamiento.description" required minlength="10" #descriptionField="ngModel"
+              [ngClass]="{
+                'is-invalid': descriptionField.invalid && descriptionField.touched,
+                'is-valid': descriptionField.valid && descriptionField.touched
+              }">
+            </textarea>
+            <!-- Mensajes de error -->
+            <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+              <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+            </div>
           </div>
           <div class="d-flex justify-content-around mb-3">
+
 
             <div class="mb-3">
               <label for="startDate" class="form-label">Fecha inicio</label>
               <input type="date" class="form-control" id="startDate" name="startDate"
-                [(ngModel)]="newTratamiento.startDate" required>
+                [(ngModel)]="newTratamiento.startDate" required [min]="minDate">
             </div>
             <div class="mb-3">
               <label for="finishiedDate" class="form-label">Fecha Fin</label>
               <input type="date" class="form-control" id="finishiedDate" name="finishiedDate"
-                [(ngModel)]="newTratamiento.finishiedDate" required>
+                [(ngModel)]="newTratamiento.finishiedDate" required [min]="minDate">
             </div>
           </div>
+
           <div class="mb-3 d-flex gap-3">
             <label for="state" class="form-label">Estado del tratamiento </label>
             <div class="form-check form-switch">

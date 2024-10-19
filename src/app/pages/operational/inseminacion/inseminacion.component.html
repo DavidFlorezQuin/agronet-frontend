@@ -114,14 +114,12 @@
               <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
             </div>
 
-            <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
-              Descripción válida.
-            </div>
+           
           </div>
           <div class="mb-3">
             <label for="semenId" class="form-label">Padre</label>
             <select class="form-control" id="semenId" name="semenId" [(ngModel)]="newInsemination.semenId"
-              #semenId="ngModel">
+              required>
               <option value="">Seleccione un animal</option>
               <!-- <option value="">Semental no propiedad de la finca</option> -->
               <ng-container *ngIf="bulls.length > 0">
@@ -142,15 +140,7 @@
               </ng-container>
               <option *ngIf="cows.length === 0" disabled>No hay animales disponibles</option>
             </select>
-            
-          
-            <!-- Mensajes de error -->
-            <div *ngIf="motherId.invalid && motherId.touched" class="invalid-feedback">
-              Seleccionar una madre es obligatorio.
-            </div>
-            <div *ngIf="motherId.valid && motherId.touched" class="valid-feedback">
-              Madre seleccionada correctamente.
-            </div>
+           
           </div>
           
           
@@ -166,9 +156,7 @@
               <option value="EXITOSO">Exitoso</option>
               <option value="PENDIENTE">Pendiente</option>
             </select>
-            <div *ngIf="inseminationType.invalid && inseminationType.touched" class="text-danger">
-              El resultado es obligatorio.
-            </div>
+            
           </div>
 
           <div class="mb-5">

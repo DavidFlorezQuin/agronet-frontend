@@ -38,7 +38,7 @@ import { AnimalDiagnostics } from '../animal-diagnostico/AnimalDiagnostics.modul
   templateUrl: './tratamiento.component.html'
 })
 export class TratamientoComponent implements OnInit {
-
+  minDate: string = new Date().toISOString().split('T')[0];
   IdFarm: number | null = null;
   diagnostics: AnimalDiagnostics[] = [];
   tratamiento: Treatments[] = [];

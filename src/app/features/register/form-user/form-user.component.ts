@@ -25,6 +25,7 @@ export class FormUserComponent implements OnInit {
     username: '',
     personId: 0,
   }
+  passwordError: string = ''; // Mensaje de error de contraseña
 
   constructor(private router:Router, private route: ActivatedRoute, private userService: UserService, private alertService: AlertService) { }
 
@@ -34,6 +35,17 @@ export class FormUserComponent implements OnInit {
     });
   }
 
+  validatePassword(): void {
+    const password = this.newUser.password;
+    // Expresión regular para verificar al menos un número y un símbolo @ ! / &
+    const regex = /^(?=.*[0-9])(?=.*[@!/&]).{3,15}$/;
+
+    if (!regex.test(password)) {
+      this.passwordError = 'La contraseña debe contener al menos un número y uno de los siguientes símbolos: @ ! / &';
+    } else {
+      this.passwordError = '';
+    }
+  }
   onSubmit(form: NgForm): void {
     if (this.personId !== null) { // Asegúrate de que PersonId no es null
       this.newUser.personId = this.personId;

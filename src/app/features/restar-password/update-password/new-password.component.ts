@@ -19,13 +19,25 @@ import { CommonModule } from '@angular/common';
 export class NewPasswordComponent implements OnInit {
   send: NewSend[] = [];
   newSend: NewSend = { newPassword: '', token: '' }
-
+  passwordError: string = '';
   constructor(private router: Router, private route: ActivatedRoute, private newSendService: NewSendService, private alertService: AlertService){}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.newSend.token = params['token'] || ''; // Si no hay token en la URL, asigna una cadena vacía
     });
+  }
+  
+  validatePassword(): void {
+    const password = this.newSend.newPassword;
+    // Expresión regular para verificar al menos un número y un símbolo @ ! / &
+    const regex = /^(?=.*[0-9])(?=.*[@!/&]).{3,15}$/;
+
+    if (!regex.test(password)) {
+      this.passwordError = 'La contraseña debe contener al menos un número y uno de los siguientes símbolos: @ ! / &';
+    } else {
+      this.passwordError = '';
+    }
   }
   onSubmit(form: NgForm): void {
     if (form.valid) {

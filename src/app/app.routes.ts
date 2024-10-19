@@ -48,7 +48,7 @@ import { FormUserComponent } from './features/register/form-user/form-user.compo
 export const routes: Routes = [
     {
         path: 'login',
-        component: LoginComponent,
+        component: NewPasswordComponent,
     },
     {   
         path: 'reset-email',

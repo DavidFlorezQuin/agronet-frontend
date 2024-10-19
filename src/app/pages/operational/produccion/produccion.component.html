@@ -140,9 +140,7 @@
             <div *ngIf="medidaId.invalid && medidaId.touched" class="invalid-feedback">
               Seleccionar la medida es obligatorio.
             </div>
-            <div *ngIf="medidaId.valid && medidaId.touched" class="valid-feedback">
-              Medida seleccionada correctamente.
-            </div>
+           
             </div>
 
             <div class="mb-3">
@@ -160,9 +158,7 @@
               <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
             </div>
 
-            <div *ngIf="descriptionField.valid && descriptionField.touched" class="valid-feedback">
-              Descripción válida.
-            </div>
+           
             </div>
 
             <div class="mb-3">
@@ -180,9 +176,7 @@
                   <div *ngIf="cantidadTotal.errors?.['min']">El peso debe ser mayor a 0.</div>
                   <div *ngIf="cantidadTotal.errors?.['pattern']">El peso debe ser un número positivo.</div>
             </div>
-             <div *ngIf="cantidadTotal.valid && cantidadTotal.touched" class="valid-feedback">
-               Peso válido.
-              </div>
+             
             </div>
             
             <div class="mb-3">
@@ -219,9 +213,7 @@
             <div *ngIf="semenId.invalid && semenId.touched" class="invalid-feedback">
               Seleccionar un animal es obligatorio.
             </div>
-            <div *ngIf="semenId.valid && semenId.touched" class="valid-feedback">
-              Animal seleccionado correctamente.
-            </div>
+           
             </div>
             
             <button type="submit" class="btn btn-success w-100" [disabled]="!productForm.valid">Enviar</button>

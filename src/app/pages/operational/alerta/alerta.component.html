@@ -123,11 +123,17 @@
                 'is-invalid': NombreDeAlertas.invalid && NombreDeAlertas.touched,
                 'is-valid': NombreDeAlertas.valid && NombreDeAlertas.touched
               }">
+              <div *ngIf="NombreDeAlertas.invalid && NombreDeAlertas.touched" class="invalid-feedback">
+                <div *ngIf="NombreDeAlertas.errors?.['required']">El nombre de la alerta es obligatorio.</div>
+                <div *ngIf="NombreDeAlertas.errors?.['minlength']">Debe tener al menos 4 caracteres.</div>              
+              </div>
           </div>
+
                     <div class="mb-3">
             <label for="Date" class="form-label">Fecha <span style="color: red;">*</span></label>
             <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newAlerta.date" required [min]="minDate">
           </div>
+
 
           <div class="mb-3">
             <label for="description" class="form-label">Descripción</label>
@@ -137,8 +143,8 @@
                 'is-valid': descriptionField.valid && descriptionField.touched
               }">
             <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
-              <div *ngIf="NombreDeAlertas.errors?.['required']">El nombre de la alerta es obligatorio.</div>
-              <div *ngIf="NombreDeAlertas.errors?.['minlength']">Debe tener al menos 4 caracteres.</div>              
+              <div *ngIf="descriptionField.errors?.['required']">La descripción de la alerta es obligatorio.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">Debe tener al menos 4 caracteres.</div>              
             </div>
           </div>
 
