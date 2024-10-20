@@ -19,7 +19,8 @@ import { FormsModule } from '@angular/forms';
 import { CategoriaAlerta } from './categoria-alerta.module';
 import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-categoria-alerta',
   standalone: true,
@@ -47,7 +48,7 @@ export class CategoriaAlertaComponent implements OnInit {
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private alertService: AlertService, private CategoriaAlertaaService: CategoriaAlertaaService) { }
   ngOnInit(): void {
 
@@ -92,6 +93,11 @@ export class CategoriaAlertaComponent implements OnInit {
       }
     });
   }
+  // Función para cerrar el modal
+  closeModal(): void {
+    const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+    modal.hide();  // Cerrar el modal
+  }
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newCategoryaAlerta.id > 0) {
@@ -101,7 +107,7 @@ export class CategoriaAlertaComponent implements OnInit {
             form.reset();
             this.newCategoryaAlerta = { id: 0, name: '', Description: '', Color: '' };
             this.listCategoriaAlerta();
-
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -113,6 +119,7 @@ export class CategoriaAlertaComponent implements OnInit {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.listCategoriaAlerta();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

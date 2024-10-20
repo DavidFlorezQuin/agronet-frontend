@@ -20,7 +20,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
 import { CategoriaSuplemento } from './categoria-suplemento.module';
 import { CategoriaSuplementoService } from './categoria-suplemento.service';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-categoria-suplemento',
   standalone: true,
@@ -53,7 +54,7 @@ export class CategoriaSuplementoComponent implements OnInit {
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private alertService: AlertService, private categoriaSuplementoService: CategoriaSuplementoService) { }
   ngOnInit(): void {
 
@@ -96,6 +97,11 @@ export class CategoriaSuplementoComponent implements OnInit {
       }
     });
   }
+   // Función para cerrar el modal
+   closeModal(): void {
+    const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+    modal.hide();  // Cerrar el modal
+  }
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newCategorySuplemento.id > 0) {
@@ -109,7 +115,7 @@ export class CategoriaSuplementoComponent implements OnInit {
               Description: ''
             };
             this.listCategoriaMedicina();
-
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -121,6 +127,7 @@ export class CategoriaSuplementoComponent implements OnInit {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.listCategoriaMedicina();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

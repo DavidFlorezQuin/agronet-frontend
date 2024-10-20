@@ -19,7 +19,8 @@ import { Suplemento } from './suplementos.module';
 import { SuplementoService } from './suplementos.service';
 import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-suplementos',
   standalone: true,
@@ -43,6 +44,7 @@ export class SuplementosComponent implements OnInit{
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private SuplementoService: SuplementoService, private alertaService: AlertService) { }
 
   ngOnInit(): void {
@@ -96,7 +98,11 @@ export class SuplementosComponent implements OnInit{
     });
 
   }
-
+ // Función para cerrar el modal
+ closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newSuplemento.id > 0) {
@@ -105,6 +111,7 @@ export class SuplementosComponent implements OnInit{
             this.alertaService.SuccessAlert('Actualizado correctamente');
             form.reset();
             this.ListAnimal();
+            this.closeModal();
           },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar');
@@ -116,6 +123,7 @@ export class SuplementosComponent implements OnInit{
             this.alertaService.SuccessAlert('Creado correctamente');
             form.reset();
             this.ListAnimal();
+            this.closeModal();
           },
           error: () => {
             this.alertaService.ErrorAlert('Error al crear');

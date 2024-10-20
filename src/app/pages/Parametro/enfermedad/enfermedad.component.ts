@@ -19,7 +19,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CategoryDisiesesService } from '../categoria-enfermedad/categoria-enfermedad.service';  // Importar servicio de categorías
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-enfermedad',
   standalone: true,
@@ -44,7 +45,7 @@ export class EnfermedadComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(
     private diseasesService: DiseasesService,
     private alertService: AlertService,
@@ -90,7 +91,11 @@ export class EnfermedadComponent implements OnInit {
       }
     });
   }
-
+// Función para cerrar el modal
+closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newDisease.id > 0) {
@@ -102,6 +107,7 @@ export class EnfermedadComponent implements OnInit {
               form.resetForm();
               this.newDisease = { id: 0, name: '', description: '', categoryDisiesesId: 0, categoryDisieses: 0 };
               this.listDiseases();
+              this.closeModal();
             },
             error: () => {
               this.alertService.ErrorAlert('Error al actualizar');
@@ -114,6 +120,7 @@ export class EnfermedadComponent implements OnInit {
             form.resetForm();
             this.newDisease = { id: 0, name: '', description: '', categoryDisiesesId: 0, categoryDisieses: 0 };
             this.listDiseases();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

@@ -19,7 +19,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-categoria-enfermedad',
   standalone: true,
@@ -46,7 +47,7 @@ export class CategoriaEnfermedadComponent implements OnInit{
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(
     private categoryDisiesesService: CategoryDisiesesService,
     private alertService: AlertService
@@ -91,7 +92,11 @@ export class CategoriaEnfermedadComponent implements OnInit{
       }
     });
   }
-
+ // Función para cerrar el modal
+ closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newCategory.id > 0) {
@@ -103,6 +108,7 @@ export class CategoriaEnfermedadComponent implements OnInit{
               form.resetForm();
               this.newCategory = { id: 0, name: '', description: '' };
               this.listCategoryDisieses();
+              this.closeModal();
             },
             error: () => {
               this.alertService.ErrorAlert('Error al actualizar');
@@ -115,6 +121,7 @@ export class CategoriaEnfermedadComponent implements OnInit{
             form.resetForm();
             this.newCategory = { id: 0, name: '', description: '' };
             this.listCategoryDisieses();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

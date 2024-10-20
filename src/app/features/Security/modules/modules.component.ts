@@ -21,7 +21,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-modules',
   standalone: true,
@@ -47,7 +48,7 @@ export class ModulesComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private moduloService: ModuleService, private alertService: AlertService) {}
 
   ngOnInit(): void {
@@ -142,7 +143,11 @@ export class ModulesComponent implements OnInit {
       }
     });
   }
-
+// Función para cerrar el modal
+closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newModulo.id > 0) {
@@ -152,6 +157,7 @@ export class ModulesComponent implements OnInit {
             form.reset();
             this.newModulo = { id: 0, name: '', description: '', orders: 0 };
             this.listModulos();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -163,6 +169,7 @@ export class ModulesComponent implements OnInit {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.listModulos();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

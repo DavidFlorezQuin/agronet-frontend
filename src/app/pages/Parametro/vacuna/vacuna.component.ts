@@ -18,9 +18,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-
-
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-vacuna',
   standalone: true,
@@ -44,7 +43,7 @@ export class VacunaComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(
     private vaccinesService: VaccinesService,
     private alertService: AlertService
@@ -89,7 +88,11 @@ export class VacunaComponent implements OnInit {
       }
     });
   }
-
+// Función para cerrar el modal
+closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newVaccine.id > 0) {
@@ -101,6 +104,7 @@ export class VacunaComponent implements OnInit {
               form.resetForm();
               this.newVaccine = { id: 0, name: '', description: '', dosesRequired: 0, refuerzoPeriod: 0, contraindications: '', typeVaccine: '' };
               this.listVaccines();
+              this.closeModal();
             },
             error: () => {
               this.alertService.ErrorAlert('Error al actualizar');
@@ -113,6 +117,7 @@ export class VacunaComponent implements OnInit {
             form.resetForm();
             this.newVaccine = { id: 0, name: '', description: '', dosesRequired: 0, refuerzoPeriod: 0, contraindications: '', typeVaccine: '' };
             this.listVaccines();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

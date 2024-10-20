@@ -21,7 +21,8 @@ import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-user-role',
   standalone: true,
@@ -50,7 +51,7 @@ export class UserRoleComponent implements OnInit {
   currentUser: { id: number, name: string } = { id: 0, name: '' };
 
   newRole: Role = { id: 0,state:true, name: '', description: '' };
-
+  @ViewChild('Modal') Modal!: ElementRef;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(
@@ -107,7 +108,13 @@ export class UserRoleComponent implements OnInit {
   onDelete(id:number):void{
 
   }
+   // Función para cerrar el modal
+   closeModal(): void {
+    const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+    modal.hide();  // Cerrar el modal
+  }
   onSubmit(form: NgForm): void {
+    this.closeModal();
   }
 
 

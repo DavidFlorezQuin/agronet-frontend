@@ -21,7 +21,8 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatButtonModule } from '@angular/material/button';
 import { Medicina } from './medicina.component.module';
 import { CategoryMedicinas } from '../categoria-medicina/categoria-medicina.module';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-medicina',
   standalone: true,
@@ -45,7 +46,7 @@ export class MedicinaComponent implements OnInit {
   NewMedicinas: Medicina = { id: 0, name: '', Administration: '', CategoryMedicinesId: 0 }
   displayedColumns: string[] = ['id', 'Name', 'Administration', 'CategoryMedicinasId', 'acciones'];
   dataSource!: MatTableDataSource<Medicina>;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   constructor(private alertService: AlertService, private medicinaService: MedicinaService) { }
@@ -99,7 +100,11 @@ export class MedicinaComponent implements OnInit {
   }
    * @param role
    */
-
+ // Función para cerrar el modal
+ closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.NewMedicinas.id > 0) {
@@ -109,7 +114,7 @@ export class MedicinaComponent implements OnInit {
             form.reset();
             this.NewMedicinas = { id: 0, name: '', Administration: '', CategoryMedicinesId: 0 };
             this.listMedicinas();
-
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -121,6 +126,7 @@ export class MedicinaComponent implements OnInit {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.listMedicinas();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

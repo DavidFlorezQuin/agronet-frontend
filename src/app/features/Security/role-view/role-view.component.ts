@@ -18,7 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Modulo } from '../modules/modulo.module';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-role-view',
   standalone: true,
@@ -43,6 +44,7 @@ export class RoleViewComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('Modal') Modal!: ElementRef;
   modulos!: Modulo[];
   currentRole: { id: number, name: string } = { id: 0, name: '' };
 
@@ -104,6 +106,11 @@ export class RoleViewComponent implements OnInit {
       }
     });
   }
+// Función para cerrar el modal
+closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -115,6 +122,7 @@ export class RoleViewComponent implements OnInit {
             form.reset()
             this.newRoleModule = { id: 0, roleId: 0, viewId: 0,}
             this.listViewRole();
+            this.closeModal();
           },
           error: (err) => {
             this.serviceAlert.ErrorAlert('Algo salió mal')
@@ -126,6 +134,7 @@ export class RoleViewComponent implements OnInit {
             this.serviceAlert.SuccessAlert('Guardado ')
             form.reset();
             this.listViewRole();
+            this.closeModal();
           },
           error: (err) => {
             this.serviceAlert.ErrorAlert('Algo salió mal')
