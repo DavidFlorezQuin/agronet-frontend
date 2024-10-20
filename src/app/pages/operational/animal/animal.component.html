@@ -248,20 +248,21 @@
 
           <div class="mb-3 w-50">
             <label for="lotId" class="form-label">Lote</label>
-            <select class="form-control" id="lotId" name="lotId" [(ngModel)]="newAnimales.lotId" 
-              required >
+            <select class="form-control" id="lotId" name="lotId" [(ngModel)]="newAnimales.lotId" #motherId="ngModel"
+              required (change)="checkValidSelection(motherId)" [ngClass]="{
+                'is-invalid': motherId.invalid && motherId.touched,
+                'is-valid': motherId.valid && motherId.touched
+              }">
               <option value="" selected>Seleccione un lote</option>
               
               <ng-container *ngIf="lote.length > 0">
                 <option *ngFor="let lot of lote" [value]="lot.id">{{ lot.name }}</option>
               </ng-container>
-              <option *ngIf="lote.length === 0" disabled>No hay Lotes disponibles</option>
             </select>
             <!-- Mensajes de error -->
             <div *ngIf="motherId.invalid && motherId.touched" class="invalid-feedback">
               Seleccionar lote es obligatorio.
             </div>
-
           </div>
         </div>
 
