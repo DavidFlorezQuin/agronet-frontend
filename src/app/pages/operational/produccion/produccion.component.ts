@@ -127,9 +127,7 @@ export class ProduccionComponent implements OnInit {
         this.alertService.ErrorAlert('Error al obtener los animales');
       }
     });
-  }
-
-  
+  }  
 
   listProductions(farmId: number): void {
     this.productionsService.getProductions(farmId).subscribe({
