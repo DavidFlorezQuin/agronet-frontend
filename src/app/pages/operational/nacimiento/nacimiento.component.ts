@@ -21,7 +21,8 @@ import { InseminationService } from '../inseminacion/inseminacion.service';
 import { Insemination } from '../inseminacion/Insemination.module';
 import { Animal } from '../animal/animal.module';
 import Swal from 'sweetalert2';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-nacimiento',
   standalone: true,
@@ -61,7 +62,7 @@ export class NacimientoComponent implements OnInit {
   dataSource: MatTableDataSource<Nacimiento> = new MatTableDataSource<Nacimiento>();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private nacimientoService: NacimetoService, private alertaService: AlertService, private inseminationService: InseminationService) { }
 
   ngOnInit(): void {
@@ -174,6 +175,11 @@ export class NacimientoComponent implements OnInit {
     }
 
   }
+   // Función para cerrar el modal
+   closeModal(): void {
+    const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+    modal.hide();  // Cerrar el modal
+  }
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newNacimiento.id > 0) {
@@ -192,6 +198,7 @@ export class NacimientoComponent implements OnInit {
             }
             if (this.IdFarm !== null) {
               this.ListNacimiento(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
@@ -220,6 +227,7 @@ export class NacimientoComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.ListNacimiento(this.IdFarm);
+              this.closeModal();
             }          },
           error: (err) => {
             console.error(err); 

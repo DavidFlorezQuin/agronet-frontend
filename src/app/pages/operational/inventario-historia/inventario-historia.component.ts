@@ -26,6 +26,8 @@ import { User } from '../../../features/Security/users/User.module';
 import { InventarioSuplemento } from '../inventario-suplemento/inventario-suplemento.module';
 import { UserService } from '../../../features/Security/users/user.service';
 import { InventarioSuplementoService } from '../inventario-suplemento/inventario-suplemento.service';
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-inventario-historia',
   standalone: true,
@@ -63,6 +65,7 @@ User:User[] = [];
 InventorySupplies:InventarioSuplemento[] = [];
 @ViewChild(MatSort) sort!: MatSort;
 @ViewChild(MatPaginator) paginator!: MatPaginator;
+@ViewChild('Modal') Modal!: ElementRef;
 dataSource!: MatTableDataSource<InventarioHistoria>;
 constructor(private InventarioHistoriaService: InventarioHistoriaService, private alertService: AlertService,
   private userService: UserService, private inventarioSuplementoService: InventarioSuplementoService
@@ -112,7 +115,11 @@ listInventarioSuplemento(): void {
     }
   });
 }
-
+ // Función para cerrar el modal
+ closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
 onSubmit(form: NgForm): void {
   if (form.valid) {
     if (this.newInventarioHistorias.id > 0) {
@@ -128,6 +135,7 @@ onSubmit(form: NgForm): void {
             UserId: 0, 
             InventorySuppliesId: 0, };
           this.ListinventarioHistoria();
+          this.closeModal();
 
         },
         error: () => {
@@ -140,6 +148,7 @@ onSubmit(form: NgForm): void {
           this.alertService.SuccessAlert('Creado correctamente');
           form.reset();
           this.ListinventarioHistoria();
+          this.closeModal();
         },
         error: () => {
           this.alertService.ErrorAlert('Error al crear');

@@ -15,11 +15,11 @@ import { MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
-import { ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { ViewChild, ElementRef } from '@angular/core';
 
 import { MatButtonModule } from '@angular/material/button';
-
+declare var bootstrap: any;
 @Component({
   selector: 'app-person',
   standalone: true,
@@ -49,6 +49,8 @@ export class PersonComponent implements OnInit {
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('personModal') personModal!: ElementRef;
+
   constructor(private personService: PersonService, private alertService: AlertService) { }
 
 
@@ -58,7 +60,12 @@ export class PersonComponent implements OnInit {
   }
 
 
-
+   // Función para cerrar el modal
+   closeModal(): void {
+    const modal = new bootstrap.Modal(this.personModal.nativeElement);  // Usar la referencia del modal
+    modal.hide();  // Cerrar el modal
+  }
+  
   listPersons(): void {
     this.personService.getPerson().subscribe({
       next: (res: Person[]) => {
@@ -114,7 +121,7 @@ export class PersonComponent implements OnInit {
               firstName: '', lastName: '', email: '', gender: '', document: '', typeDocument: '', direction: '', phone: '', birthday: ''
             };
             this.listPersons();
-
+            this.closeModal(); 
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -126,6 +133,7 @@ export class PersonComponent implements OnInit {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.listPersons();
+            this.closeModal(); 
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

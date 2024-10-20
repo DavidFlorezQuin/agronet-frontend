@@ -20,7 +20,8 @@ import { AnimalService } from '../animal/animal.service';
 import jsPDF from 'jspdf';
 import { EnumService } from '../../../shared/components/enum.service';
 import Swal from 'sweetalert2';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-produccion',
   standalone: true,
@@ -81,6 +82,7 @@ export class ProduccionComponent implements OnInit {
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private productionsService: ProductionsService, private animalService: AnimalService, private alertService: AlertService, private enumController: EnumService) { }
 
   ngOnInit(): void {
@@ -220,7 +222,11 @@ export class ProduccionComponent implements OnInit {
     this.newProduction.stock = quantityTotal; // Actualiza stock con el valor de cantidad total
   }
   
-
+ // Función para cerrar el modal
+ closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newProduction.id > 0) {
@@ -254,6 +260,7 @@ export class ProduccionComponent implements OnInit {
             };
             if (this.IdFarm !== null) {
               this.listProductions(this.IdFarm);
+              this.closeModal();
             }
           },
           error: () => {
@@ -268,6 +275,7 @@ export class ProduccionComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listProductions(this.IdFarm);
+              this.closeModal();
             }
           },
           error: (err) => {

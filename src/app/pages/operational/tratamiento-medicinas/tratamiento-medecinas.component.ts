@@ -22,7 +22,8 @@ import { Treatments } from '../tratamiento/tratamiento.module';
 import { TreatmentsService } from '../tratamiento/tratamiento.service';
 import { Medicina } from '../../Parametro/medicina/medicina.component.module';
 import { MedicinaService } from '../../Parametro/medicina/medicina.service';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-tratamiento-medecinas',
   standalone: true,
@@ -49,7 +50,7 @@ export class TratamientoMedecinasComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private treatmentMedicineService: TreatmentsMedicinesService, private alertService: AlertService, private treatmentService: TreatmentsService, private medicinesService:MedicinaService) { }
 
   ngOnInit(): void {
@@ -131,7 +132,11 @@ export class TratamientoMedecinasComponent implements OnInit {
       }
     });
   }
-
+// Función para cerrar el modal
+closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newTreatmentMedicine.id > 0) {
@@ -140,6 +145,7 @@ export class TratamientoMedecinasComponent implements OnInit {
             this.alertService.SuccessAlert('Actualizado correctamente');
             if (this.IdFarm !== null) {
               this.getTreatmentsMedicines(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
@@ -155,6 +161,7 @@ export class TratamientoMedecinasComponent implements OnInit {
             this.alertService.SuccessAlert('Creado correctamente');
             if (this.IdFarm !== null) {
               this.getTreatmentsMedicines(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }

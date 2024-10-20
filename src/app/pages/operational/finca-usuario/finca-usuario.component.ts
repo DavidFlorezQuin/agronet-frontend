@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -21,6 +21,8 @@ import { DataTablesModule } from 'angular-datatables';
 import { MatButtonModule } from '@angular/material/button';
 import { Finca } from '../finca/finca.module';
 import { FincaService } from '../finca/finca.service';
+import { ViewChild, ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-finca-usuario',
   standalone: true,
@@ -51,7 +53,7 @@ export class FincaUsuarioComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private fincaService: FincaService,private farmUserService: FarmUserService,private userService:UserService, private alertService: AlertService) {}
 
   ngOnInit(): void {
@@ -133,7 +135,11 @@ export class FincaUsuarioComponent implements OnInit {
       modal.style.display = 'none'; // Cerrar el modal
     }
   }
-  
+   // Función para cerrar el modal
+   closeModal(): void {
+    const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+    modal.hide();  // Cerrar el modal
+  }
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newFarmUser.id > 0) {
@@ -143,6 +149,7 @@ export class FincaUsuarioComponent implements OnInit {
             form.resetForm();
             this.newFarmUser = { id: 0, FarmsId: 0, UsersId: 0 };
             this.listFarmUsers();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -154,6 +161,7 @@ export class FincaUsuarioComponent implements OnInit {
             this.alertService.SuccessAlert('Creado correctamente');
             form.resetForm();
             this.listFarmUsers();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

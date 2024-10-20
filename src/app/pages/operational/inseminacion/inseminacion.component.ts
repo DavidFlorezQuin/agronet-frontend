@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -19,7 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Animal } from '../animal/animal.module';
 import { AnimalService } from '../animal/animal.service';
 import Swal from 'sweetalert2';
-
+import { ViewChild, ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-insemination',
   standalone: true,
@@ -48,6 +49,7 @@ export class InseminationComponent implements OnInit {
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('Modal') Modal!: ElementRef;
 
   displayedColumns: string[] = ['id', 'description', 'semen', 'mother', 'result', 'inseminationType','estado', 'acciones'];
 
@@ -232,7 +234,11 @@ export class InseminationComponent implements OnInit {
       }
     });
   }
-
+// Función para cerrar el modal
+closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newInsemination.id > 0) {
@@ -253,6 +259,7 @@ export class InseminationComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listInseminations(this.IdFarm);
+              this.closeModal();
             }
           },
           error: () => {
@@ -283,6 +290,7 @@ export class InseminationComponent implements OnInit {
             };
             if (this.IdFarm !== null) {
               this.listInseminations(this.IdFarm);
+              this.closeModal();
             }
           },
           error: (err) => {

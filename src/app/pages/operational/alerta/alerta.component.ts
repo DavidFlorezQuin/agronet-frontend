@@ -1,5 +1,4 @@
 import { FormsModule, NgForm, NgModel } from '@angular/forms';
-
 import { ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -24,7 +23,8 @@ import { AnimalService } from '../animal/animal.service';
 import { Animal } from '../animal/animal.module';
 import { CategoriaAlertaaService } from '../../Parametro/categoria-alerta/categoria-alerta.service';
 import { CategoriaAlerta } from '../../Parametro/categoria-alerta/categoria-alerta.module';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-alerta',
   standalone: true,
@@ -70,6 +70,7 @@ export class AlertaComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('Modal') Modal!: ElementRef;
 
   constructor(private AlertaService: AlertaService, private alertService: AlertService, private animalService: AnimalService, private CategoriaAlertaaService: CategoriaAlertaaService) { }
 
@@ -94,7 +95,12 @@ export class AlertaComponent implements OnInit {
       console.warn('No se pudo obtener el ID de la finca.');
     }
   }
-
+  // Función para cerrar el modal
+  closeModal(): void {
+    const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+    modal.hide();  // Cerrar el modal
+  }
+  
 
   ListAnimal(farmId: number): void {
     this.animalService.getAnimals(farmId).subscribe({
@@ -251,6 +257,7 @@ export class AlertaComponent implements OnInit {
           this.resetForm();
           if (this.IdFarm !== null) {
             this.listAlerta(this.IdFarm);
+            this.closeModal();
           }
         },
         error: (err) => {
@@ -265,6 +272,7 @@ export class AlertaComponent implements OnInit {
           this.resetForm();
           if (this.IdFarm !== null) {
             this.listAlerta(this.IdFarm);
+            this.closeModal();
           }
         },
         error: (err) => {

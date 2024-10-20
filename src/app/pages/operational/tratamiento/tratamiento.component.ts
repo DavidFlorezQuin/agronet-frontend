@@ -18,7 +18,8 @@ import { Config } from 'datatables.net';
 import { DataTablesModule } from 'angular-datatables';
 import { AnimalDiagnosticsService } from '../animal-diagnostico/animal-diagnostico.service';
 import { AnimalDiagnostics } from '../animal-diagnostico/AnimalDiagnostics.module';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-tratamiento',
@@ -59,7 +60,7 @@ export class TratamientoComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private treatmentsService: TreatmentsService, private alertService: AlertService, private animalDiagnosticService: AnimalDiagnosticsService) { }
   ngOnInit(): void {
 
@@ -157,7 +158,11 @@ export class TratamientoComponent implements OnInit {
       animalDiagnosticsId: 0
     };
   }
-
+ // Función para cerrar el modal
+ closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newTratamiento.id > 0) {
@@ -179,6 +184,7 @@ export class TratamientoComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listTratamiento(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
@@ -194,6 +200,7 @@ export class TratamientoComponent implements OnInit {
             this.alertService.SuccessAlert('Agregado correctamente');
             if (this.IdFarm !== null) {
               this.listTratamiento(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             } form.reset();

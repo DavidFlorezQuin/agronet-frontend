@@ -21,6 +21,8 @@ import { Finca } from '../finca/finca.module';
 import { FincaService } from '../finca/finca.service';
 import { DataTablesModule } from 'angular-datatables';
 import jsPDF from 'jspdf';
+import {  ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-inventario',
   standalone: true,
@@ -56,7 +58,7 @@ export class InventarioComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private inventoriesService: InventoriesService, private alertService: AlertService, private fincaService: FincaService) { }
 
   ngOnInit(): void {
@@ -178,7 +180,11 @@ export class InventarioComponent implements OnInit {
       }
     });
   }
-
+// Función para cerrar el modal
+closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newInventory.id > 0) {
@@ -198,6 +204,7 @@ export class InventarioComponent implements OnInit {
             if (this.IdFarm !== null) {
 
               this.listInventories(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
@@ -214,6 +221,7 @@ export class InventarioComponent implements OnInit {
 
             if (this.IdFarm !== null) {
               this.listInventories(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }

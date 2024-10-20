@@ -24,6 +24,8 @@ import { Ventas } from './ventass.module';
 import { EnumService } from '../../../shared/components/enum.service';
 import { ProductionsService } from '../produccion/produccion.service';
 import { Productions } from '../produccion/produccion.module';
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-ventas',
   standalone: true,
@@ -60,7 +62,7 @@ export class VentasComponent implements OnInit {
   displayedColumns: string[] = ['id', 'price', 'quantity', 'production', 'currency', 'acciones'];
   dataSource!: MatTableDataSource<Ventas>;
 
-
+  @ViewChild('Modal') Modal!: ElementRef;
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -140,7 +142,11 @@ export class VentasComponent implements OnInit {
       }
     });
   }
-
+ // Función para cerrar el modal
+ closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newSale.id > 0) {
@@ -158,6 +164,7 @@ export class VentasComponent implements OnInit {
             };
             if (this.IdFarm !== null) {
               this.listSales(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }          },
@@ -172,6 +179,7 @@ export class VentasComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listSales(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }          },

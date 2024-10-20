@@ -25,7 +25,8 @@ import { state } from '@angular/animations';
 import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-vacunacion',
   standalone: true,
@@ -70,6 +71,7 @@ export class VacunacionComponent implements OnInit {
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private vaccineAnimalsService: VaccineAnimalsService,
     private alertService: AlertService
     , private animalService: AnimalService, private vaccinesService: VaccinesService) { }
@@ -151,7 +153,11 @@ export class VacunacionComponent implements OnInit {
     });
 
   }
-
+ // Función para cerrar el modal
+ closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newVaccineAnimal.id > 0) {
@@ -161,6 +167,7 @@ export class VacunacionComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listVaccineAnimals(this.IdFarm);
+              this.closeModal();
             }
             this.newVaccineAnimal = {
               id: 0,
@@ -181,6 +188,7 @@ export class VacunacionComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listVaccineAnimals(this.IdFarm);
+              this.closeModal();
             }
           },
           error: () => {

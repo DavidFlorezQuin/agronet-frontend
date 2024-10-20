@@ -60,20 +60,22 @@ export class FormRegisterComponent implements OnInit {
     return allowedDomains.includes(domain);
   }
 
-  // Método para validar la edad
   isAdult(birthday: string): boolean {
     const birthDate = new Date(birthday);
     const today = new Date();
-    const age = today.getFullYear() - birthDate.getFullYear();
+  
+    let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
     const dayDiff = today.getDate() - birthDate.getDate();
-
-    // Comprobar si ya ha cumplido los 18 años (o si los cumplirá este año)
+  
+    // Ajusta la edad si la persona aún no ha tenido su cumpleaños este año
     if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-      return age - 1 >= 18;
+      age--;
     }
+  
     return age >= 18;
   }
+  
   onSubmit(form: NgForm) {
     this.ageError = ''; // Reiniciar el error de edad
     if (!this.isAdult(this.newPerson.birthday)) {
@@ -83,7 +85,6 @@ export class FormRegisterComponent implements OnInit {
     this.personService.createPerson(this.newPerson).subscribe({
       next: (res) => {
         const personId = res.id;  
-
         this.router.navigate(['register-user'], { queryParams: { personId: personId } });
       },
       error: () => {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -19,7 +19,8 @@ import jsPDF from 'jspdf';
 import { City } from '../../../features/Parameter/city/city.module';
 import { FarmUserService } from '../finca-usuario/finca-usuario.service';
 import { FarmUser } from '../finca-usuario/finca-usuario.module';
-
+import { ViewChild, ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-finca',
   standalone: true,
@@ -57,6 +58,7 @@ export class FincaComponent implements OnInit {
   City: City[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private fincaService: FincaService, private alertService: AlertService, private cityService: CityService, private userFarmService: FarmUserService) { }
 
   ngOnInit(): void {
@@ -181,7 +183,10 @@ export class FincaComponent implements OnInit {
       }
     });
   }
-
+  closeModal(): void {
+    const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+    modal.hide();  // Cerrar el modal
+  }
   onSubmit(form: NgForm): void {
     if (form.valid) {
       const formData = form.value;
@@ -199,7 +204,9 @@ export class FincaComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
-            if (this.IdUser !== null) this.listFincas(this.IdUser);
+            if (this.IdUser !== null)
+               this.listFincas(this.IdUser);
+            this.closeModal();
           },
           error: () => this.alertService.ErrorAlert('Error al actualizar')
         });
@@ -217,8 +224,10 @@ export class FincaComponent implements OnInit {
             if (this.IdUser !== null) {
               this.createFarmUser(fincaId);
               this.listFincas(this.IdUser);
+              this.closeModal();
               if (this.IdUser !== null) {
                 this.listFincas(this.IdUser);
+                this.closeModal();
               }
             } else {
               console.warn('No se pudo obtener el ID del usuario.');

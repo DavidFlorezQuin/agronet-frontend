@@ -109,12 +109,13 @@
                </div>
              </div>
         </div>
+
         <div class="mb-3">
-            <label for="birthday" class="form-label">Fecha de Nacimiento</label>
-            <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday" required >
-            <div *ngIf="ageError" class="text-danger">{{ ageError }}</div>
-          </div>
-          
+          <label for="birthday" class="form-label">Fecha de Nacimiento</label>
+          <input type="date" class="form-control" id="birthday" name="birthday" [(ngModel)]="newPerson.birthday" required>
+          <div *ngIf="ageError" class="text-danger">{{ ageError }}</div> <!-- Muestra error -->
+        </div>
+        
         <button type="submit" id="btn-forms" class="btn w-100 mt-4" [disabled]="!personForm.valid">Registrarme</button>
     </form>
 </div>

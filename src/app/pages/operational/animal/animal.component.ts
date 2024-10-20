@@ -17,7 +17,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { CommonModule } from '@angular/common';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
-import { ViewChild } from '@angular/core';
 import { AnimalService } from './animal.service';
 import { state } from '@angular/animations';
 import { DataTablesModule } from 'angular-datatables';
@@ -26,6 +25,9 @@ import { LoteService } from '../lote/lote.service';
 import jsPDF from 'jspdf';
 import { EnumService } from '../../../shared/components/enum.service';
 import { Lote } from '../lote/lote.module';
+import { ViewChild, ElementRef } from '@angular/core';
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-animal',
   standalone: true,
@@ -55,6 +57,7 @@ export class AnimalComponent implements OnInit {
   dataSource!: MatTableDataSource<Animal>;
 
   lote: Lote[] = [];
+  @ViewChild('Modal') Modal!: ElementRef;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -125,7 +128,11 @@ export class AnimalComponent implements OnInit {
       }
     })
   }
-
+ // Función para cerrar el modal
+ closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   downloadPDF(): void {
     const doc = new jsPDF();
 
@@ -274,6 +281,7 @@ export class AnimalComponent implements OnInit {
             this.alertaService.SuccessAlert('Actualizado correctamente');
             if (this.IdFarm !== null) {
               this.ListAnimal(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
@@ -289,6 +297,7 @@ export class AnimalComponent implements OnInit {
             this.alertaService.SuccessAlert('Creado correctamente');
             if (this.IdFarm !== null) {
               this.ListAnimal(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }

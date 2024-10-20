@@ -16,7 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
 import jsPDF from 'jspdf';
 import { FincaService } from '../finca/finca.service';
 import { Finca } from '../finca/finca.module';
-
+import { ElementRef } from '@angular/core';
+declare var bootstrap: any;
 @Component({
   selector: 'app-lote',
   standalone: true,
@@ -49,7 +50,7 @@ export class LoteComponent implements OnInit {
   }
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
+  @ViewChild('Modal') Modal!: ElementRef;
   constructor(private loteService: LoteService, private alertaService: AlertService, private fincaService:FincaService) { }
   ngOnInit(): void {
 
@@ -194,7 +195,11 @@ export class LoteComponent implements OnInit {
       }
     });
   }
-
+// Función para cerrar el modal
+closeModal(): void {
+  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
+  modal.hide();  // Cerrar el modal
+}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newLote.id > 0) {
@@ -216,6 +221,7 @@ export class LoteComponent implements OnInit {
               farmId: 0,             };
             if (this.IdFarm !== null) {
               this.listLot(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }          },
@@ -230,6 +236,7 @@ export class LoteComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listLot(this.IdFarm);
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }          },
