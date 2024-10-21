@@ -15,7 +15,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { NgForm } from '@angular/forms';
 import { AlertService } from '../../../shared/components/alert.service';
-
+import { Modal } from 'bootstrap';
 import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
 import { CategoriaSuplemento } from './categoria-suplemento.module';
@@ -99,8 +99,23 @@ export class CategoriaSuplementoComponent implements OnInit {
   }
    // Función para cerrar el modal
    closeModal(): void {
-    const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
-    modal.hide();  // Cerrar el modal
+    const modalElement = document.getElementById('categoryMedicinaModal');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide(); // Cierra el modal
+      modalElement.classList.remove('show');
+      modalElement.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = ''; // Restaurar el overflow del body
+  
+      // Eliminar cualquier 'modal-backdrop' que haya quedado
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove(); // Elimina la capa de fondo negra
+      }
+    } else {
+      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+    }
   }
   onSubmit(form: NgForm): void {
     if (form.valid) {

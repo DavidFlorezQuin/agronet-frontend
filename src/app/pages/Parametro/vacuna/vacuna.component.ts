@@ -9,7 +9,7 @@ import { AlertService } from '../../../shared/components/alert.service';
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { Modal } from 'bootstrap';
 import { FormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
@@ -90,8 +90,23 @@ export class VacunaComponent implements OnInit {
   }
 // Función para cerrar el modal
 closeModal(): void {
-  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
-  modal.hide();  // Cerrar el modal
+  const modalElement = document.getElementById('vaccineModal');
+  if (modalElement) {
+    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+    modal.hide(); // Cierra el modal
+    modalElement.classList.remove('show');
+    modalElement.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = ''; // Restaurar el overflow del body
+
+    // Eliminar cualquier 'modal-backdrop' que haya quedado
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove(); // Elimina la capa de fondo negra
+    }
+  } else {
+    console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+  }
 }
   onSubmit(form: NgForm): void {
     if (form.valid) {
