@@ -20,6 +20,7 @@ import { InventoriesService } from '../inventario/inventario.service';
 import { Suplemento } from '../../Parametro/insumos/suplementos.module';
 import { SuplementoService } from '../../Parametro/insumos/suplementos.service';
 import { EnumService } from '../../../shared/components/enum.service';
+import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-inventario-suplemento',
   standalone: true,
@@ -145,7 +146,25 @@ export class InventarioSuplementoComponent implements OnInit {
       }
     });
   }
-
+  closeModal(): void {
+    const modalElement = document.getElementById('suplementoModal');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide(); // Cierra el modal
+      modalElement.classList.remove('show');
+      modalElement.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = ''; // Restaurar el overflow del body
+  
+      // Eliminar cualquier 'modal-backdrop' que haya quedado
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove(); // Elimina la capa de fondo negra
+      }
+    } else {
+      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+    }
+  }
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newInventarioSuplemento.id > 0) {
@@ -161,7 +180,7 @@ export class InventarioSuplementoComponent implements OnInit {
               suppliesId: 0,
             };
             this.listInventarioSuplemento();
-
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -173,6 +192,7 @@ export class InventarioSuplementoComponent implements OnInit {
             this.alertService.SuccessAlert('Creado correctamente');
             form.reset();
             this.listInventarioSuplemento();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear');

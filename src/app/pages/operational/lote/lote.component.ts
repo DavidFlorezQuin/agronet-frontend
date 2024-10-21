@@ -18,6 +18,7 @@ import { FincaService } from '../finca/finca.service';
 import { Finca } from '../finca/finca.module';
 import { ElementRef } from '@angular/core';
 declare var bootstrap: any;
+import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-lote',
   standalone: true,
@@ -197,8 +198,23 @@ export class LoteComponent implements OnInit {
   }
 // Función para cerrar el modal
 closeModal(): void {
-  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
-  modal.hide();  // Cerrar el modal
+  const modalElement = document.getElementById('modalLote');
+  if (modalElement) {
+    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+    modal.hide(); // Cierra el modal
+    modalElement.classList.remove('show');
+    modalElement.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = ''; // Restaurar el overflow del body
+
+    // Eliminar cualquier 'modal-backdrop' que haya quedado
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove(); // Elimina la capa de fondo negra
+    }
+  } else {
+    console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+  }
 }
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -221,10 +237,13 @@ closeModal(): void {
               farmId: 0,             };
             if (this.IdFarm !== null) {
               this.listLot(this.IdFarm);
-              this.closeModal();
+              
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }          },
+            }        
+             this.closeModal();
+          
+          },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar');
           }
@@ -236,10 +255,12 @@ closeModal(): void {
             form.reset();
             if (this.IdFarm !== null) {
               this.listLot(this.IdFarm);
-              this.closeModal();
+              
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }          },
+            }    
+            this.closeModal();
+          },
           error: () => {
             this.alertaService.ErrorAlert('Error al crear');
           }

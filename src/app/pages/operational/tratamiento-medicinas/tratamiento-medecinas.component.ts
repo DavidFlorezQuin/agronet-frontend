@@ -16,7 +16,7 @@ import { CommonModule } from '@angular/common';
 import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-
+import { Modal } from 'bootstrap';
 import { MatButtonModule } from '@angular/material/button';
 import { Treatments } from '../tratamiento/tratamiento.module';
 import { TreatmentsService } from '../tratamiento/tratamiento.service';
@@ -133,9 +133,25 @@ export class TratamientoMedecinasComponent implements OnInit {
     });
   }
 // Función para cerrar el modal
+
 closeModal(): void {
-  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
-  modal.hide();  // Cerrar el modal
+  const modalElement = document.getElementById('treatmentsModal');
+  if (modalElement) {
+    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+    modal.hide(); // Cierra el modal
+    modalElement.classList.remove('show');
+    modalElement.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = ''; // Restaurar el overflow del body
+
+    // Eliminar cualquier 'modal-backdrop' que haya quedado
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove(); // Elimina la capa de fondo negra
+    }
+  } else {
+    console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+  }
 }
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -145,10 +161,11 @@ closeModal(): void {
             this.alertService.SuccessAlert('Actualizado correctamente');
             if (this.IdFarm !== null) {
               this.getTreatmentsMedicines(this.IdFarm);
-              this.closeModal();
+              
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
+            this.closeModal();
             form.resetForm();
           },
           error: () => {
@@ -161,10 +178,11 @@ closeModal(): void {
             this.alertService.SuccessAlert('Creado correctamente');
             if (this.IdFarm !== null) {
               this.getTreatmentsMedicines(this.IdFarm);
-              this.closeModal();
+              
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
+            this.closeModal();
             form.resetForm();
           },
           error: () => {

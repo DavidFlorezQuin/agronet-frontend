@@ -22,6 +22,7 @@ import { EnumService } from '../../../shared/components/enum.service';
 import Swal from 'sweetalert2';
 import { ElementRef } from '@angular/core';
 declare var bootstrap: any;
+import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-produccion',
   standalone: true,
@@ -222,8 +223,23 @@ export class ProduccionComponent implements OnInit {
   
  // Función para cerrar el modal
  closeModal(): void {
-  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
-  modal.hide();  // Cerrar el modal
+  const modalElement = document.getElementById('animalModal');
+  if (modalElement) {
+    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+    modal.hide(); // Cierra el modal
+    modalElement.classList.remove('show');
+    modalElement.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = ''; // Restaurar el overflow del body
+
+    // Eliminar cualquier 'modal-backdrop' que haya quedado
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove(); // Elimina la capa de fondo negra
+    }
+  } else {
+    console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+  }
 }
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -258,8 +274,9 @@ export class ProduccionComponent implements OnInit {
             };
             if (this.IdFarm !== null) {
               this.listProductions(this.IdFarm);
-              this.closeModal();
+              
             }
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -273,8 +290,9 @@ export class ProduccionComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listProductions(this.IdFarm);
-              this.closeModal();
+              
             }
+            this.closeModal();
           },
           error: (err) => {
             let errorMessage = err.error?.message || err.message || "Ha ocurrido un error inesperado.";

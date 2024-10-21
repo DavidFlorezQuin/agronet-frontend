@@ -3,7 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormsModule, NgForm, NgModel } from '@angular/forms';
-
+import { Modal } from 'bootstrap';
 import { AlertService } from '../../../shared/components/alert.service';
 import { Inventories } from './Inventories.module';
 import { MatIconModule } from '@angular/material/icon';
@@ -182,8 +182,23 @@ export class InventarioComponent implements OnInit {
   }
 // Función para cerrar el modal
 closeModal(): void {
-  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
-  modal.hide();  // Cerrar el modal
+  const modalElement = document.getElementById('modalInventory');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide(); // Cierra el modal
+      modalElement.classList.remove('show');
+      modalElement.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = ''; // Restaurar el overflow del body
+  
+      // Eliminar cualquier 'modal-backdrop' que haya quedado
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove(); // Elimina la capa de fondo negra
+      }
+    } else {
+      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+    }
 }
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -200,14 +215,16 @@ closeModal(): void {
         this.inventoriesService.updateInventory(Data, this.newInventory.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Inventario actualizado correctamente');
-            form.reset();
+           
             if (this.IdFarm !== null) {
 
               this.listInventories(this.IdFarm);
-              this.closeModal();
+              
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
+            form.reset();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar inventario');
@@ -217,7 +234,7 @@ closeModal(): void {
         this.inventoriesService.createInventory(this.newInventory).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Inventario creado correctamente');
-            form.reset();
+            
 
             if (this.IdFarm !== null) {
               this.listInventories(this.IdFarm);
@@ -225,7 +242,8 @@ closeModal(): void {
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
-            
+            form.reset();
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al crear inventario');

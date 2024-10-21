@@ -18,7 +18,7 @@ import { FormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
-
+import { Modal } from 'bootstrap';
 import { VentasService } from './ventas.service';
 import { Ventas } from './ventass.module';
 import { EnumService } from '../../../shared/components/enum.service';
@@ -144,8 +144,23 @@ export class VentasComponent implements OnInit {
   }
  // Función para cerrar el modal
  closeModal(): void {
-  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
-  modal.hide();  // Cerrar el modal
+  const modalElement = document.getElementById('ventaModal');
+  if (modalElement) {
+    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+    modal.hide(); // Cierra el modal
+    modalElement.classList.remove('show');
+    modalElement.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('modal-open');
+    document.body.style.overflow = ''; // Restaurar el overflow del body
+
+    // Eliminar cualquier 'modal-backdrop' que haya quedado
+    const backdrop = document.querySelector('.modal-backdrop');
+    if (backdrop) {
+      backdrop.remove(); // Elimina la capa de fondo negra
+    }
+  } else {
+    console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+  }
 }
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -164,10 +179,12 @@ export class VentasComponent implements OnInit {
             };
             if (this.IdFarm !== null) {
               this.listSales(this.IdFarm);
-              this.closeModal();
+              
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }          },
+            } 
+            this.closeModal();
+          },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar la venta');
           }
@@ -179,10 +196,12 @@ export class VentasComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listSales(this.IdFarm);
-              this.closeModal();
+              
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }          },
+            } 
+            this.closeModal();
+          },
           error: () => {
             this.alertService.ErrorAlert('Error al registrar la venta');
           }
