@@ -79,17 +79,48 @@
           <div class="mb-3">
             <label for="Name" class="form-label">Nombre</label>
             <input type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newCategoryaAlerta.name"
-              required>
+            minlength="4" #NombreCategoriaAlerta="ngModel" [ngClass]="{
+              'is-invalid': NombreCategoriaAlerta.invalid && NombreCategoriaAlerta.touched,
+              'is-valid': NombreCategoriaAlerta.valid && NombreCategoriaAlerta.touched
+            }" />
+             <!-- Mensajes de error -->
+             <div *ngIf="NombreCategoriaAlerta.invalid && NombreCategoriaAlerta.touched" class="invalid-feedback">
+               <div *ngIf="NombreCategoriaAlerta.errors?.['required']">El nombre del animal es obligatoria.</div>
+               <div *ngIf="NombreCategoriaAlerta.errors?.['minlength']">El nombre del animal debe tener al menos 4
+                 caracteres.
+               </div>
+              </div>
           </div>
+
           <div class="mb-3">
             <label for="Description" class="form-label">Descripción</label>
             <input type="text" class="form-control" id="Description" name="Description"
-              [(ngModel)]="newCategoryaAlerta.Description" required>
+              [(ngModel)]="newCategoryaAlerta.Description" minlength="10" #descriptionField="ngModel"
+              [ngClass]="{
+                'is-invalid': descriptionField.invalid && descriptionField.touched,
+                'is-valid': descriptionField.valid && descriptionField.touched
+              }" />
+          
+            <!-- Mensajes de error -->
+            <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+              <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+            </div>
           </div>
+
           <div class="mb-3">
             <label for="Color" class="form-label">Color</label>
-            <input type="text" class="form-control" id="Color" name="Color" [(ngModel)]="newCategoryaAlerta.Color"
-              required>
+            <input type="color" class="form-control" id="Color" name="Color" [(ngModel)]="newCategoryaAlerta.Color"
+              required #color="ngModel"
+              [ngClass]="{
+                'is-invalid': color.invalid && color.touched,
+                'is-valid': color.valid && color.touched
+              }" />
+          
+            <!-- Mensajes de error -->
+            <div *ngIf="color.invalid && color.touched" class="invalid-feedback">
+              <div *ngIf="color.errors?.['required']">El color es obligatoria.</div>
+            </div>
           </div>
           <button type="submit" class="btn btn-primary" [disabled]="!categoriaAlertaForm.valid">{{ newCategoryaAlerta.id
             ? 'Actualizar' : 'Guardar' }}</button>
