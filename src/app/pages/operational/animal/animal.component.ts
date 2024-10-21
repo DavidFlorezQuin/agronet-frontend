@@ -27,7 +27,7 @@ import { EnumService } from '../../../shared/components/enum.service';
 import { Lote } from '../lote/lote.module';
 import { ViewChild, ElementRef } from '@angular/core';
 declare var bootstrap: any;
-
+import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-animal',
   standalone: true,
@@ -129,10 +129,10 @@ export class AnimalComponent implements OnInit {
     })
   }
  // Función para cerrar el modal
- closeModal(): void {
-  const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
-  modal.hide();  // Cerrar el modal
-}
+/** */
+ 
+
+
   downloadPDF(): void {
     const doc = new jsPDF();
 
@@ -259,63 +259,80 @@ export class AnimalComponent implements OnInit {
     });
   }
 
+  closeModal(): void {
+    const modalElement = document.getElementById('animalModal');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide(); // Cierra el modal
+      modalElement.classList.remove('show');
+      modalElement.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = ''; // Restaurar el overflow del body
+  
+      // Eliminar cualquier 'modal-backdrop' que haya quedado
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove(); // Elimina la capa de fondo negra
+      }
+    } else {
+      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+    }
+  }
+
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newAnimales.id > 0) {
+        // Si el animal ya existe, lo actualiza
         const formData = form.value; 
-        const animalData:Animal = {
+        const animalData: Animal = {
           ...formData,
-            name: this.newAnimales.name,
-            race: this.newAnimales.race,
-            gender: this.newAnimales.gender,
-            weight: this.newAnimales.weight,
-            photo: this.newAnimales.photo,
-            purpose: this.newAnimales.purpose,
-            birthDay: this.newAnimales.birthDay,
-            lotId: this.newAnimales.lotId,
-            id: this.newAnimales.id,
-            state: this.newAnimales.state
-        }
+          name: this.newAnimales.name,
+          race: this.newAnimales.race,
+          gender: this.newAnimales.gender,
+          weight: this.newAnimales.weight,
+          photo: this.newAnimales.photo,
+          purpose: this.newAnimales.purpose,
+          birthDay: this.newAnimales.birthDay,
+          lotId: this.newAnimales.lotId,
+          id: this.newAnimales.id,
+          state: this.newAnimales.state
+        };
+  
         this.animalService.updateAnimal(animalData, this.newAnimales.id).subscribe({
           next: () => {
-            this.alertaService.SuccessAlert('Actualizado correctamente');
+            this.alertaService.SuccessAlert('Actualizado con exito')
             if (this.IdFarm !== null) {
-              this.ListAnimal(this.IdFarm);
-              this.closeModal();
-            } else {
-              console.warn('No se pudo obtener el ID de la finca.');
+              this.ListAnimal(this.IdFarm);  // Actualizar la lista de animales
             }
-            form.reset();
+            this.closeModal();  // Cerrar modal
+            form.reset();  // Limpiar el formulario
           },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar');
           }
         });
       } else {
+        // Si es un nuevo animal, lo crea
         this.animalService.createAnimal(this.newAnimales).subscribe({
           next: () => {
-            this.alertaService.SuccessAlert('Creado correctamente');
+            this.alertaService.SuccessAlert('Creado con exito')
             if (this.IdFarm !== null) {
-              this.ListAnimal(this.IdFarm);
-              this.closeModal();
-            } else {
-              console.warn('No se pudo obtener el ID de la finca.');
+              this.ListAnimal(this.IdFarm);  // Actualizar la lista de animales
             }
-            form.reset();
-
-
+            this.closeModal();  // Cerrar modal
+            form.reset();  // Limpiar el formulario
           },
           error: () => {
             this.alertaService.ErrorAlert('Error al crear');
-
           }
         });
       }
     } else {
-      this.alertaService.ErrorAlert('Por favor completa todod los campos');
-
+      this.alertaService.ErrorAlert('Por favor completa todos los campos');
     }
   }
+  
+  
 }
 
 

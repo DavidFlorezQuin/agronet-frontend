@@ -21,6 +21,7 @@ import { FarmUserService } from '../finca-usuario/finca-usuario.service';
 import { FarmUser } from '../finca-usuario/finca-usuario.module';
 import { ViewChild, ElementRef } from '@angular/core';
 declare var bootstrap: any;
+import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-finca',
   standalone: true,
@@ -184,8 +185,23 @@ export class FincaComponent implements OnInit {
     });
   }
   closeModal(): void {
-    const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
-    modal.hide();  // Cerrar el modal
+    const modalElement = document.getElementById('exampleModal');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide(); // Cierra el modal
+      modalElement.classList.remove('show');
+      modalElement.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = ''; // Restaurar el overflow del body
+  
+      // Eliminar cualquier 'modal-backdrop' que haya quedado
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove(); // Elimina la capa de fondo negra
+      }
+    } else {
+      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+    }
   }
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -224,11 +240,12 @@ export class FincaComponent implements OnInit {
             if (this.IdUser !== null) {
               this.createFarmUser(fincaId);
               this.listFincas(this.IdUser);
-              this.closeModal();
+              
               if (this.IdUser !== null) {
                 this.listFincas(this.IdUser);
-                this.closeModal();
+                
               }
+              this.closeModal();
             } else {
               console.warn('No se pudo obtener el ID del usuario.');
             }

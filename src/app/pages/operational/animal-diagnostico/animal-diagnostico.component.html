@@ -118,9 +118,7 @@
              <div *ngIf="NombreDelAnimalDiagnostico.errors?.['minlength']">El nombre del animal diagnostico debe tener al menos 4 caracteres.</div>
            </div>
 
-           <div *ngIf="NombreDelAnimalDiagnostico.valid && NombreDelAnimalDiagnostico.touched" class="valid-feedback">
-             Descripción válida.
-           </div>
+           
             </div>
             
             <div class="mb-3">
@@ -140,9 +138,7 @@
               <div *ngIf="animalDiagnostico.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
             </div>
 
-            <div *ngIf="animalDiagnostico.valid && animalDiagnostico.touched" class="valid-feedback">
-              Descripción válida.
-            </div>
+           
             </div>
   
            
@@ -168,9 +164,7 @@
             <div *ngIf="semenId.invalid && semenId.touched" class="invalid-feedback">
               Seleccionar un animal es obligatorio.
             </div>
-            <div *ngIf="semenId.valid && semenId.touched" class="valid-feedback">
-              Animal seleccionado correctamente.
-            </div>
+          
             </div>
   
             <button type="submit" class="btn btn-success w-100" [disabled]="!diagnosticsForm.valid">Guardar</button>

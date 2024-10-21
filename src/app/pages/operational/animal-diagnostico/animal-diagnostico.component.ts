@@ -19,6 +19,7 @@ import { MatInputModule } from '@angular/material/input';
 import jsPDF from 'jspdf';
 import { ViewChild, ElementRef } from '@angular/core';
 declare var bootstrap: any;
+import { Modal } from 'bootstrap';
 @Component({
   selector: 'app-animal-diagnostico',
   standalone: true,
@@ -182,9 +183,25 @@ export class AnimalDiagnosticoComponent implements OnInit {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
+
   closeModal(): void {
-    const modal = new bootstrap.Modal(this.Modal.nativeElement);  // Usar la referencia del modal
-    modal.hide();  // Cerrar el modal
+    const modalElement = document.getElementById('diagnosticsModal');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide(); // Cierra el modal
+      modalElement.classList.remove('show');
+      modalElement.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = ''; // Restaurar el overflow del body
+  
+      // Eliminar cualquier 'modal-backdrop' que haya quedado
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove(); // Elimina la capa de fondo negra
+      }
+    } else {
+      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+    }
   }
 
   onSubmit(form: NgForm): void {
@@ -201,13 +218,16 @@ export class AnimalDiagnosticoComponent implements OnInit {
         this.diagnosticsService.updateAnimalDiagnostics(diagnosticData, this.newDiagnostic.id).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Actualizado correctamente');
-            form.reset();
+            
             if (this.IdFarm !== null) {
               this.listDiagnostics(this.IdFarm);
-              this.closeModal();
+              
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }          },
+            }      
+            form.reset();   
+            this.closeModal();
+          },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar');
           }
@@ -221,13 +241,16 @@ export class AnimalDiagnosticoComponent implements OnInit {
         this.diagnosticsService.createAnimalDiagnostics(diagnostic).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Creado correctamente');
-            form.reset();
+            
             if (this.IdFarm !== null) {
               this.listDiagnostics(this.IdFarm);
-              this.closeModal();
+              
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }            },
+            }
+            form.reset();
+            this.closeModal();          
+            },
           error: () => {
             this.alertaService.ErrorAlert('Error al crear');
           }
