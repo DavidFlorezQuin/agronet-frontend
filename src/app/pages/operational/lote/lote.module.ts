@@ -4,5 +4,6 @@ export interface Lote {
   name: string;
   hectare: number;
   farmId: number;
+  state: boolean
 }
 

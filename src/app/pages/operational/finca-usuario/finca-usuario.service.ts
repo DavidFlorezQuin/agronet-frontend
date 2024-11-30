@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { FarmUser } from './finca-usuario.module'; 
 import { environment } from '../../../../env/enviroment'; 
@@ -26,4 +26,23 @@ export class FarmUserService {
   deleteFarmUsers(id: number): Observable<void> {
     return this.http.delete<void>(`${this._baseUrl}/FarmUser/${id}`);
   }
+  listUsersJoin():Observable<FarmUser[]>{
+    return this.http.get<FarmUser[]>(`${this._baseUrl}/FarmUser/list-join-users`);
+  }
+  
+  postCodeFarm(farmCode: string, userId: number): Observable<any> {
+    // Crear los parámetros de consulta
+    const params = new HttpParams()
+      .set('farmCode', farmCode)
+      .set('userId', userId.toString());
+
+    return this.http.post<any>(`${this._baseUrl}/FarmUser/join-farm`, null, { params });
+  }
+
+  listUserFarmJoin(idUser:number):Observable<any>{
+    return this.http.get<any>(`${this._baseUrl}/FarmUser/list-join-users/${idUser}`); 
+  }
+  joinUser(userFarmId: number): Observable<any> {
+    return this.http.post<any>(`${this._baseUrl}/accept-user`, { userFarmId });
+}
 }

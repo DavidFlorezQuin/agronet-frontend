@@ -4,7 +4,6 @@ import { LoginComponent } from './features/login/login.component';
 import { MainComponent } from './main/main.component';
 import { HomeComponent } from './features/pages/home/home.component';
 import { authGuard } from './core/guards/auth.guard';
-import { AboutComponent } from './features/pages/about/about.component';
 import { RoleViewComponent } from './features/Security/role-view/role-view.component';
 import { UserRoleComponent } from './features/Security/user-role/user-role.component';
 import { RoleComponent } from './features/Security/role/role.component';
@@ -44,6 +43,9 @@ import { SendEmailComponent } from './features/restar-password/send-email/send-e
 import { NewPasswordComponent } from './features/restar-password/update-password/new-password.component';
 import { FormRegisterComponent } from './features/register/form-register/form-register.component';
 import { FormUserComponent } from './features/register/form-user/form-user.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { SettingsProfileComponent } from './pages/profile/settings-profile/settings-profile.component';
+import { SettingUserComponent } from './pages/profile/setting-user/setting-user.component';
 
 export const routes: Routes = [
     {
@@ -66,10 +68,6 @@ export const routes: Routes = [
         path: 'reset-password',
         component: NewPasswordComponent,
     },
-    {
-        path: 'about',
-        component: AboutComponent,
-    },
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     {
         path: 'home',
@@ -77,6 +75,21 @@ export const routes: Routes = [
     }, {
         path: 'menu',
         component: MenuComponent
+    },
+    {
+        path:'profile',
+        component: ProfileComponent,
+        canActivate: [authGuard],
+        children:[
+            {
+                path: 'settings-profile',
+                component: SettingsProfileComponent
+            },
+            {
+                path: 'settings-user',
+                component: SettingUserComponent
+            }
+        ]
     },
     {
         path: 'dashboard',

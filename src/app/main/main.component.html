@@ -1,12 +1,86 @@
+<!-- main.component.html -->
+<nav class="navbar p-3 shadow-sm bg-body-tertiary" style="margin-left: 200px;">
+  <div class="container d-flex justify-content-between">
+    <div class="form-farm d-flex" style="height: 40px;">
 
-  <!-- main.component.html -->
-<div class="container-main">
-    <div class="app-menu">
-      <app-menu></app-menu>
-    </div>
-    <div class="content">
-      <router-outlet class="rutas">
-      </router-outlet>
+      <form #codeForm="ngForm" (ngSubmit)="onSubmit()" class="d-flex gap-2" novalidate>
+        <input type="text" required class="form-control" placeholder="Escribe el código" [(ngModel)]="code" name="code">
+        <button type="submit" class="btn btn-join">Unirme a una finca</button>
+      </form>
+      
+
     </div>
 
+    <div class="icons d-flex gap-3">
+
+      <div class="dropdown">
+        <a class="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          
+          <div *ngIf="alerts.length > 0" class="p-3">
+            <div class="icon-alert p-1">
+              {{alerts.length}}
+            </div> 
+        </div>
+          <i class="bi bi-bell-fill"></i>
+        </a>
+
+        <ul class="dropdown-menu dropdown-menu-lg-end">
+          <li *ngFor="let alert of alerts"><a class="dropdown-item">{{alert.description}}</a></li>
+
+          <div *ngIf="alerts.length === 0" class="p-3">
+              <p class="text-alert mb-0">¡Aún no hay alertas pendientes!</p> 
+          </div>
+        </ul>
+
+      </div> 
+      <div class="icon-container gap-3 d-flex">
+        <div class="icon-alert p-1" *ngIf="farmUser.length > 0">
+          <p>{{ farmUser.length }}</p>
+        </div>
+        <i class="bi bi-briefcase-fill" data-bs-toggle="modal" data-bs-target="#myModal"></i>
+        <a class="container-profile d-flex align-items-center gap-2" href="profile">
+          <i class="bi bi-person-circle"></i>
+          {{username}}
+        </a>
+      </div>
+      
+    </div>
   </div>
+</nav>
+
+<div class="container-main">
+  <div class="app-menu">
+    <app-menu></app-menu>
+  </div>
+  <div class="content">
+    <router-outlet class="rutas"></router-outlet>
+  </div>
+</div>
+
+
+<!-- modal.component.html -->
+<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="myModalLabel">Solicitudes de unión a tus fincas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex border p-2 rounded-3 gap-4 align-items-center justify-content-around hover" *ngFor="let user of farmUser">  
+          
+          <p class="mb-0">{{user.id}}</p>
+          <p class="mb-0">
+            {{user.users}}
+          </p>
+          <p class="mb-0">{{user.farm}}</p> 
+          <div class="d-flex gap-2">
+            
+            <button class="btn bg-green text-white"(click)="acceptUser(user.id)" >Aceptar</button>
+            <button class="btn btn-danger text-white" (click)="onDelete(user.id)">Rechazar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,24 +1,25 @@
 <div class="container mt-3 border p-3 shadow-sm">
   <div class="d-flex justify-content-between">
-  
-      <section class="d-flex align-items-center justify-content-start gap-3">
-        <h2 class="fw-normal mb-0 w-50">Diagnósticos de Animales</h2>
-        <button type="button" data-bs-toggle="modal" data-bs-target="#diagnosticsModal" id="btn-forms" class="btn h-50">
-          <i class="bi bi-plus-circle mx-2"></i>
-          Agregar Diagnóstico
-        </button>
 
-        <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-          Descargar PDF
-        </button>
+    <section class="d-flex align-items-center justify-content-start gap-3">
+      <h2 class="fw-normal mb-0" style="font-size: 25px;">Diagnósticos Animales</h2>
+      <button data-bs-toggle="modal" data-bs-target="#diagnosticsModal" id="btn-forms" class="btn d-flex">
+        <i class="bi bi-plus-circle "></i>
+        Nuevo Diagnóstico
+      </button>
 
-        <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-          <i class="bi bi-file-spreadsheet"></i>
-          Descargar Excel
-        </button>
-      </section>
-  
- 
+      <button id="btn-forms" class="btn d-flex" (click)="downloadPDF()">
+        <i class="bi bi-file-earmark-pdf-fill"></i>
+        PDF
+      </button>
+
+      <button id="btn-forms" class="btn d-flex" (click)="downloadPDF()">
+        <i class="bi bi-file-spreadsheet"></i>
+        Excel
+      </button>
+    </section>
+
+
     <!-- Filtro de búsqueda -->
     <mat-form-field appearance="fill">
       <mat-label>Buscar</mat-label>
@@ -26,9 +27,11 @@
     </mat-form-field>
   </div>
 
-  <div *ngIf="diagnostics.length === 0"><div class="alert alert-warning" role="alert">
-    Aún no hay animales con diagnostico agregados!
-  </div></div>
+  <div *ngIf="diagnostics.length === 0">
+    <div class="alert alert-warning" role="alert">
+      Aún no hay animales con diagnostico agregados!
+    </div>
+  </div>
 
   <!-- Tabla con MatTable -->
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 mt-4" matSort>
@@ -68,14 +71,15 @@
         {{ element.state ? ' ACTIVO' : ' INACTIVO' }}
       </td>
     </ng-container>
-      
+
 
     <!-- Columna Acciones -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
         <div class="d-flex gap-2 justify-content-center" id="icons-section">
-          <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#diagnosticsModal"(click)="onEdit(element)"></i>
+          <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#diagnosticsModal"
+            (click)="onEdit(element)"></i>
           <i class="bi bi-trash" (click)="onDelete(element.id)"></i>
         </div>
       </td>
@@ -89,88 +93,84 @@
   <!-- Paginador -->
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
-  
-  <!-- Modal para agregar o editar diagnósticos -->
-  <div class="modal fade" id="diagnosticsModal" tabindex="-1" aria-labelledby="diagnosticsModalLabel" #Modal aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="diagnosticsModalLabel">Agregar Diagnóstico</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form #diagnosticsForm="ngForm" (ngSubmit)="onSubmit(diagnosticsForm)">
+
+<!-- Modal para agregar o editar diagnósticos -->
+<div class="modal fade" id="diagnosticsModal" tabindex="-1" aria-labelledby="diagnosticsModalLabel" #Modal
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="diagnosticsModalLabel">Agregar Diagnóstico</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #diagnosticsForm="ngForm" (ngSubmit)="onSubmit(diagnosticsForm)">
           <input type="hidden" id="usersId" name="usersId" [(ngModel)]="newDiagnostic.usersId">
-            
+
           <div class="mb-3">
-              <label for="diagnosis" class="form-label">Nombre</label>
-              <input class="form-control" id="name" name="name" [(ngModel)]="newDiagnostic.name" 
-              required
-              minlength="4" #NombreDelAnimalDiagnostico="ngModel"
-              [ngClass]="{
+            <label for="diagnosis" class="form-label">Nombre</label>
+            <input class="form-control" id="name" name="name" [(ngModel)]="newDiagnostic.name" required minlength="4"
+              #NombreDelAnimalDiagnostico="ngModel" [ngClass]="{
                'is-invalid': NombreDelAnimalDiagnostico.invalid && NombreDelAnimalDiagnostico.touched,
                'is-valid': NombreDelAnimalDiagnostico.valid && NombreDelAnimalDiagnostico.touched
-             }"
-              />
-              <!-- Mensajes de error -->
-           <div *ngIf="NombreDelAnimalDiagnostico.invalid && NombreDelAnimalDiagnostico.touched" class="invalid-feedback">
-             <div *ngIf="NombreDelAnimalDiagnostico.errors?.['required']">El nombre del animal diagnostico es obligatoria.</div>
-             <div *ngIf="NombreDelAnimalDiagnostico.errors?.['minlength']">El nombre del animal diagnostico debe tener al menos 4 caracteres.</div>
-           </div>
-
-           
+             }" />
+            <!-- Mensajes de error -->
+            <div *ngIf="NombreDelAnimalDiagnostico.invalid && NombreDelAnimalDiagnostico.touched"
+              class="invalid-feedback">
+              <div *ngIf="NombreDelAnimalDiagnostico.errors?.['required']">El nombre del animal diagnostico es
+                obligatoria.</div>
+              <div *ngIf="NombreDelAnimalDiagnostico.errors?.['minlength']">El nombre del animal diagnostico debe tener
+                al menos 4 caracteres.</div>
             </div>
-            
-            <div class="mb-3">
-              <label for="diagnosis" class="form-label">Diagnóstico</label>
-              <textarea class="form-control" id="diagnosis" name="diagnosis" [(ngModel)]="newDiagnostic.diagnosis" 
-              required
-              minlength="10" #animalDiagnostico="ngModel"
-             [ngClass]="{
+
+
+          </div>
+
+          <div class="mb-3">
+            <label for="diagnosis" class="form-label">Diagnóstico</label>
+            <textarea class="form-control" id="diagnosis" name="diagnosis" [(ngModel)]="newDiagnostic.diagnosis"
+              required minlength="10" #animalDiagnostico="ngModel" [ngClass]="{
               'is-invalid': animalDiagnostico.invalid && animalDiagnostico.touched,
               'is-valid': animalDiagnostico.valid && animalDiagnostico.touched
-            }"
-              ></textarea>
-              
-             <!-- Mensajes de error -->
+            }"></textarea>
+
+            <!-- Mensajes de error -->
             <div *ngIf="animalDiagnostico.invalid && animalDiagnostico.touched" class="invalid-feedback">
               <div *ngIf="animalDiagnostico.errors?.['required']">La descripción es obligatoria.</div>
-              <div *ngIf="animalDiagnostico.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+              <div *ngIf="animalDiagnostico.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.
+              </div>
             </div>
 
-           
-            </div>
-  
-           
-            <div class="mb-3">
-              <label for="animalId" class="form-label">Animal</label>
-              <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newDiagnostic.animalId" 
-              #semenId="ngModel" required
-              (change)="checkValidSelection(semenId)"
-              [ngClass]="{
+
+          </div>
+
+
+          <div class="mb-3">
+            <label for="animalId" class="form-label">Animal</label>
+            <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newDiagnostic.animalId"
+              #semenId="ngModel" required (change)="checkValidSelection(semenId)" [ngClass]="{
                 'is-invalid': semenId.invalid && semenId.touched,
                 'is-valid': semenId.valid && semenId.touched
               }">
-                <option value="" selected>Seleccione un animal</option>
-                <ng-container *ngIf="animales.length > 0">
-                  <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
+              <option value="" selected>Seleccione un animal</option>
+              <ng-container *ngIf="animales.length > 0">
+                <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
 
-                </ng-container>
-                <option *ngIf="animales.length === 0" disabled>No hay animales disponibles</option>
-             
-              </select>
-              
+              </ng-container>
+              <option *ngIf="animales.length === 0" disabled>No hay animales disponibles</option>
+
+            </select>
+
             <!-- Mensajes de error -->
             <div *ngIf="semenId.invalid && semenId.touched" class="invalid-feedback">
               Seleccionar un animal es obligatorio.
             </div>
-          
-            </div>
-  
-            <button type="submit" class="btn btn-success w-100" [disabled]="!diagnosticsForm.valid">Guardar</button>
-          </form>
-        </div>
+
+          </div>
+
+          <button type="submit" class="btn btn-success w-100" [disabled]="!diagnosticsForm.valid">Guardar</button>
+        </form>
       </div>
     </div>
   </div>
-  
+</div>

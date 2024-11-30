@@ -30,4 +30,9 @@ export class AlertaService {
     const url = `${this._baseUrl}/Alert/${id}`
     return this.http.put<Alerta>(url,Alerta);
   }
+
+  getAlertsNotRead(id:number){
+    return this.http.get<Alerta[]>(`${this._baseUrl}/Alert/GetAlertsNotReads/${id}`)
+  }
+  
 }

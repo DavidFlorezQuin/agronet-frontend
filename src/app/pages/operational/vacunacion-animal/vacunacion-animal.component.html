@@ -1,19 +1,20 @@
 <div class="container mt-3 border p-3 shadow-sm">
   <div class="d-flex justify-content-between">
   <section class="d-flex align-items-center gap-3">
-    <h2 class="fw-normal mb-0 w-50">Vacunación de Animales</h2>
+    <h2 class="fw-normal mb-0" style="font-size: 25px;">Vacunación de Animales</h2>
     <!-- Botón para abrir el modal -->
     <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#vaccineAnimalModal" id="btn-forms">
       <i class="bi bi-plus-circle mx-2"></i>
-      Registrar Vacuna
+      Nueva Vacuna
     </button>
 
     <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-      Descargar PDF
+      <i class="bi bi-file-earmark-pdf-fill"></i>
+      PDF
     </button>
     <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
       <i class="bi bi-file-spreadsheet"></i>
-      Descargar Excel
+      Excel
     </button>
   </section>
 
@@ -115,7 +116,7 @@
                 [(ngModel)]="newVaccineAnimal.dateApplied" required>
             </div>
 
-            <button type="submit" class="btn btn-primary" [disabled]="!productForm.valid">Enviar</button>
+            <button type="submit" class="btn btn-success w-100" [disabled]="!productForm.valid">Enviar</button>
           </form>
         </div>
       </div>

@@ -24,8 +24,13 @@ import { Animal } from '../animal/animal.module';
 import { CategoriaAlertaaService } from '../../Parametro/categoria-alerta/categoria-alerta.service';
 import { CategoriaAlerta } from '../../Parametro/categoria-alerta/categoria-alerta.module';
 import { ElementRef } from '@angular/core';
+import * as XLSX from 'xlsx'; // Librería XLSX
+import saveAs from 'file-saver';
+
 declare var bootstrap: any;
 import { Modal } from 'bootstrap';
+import { Finca } from '../finca/finca.module';
+import { FincaService } from '../finca/finca.service';
 @Component({
   selector: 'app-alerta',
   standalone: true,
@@ -53,85 +58,64 @@ export class AlertaComponent implements OnInit {
   IdFarm: number | null = null;
   IdUser: number | null = null;
   animals: Animal[] = [];
+  farms: Finca[] = [];
   CategoriaAlerta: CategoriaAlerta[] = [];
 
   newAlerta: Alerta = {
     id: 0,
-    name: '',
+    Name: '',
     description: '',
     date: new Date(),
     isRead: false,
+    farmsId: 0,
     animalId: 0,
     categoryAlertId: 0,
     usersId: 0,
   };
 
-  displayedColumns: string[] = ['id', 'name', 'date', 'isRead', 'animal', 'categoryAlert', 'estado','acciones'];
+  displayedColumns: string[] = ['id', 'name', 'date', 'isRead', 'animal', 'categoryAlert', 'estado', 'acciones'];
   dataSource!: MatTableDataSource<Alerta>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('Modal') Modal!: ElementRef;
 
-  constructor(private AlertaService: AlertaService, private alertService: AlertService, private animalService: AnimalService, private CategoriaAlertaaService: CategoriaAlertaaService) { }
+  constructor(private AlertaService: AlertaService, private alertService: AlertService, private animalService: AnimalService, private CategoriaAlertaaService: CategoriaAlertaaService, private FincaService: FincaService) { }
 
   ngOnInit(): void {
     const StorageId: string | null = localStorage.getItem('Usuario');
-    this.IdUser = Number(StorageId);
-    this.newAlerta.usersId = this.IdUser;
+    const IdUser: number = StorageId ? Number(StorageId) : 0;
+
+
+    this.newAlerta.usersId = IdUser;
 
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
+    const idFarm: number = idFarmString ? Number(idFarmString) : 0;
 
-    if (idFarmString && !isNaN(Number(idFarmString))) {
-      this.IdFarm = Number(idFarmString); // Convertir a number
-    } else {
-      this.IdFarm = null; // Si no hay ID, establecer a null
-    }
-
-    if (this.IdFarm !== null) {
-      this.listAlerta(this.IdFarm);
-      this.ListAnimal(this.IdFarm);
-      this.listCategoryAlert();
-    } else {
-      console.warn('No se pudo obtener el ID de la finca.');
-    }
+    this.listAlerta(IdUser);
+    this.ListAnimal(idFarm);
+    this.ListFincas(IdUser);
+    this.listCategoryAlert();
   }
-  // Función para cerrar el modal
-  closeModal(): void {
-    const modalElement = document.getElementById('animalModal');
-    if (modalElement) {
-      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-      modal.hide(); // Cierra el modal
-      modalElement.classList.remove('show');
-      modalElement.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('modal-open');
-      document.body.style.overflow = ''; // Restaurar el overflow del body
-  
-      // Eliminar cualquier 'modal-backdrop' que haya quedado
-      const backdrop = document.querySelector('.modal-backdrop');
-      if (backdrop) {
-        backdrop.remove(); // Elimina la capa de fondo negra
-      }
-    } else {
-      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
-    }
-  }
-  
-
   ListAnimal(farmId: number): void {
     this.animalService.getAnimals(farmId).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.animals = data;
-      },
-      error: () => {
-        this.alertService.ErrorAlert('Error al obtener los animales');
+      }
+    });
+  }
+  ListFincas(IdUser: number): void {
+    this.FincaService.getFincas(IdUser).subscribe({
+      next: (res: any) => {
+        const data = res.data;
+        this.farms = data;
       }
     });
   }
 
-  listAlerta(IdFarm: number): void {
-    this.AlertaService.getAlerta(IdFarm).subscribe({
+  listAlerta(IdUser: number): void {
+    this.AlertaService.getAlerta(IdUser).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.dataSource = new MatTableDataSource(data);
@@ -139,9 +123,6 @@ export class AlertaComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.dataSource.data = data;
         this.alerta = data;
-      },
-      error: () => {
-        this.alertService.ErrorAlert('Error al obtener los datos');
       }
     });
   }
@@ -182,13 +163,12 @@ export class AlertaComponent implements OnInit {
     // Datos de la tabla
     const data = this.dataSource.data.map(alerta => [
       alerta.id,
-      alerta.name,
+      alerta.Name,
       alerta.description,
       alerta.date,
       alerta.isRead,
     ]);
 
-    // Generar tabla usando autoTable
     (doc as any).autoTable({
       head: headers,
       body: data,
@@ -254,16 +234,17 @@ export class AlertaComponent implements OnInit {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
       return;
     }
-
+    
     const formData = form.value;
     const alertaData: Alerta = {
-      id: this.newAlerta.id, 
+      id: this.newAlerta.id,
       ...formData,
       animalId: Number(formData.animalId) !== 0 ? Number(formData.animalId) : null,
       categoryAlertId: Number(formData.categoryAlertId),
       usersId: Number(formData.usersId),
       isRead: false,
-      date: new Date(formData.date).toISOString()
+      date: new Date(formData.date).toISOString(),
+      farmsId: Number(formData.farmsId)
     };
 
     if (this.newAlerta.id > 0) {
@@ -273,9 +254,7 @@ export class AlertaComponent implements OnInit {
           this.resetForm();
           if (this.IdFarm !== null) {
             this.listAlerta(this.IdFarm);
-            
           }
-          this.closeModal();
         },
         error: (err) => {
           console.error(err);
@@ -283,15 +262,19 @@ export class AlertaComponent implements OnInit {
         }
       });
     } else {
+      const alertaData: Alerta = {
+        ...formData,
+        farmsId: this.IdFarm
+      };
+      alert(this.IdFarm)
       this.AlertaService.createAlerta(alertaData).subscribe({
         next: () => {
           this.alertService.SuccessAlert('Creado correctamente');
           this.resetForm();
           if (this.IdFarm !== null) {
             this.listAlerta(this.IdFarm);
-            
+
           }
-          this.closeModal();
         },
         error: (err) => {
           console.error(err);
@@ -299,25 +282,22 @@ export class AlertaComponent implements OnInit {
         }
       });
     }
-
   }
 
   setDefaultSelections(): void {
     // Si hay toros disponibles, seleccionar el primero como valor predeterminado
     if (this.animals.length > 0) {
-      this.newAlerta.animalId= this.animals[0].id;
+      this.newAlerta.animalId = this.animals[0].id;
     }
     // Si hay vacas disponibles, seleccionar la primera como valor predeterminado
     if (this.CategoriaAlerta.length > 0) {
-      this.newAlerta.categoryAlertId= this.CategoriaAlerta[0].id;
-    }
-  }
-
-
-  resetForm(): void {
-    this.newAlerta = { ...this.newAlerta, id: 0, name: '', description: '', date: new Date(), isRead: false };
+      this.newAlerta.categoryAlertId = this.CategoriaAlerta[0].id;
+    }
   }
 
+  resetForm(): void {
+    this.newAlerta = { ...this.newAlerta, id: 0, Name: '', description: '', date: new Date(), isRead: false };
+  }
 
   private refreshAlertList(): void {
     if (this.IdFarm !== null) {
@@ -335,4 +315,32 @@ export class AlertaComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  downloadExcel(): void {
+    // Paso 1: Preparar los datos para el Excel
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.dataSource.data);
+
+    // Paso 2: Crear el workbook (libro de Excel)
+    const workbook: XLSX.WorkBook = {
+      Sheets: { 'Alertas': worksheet },
+      SheetNames: ['Alertas'],
+    };
+
+    // Paso 3: Convertir el workbook a un archivo binario
+    const excelBuffer: any = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+
+    // Paso 4: Llamar a la función para guardar el archivo
+    this.saveAsExcelFile(excelBuffer, 'Alertas');
+  }
+
+  // Función auxiliar para guardar el archivo
+  private saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], { type: 'application/octet-stream' });
+    saveAs(data, `${fileName}_${new Date().toLocaleDateString()}.xlsx`);
+  }
+
+
 }

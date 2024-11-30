@@ -27,5 +27,7 @@ export class ProductionsService {
   deleteProduction(id: number): Observable<void> {
     return this.http.delete<void>(`${this._baseUrl}/Production/${id}`);
   }
-
+  getMonthlyMilkProduction(id:number): Observable<any[]> {
+    return this.http.get<any[]>(`${this._baseUrl}/Production/monthly-milk-production/${id}`);
+  }
 }

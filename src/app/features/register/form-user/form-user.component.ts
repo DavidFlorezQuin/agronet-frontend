@@ -47,7 +47,7 @@ export class FormUserComponent implements OnInit {
     }
   }
   onSubmit(form: NgForm): void {
-    if (this.personId !== null) { // Asegúrate de que PersonId no es null
+    if (this.personId !== null) { 
       this.newUser.personId = this.personId;
 
       this.userService.createUser(this.newUser).subscribe({

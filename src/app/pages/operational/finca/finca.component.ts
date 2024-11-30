@@ -42,16 +42,20 @@ import { Modal } from 'bootstrap';
 })
 export class FincaComponent implements OnInit {
 
+  usuarioId: number | null = null;
+
   IdUser: number | null = null;
   fincas: Finca[] = [];
   newFinca: Finca = {
     id: 0,
     City: '',
+    code:'',
     name: '',
     photo: '',
     hectare: 0,
     description: '',
-    cityId: 0
+    cityId: 0,
+    state: true
   }
 
   displayedColumns: string[] = ['id', 'name', 'hectare', 'description', 'cityId', 'acciones'];
@@ -63,7 +67,9 @@ export class FincaComponent implements OnInit {
   constructor(private fincaService: FincaService, private alertService: AlertService, private cityService: CityService, private userFarmService: FarmUserService) { }
 
   ngOnInit(): void {
+
     const StorageId: string | null = localStorage.getItem('Usuario');
+    this.usuarioId = StorageId ? Number(StorageId) : null;
 
     if (StorageId && !isNaN(Number(StorageId))) {
       this.IdUser = Number(StorageId);
@@ -184,31 +190,14 @@ export class FincaComponent implements OnInit {
       }
     });
   }
-  closeModal(): void {
-    const modalElement = document.getElementById('exampleModal');
-    if (modalElement) {
-      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-      modal.hide(); // Cierra el modal
-      modalElement.classList.remove('show');
-      modalElement.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('modal-open');
-      document.body.style.overflow = ''; // Restaurar el overflow del body
   
-      // Eliminar cualquier 'modal-backdrop' que haya quedado
-      const backdrop = document.querySelector('.modal-backdrop');
-      if (backdrop) {
-        backdrop.remove(); // Elimina la capa de fondo negra
-      }
-    } else {
-      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
-    }
-  }
   onSubmit(form: NgForm): void {
     if (form.valid) {
       const formData = form.value;
       const fincaData: Finca = {
         ...formData,
         id: this.newFinca.id,
+        code: this.newFinca.code,
         name: this.newFinca.name,
         photo:this.newFinca.photo,
         hectare: this.newFinca.hectare,
@@ -222,39 +211,40 @@ export class FincaComponent implements OnInit {
             form.reset();
             if (this.IdUser !== null)
                this.listFincas(this.IdUser);
-            this.closeModal();
           },
           error: () => this.alertService.ErrorAlert('Error al actualizar')
         });
       } else {
         const formData = form.value;
-        const fincaToCreate: Finca = { ...formData, id: 0 };
-
-        // Crear la finca primero
-        this.fincaService.createFinca(fincaToCreate).subscribe({
+        const fincaToCreate: Finca = { ...formData, id: 0, code:'' };
+        
+        if (this.IdUser !== null) {
+        this.fincaService.createFinca(fincaToCreate, this.IdUser).subscribe({
           next: (response: any) => {
             this.alertService.SuccessAlert('Finca creada correctamente');
-            form.reset();
-            const fincaId = response.data.id; // Acceso directo al ID
-            console.log(fincaId)
-            if (this.IdUser !== null) {
-              this.createFarmUser(fincaId);
-              this.listFincas(this.IdUser);
-              
+            form.reset();                
               if (this.IdUser !== null) {
                 this.listFincas(this.IdUser);
-                
               }
-              this.closeModal();
-            } else {
-              console.warn('No se pudo obtener el ID del usuario.');
-            }
           },
           error: () => this.alertService.ErrorAlert('Error al crear finca')
         });
       }
+    }
+
     } else {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
+    }
+  }
+
+  onPhotoChange(event: any): void {
+    const file = event.target.files[0]; // Tomamos el primer archivo seleccionado
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.newFinca.photo = reader.result as string; // Guardamos el resultado en base64
+      };
+      reader.readAsDataURL(file); // Leemos el archivo como base64
     }
   }
 
@@ -263,32 +253,17 @@ export class FincaComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  createFarmUser(farmId: number): void {
-    if (this.IdUser !== null) {
-      const userFarm: FarmUser = {
-        id: 0,
-        FarmsId: farmId,
-        UsersId: this.IdUser
-      };
-
-      this.userFarmService.createFarmUsers(userFarm).subscribe({
-        next: () => {
-        },
-      });
-    } else {
-      console.warn('ID de usuario no disponible para crear la relación.');
-    }
-  }
-
   resetForm(): void {
     this.newFinca = {
       id: 0,
+      code: '',
       City: '',
       name: '',
       photo: '',
       hectare: 0,
       description: '',
-      cityId: 0
+      cityId: 0,
+      state: true
     }
   }
 

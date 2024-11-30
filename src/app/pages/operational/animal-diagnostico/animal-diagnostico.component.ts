@@ -34,7 +34,8 @@ import { Modal } from 'bootstrap';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule],
-  templateUrl: './animal-diagnostico.component.html'
+  templateUrl: './animal-diagnostico.component.html',
+  styleUrl: './animal-diagnostico.css'
 })
 export class AnimalDiagnosticoComponent implements OnInit {
   IdFarm: number | null = null;
@@ -45,7 +46,7 @@ export class AnimalDiagnosticoComponent implements OnInit {
   usuarios: User[] = [];
 
   newDiagnostic: AnimalDiagnostics = {
-    id: 0, name:'', animal:'', users:'',state:'', diagnosis: '', animalId: 0, usersId: 0,
+    id: 0, name:'', animal:'', users:'',state:'', diagnosis: '', animalId: 0, usersId: 0, DiseaseStatus: ''
 
   };
 
@@ -236,7 +237,8 @@ export class AnimalDiagnosticoComponent implements OnInit {
         const formData = form.value; 
         const diagnostic: AnimalDiagnostics = {
           ...formData,
-          usersId:Number(formData.usersId)
+          usersId:Number(formData.usersId),
+          DiseaseStatus: 'PENDIENTE'
         }
         this.diagnosticsService.createAnimalDiagnostics(diagnostic).subscribe({
           next: () => {

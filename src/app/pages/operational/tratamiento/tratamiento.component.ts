@@ -212,7 +212,12 @@ export class TratamientoComponent implements OnInit {
           }
         })
       } else {
-        this.treatmentsService.createTreatment(this.newTratamiento).subscribe({
+        const formData = form.value; 
+        const tratamiento: Treatments = {
+          ...formData,
+          Result: 'EN PROCESO'
+        }
+        this.treatmentsService.createTreatment(tratamiento).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Agregado correctamente');
             if (this.IdFarm !== null) {

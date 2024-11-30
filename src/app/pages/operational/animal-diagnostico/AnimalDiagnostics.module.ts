@@ -6,5 +6,6 @@ export interface AnimalDiagnostics {
     state:string, 
     diagnosis: string, 
     animalId: number, 
+    DiseaseStatus: string,
     usersId: number,
 }

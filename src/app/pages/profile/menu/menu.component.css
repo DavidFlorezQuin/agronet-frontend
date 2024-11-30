@@ -1,6 +1,6 @@
 
-  .bg-green{
-    background-color: #2D7A11;
+.bg-green{
+    background-color: #ffffff;
   }
   .bi {
     vertical-align: -.125em;
@@ -73,6 +73,7 @@
 
 .medium-text{
   font-size: 1rem; /* Ajusta el tamaño según tus necesidades */
+  color: var(--color-green-500);
 }
 
 .collapse {
@@ -94,8 +95,12 @@
 
 .nav-link-menu{
   margin: 10px 0;
-  font-size: 17px;
+  font-size: 17px;  
+  font-weight: 600;
   transition: 0.2s all;
+  cursor: pointer;
+  color: var(--color-green-500)!important
+  
 }
 
 .nav-link-menu:hover{

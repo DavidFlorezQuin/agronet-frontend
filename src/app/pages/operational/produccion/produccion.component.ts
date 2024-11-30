@@ -118,7 +118,7 @@ export class ProduccionComponent implements OnInit {
     }
   }
   ListAnimal(farmId: number): void {
-    this.animalService.getAnimals(farmId).subscribe({
+    this.animalService.getAnimalsMilks(farmId).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.animales = data;

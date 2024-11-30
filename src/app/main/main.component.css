@@ -1,50 +1,90 @@
-/* main.component.css */
-.container-main {
-    display: flex;
-    height: 100vh; /* Ocupa todo el alto de la ventana */
-    margin: 0;
-    background-color: #fffafa; /* Beige claro */
+.app-menu {
+  flex: 0 0 16.6667%; /* Aproximadamente 2 de 12 columnas */
+  background: #fff;
+  border-right: 1px solid #ccc; /* Línea de separación */
+  height: 100vh; /* Toda la altura de la ventana */
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow-y: auto; /* Scroll en caso de contenido grande */
+}
 
-  } 
-  
-  .app-menu {
-    flex: 0 0 16.6667%; /* Ocupa 2 de 12 columnas (aproximadamente 16.67%) */
-    background: #fff;
-    border-right: 1px solid #ccc; /* Línea de separación */
-    height: 100vh; /* Ocupa toda la altura de la ventana */
-    position: fixed; /* Fija el menú en una posición */
-    top: 0;
-    left: 0;
-    overflow-y: auto; /* Permite el scroll si el contenido es grande */
-  }
+.bg-green{
+  background-color: var(--color-green-600);
+}
 
+/* Personalización del scroll */
 .app-menu::-webkit-scrollbar {
-  width: 5px; /* Ancho de la barra de desplazamiento */
+  width: 5px;
 }
 
-/* Estilo para el "track" (parte de la barra que se mueve) */
 .app-menu::-webkit-scrollbar-track {
-  background: #e0e0e0; /* Color del track */
-  border-radius: 10px; /* Esquinas redondeadas */
+  background: #e0e0e0;
+  border-radius: 10px;
 }
 
-/* Estilo para el "thumb" (la parte que se arrastra) */
 .app-menu::-webkit-scrollbar-thumb {
-  background: var(--color-green-500); /* Color del thumb */
-  border-radius: 20px; /* Esquinas redondeadas */
+  background: var(--color-green-500);
+  border-radius: 20px;
 }
 
-/* Estilo para el "thumb" cuando se está usando */
 .app-menu::-webkit-scrollbar-thumb:hover {
-  background: var(--color-green-600); /* Color del thumb al pasar el mouse */
+  background: var(--color-green-800);
 }
 
-  .content {
-    margin-left: 16.6667%; /* Ajusta el contenido para que no quede debajo del menú */
-    width: 83.3333%; /* Ocupa el espacio restante (10 de 12 columnas) */
-    padding: 20px; /* Espaciado interno */
-    overflow-y: auto; /* Permite el scroll si el contenido es grande */
-    height: 100vh; /* Ocupa toda la altura de la ventana */
-  }
+.content {
+  margin-left: 16.6667%; /* Ajusta para que no se superponga al menú */
+  width: 83.3333%; /* El resto del espacio disponible */
+  padding: 20px;
+  height: 100vh;
+}
+
+.btn-join{
+  background-color: var(--color-green-600);
+  width: 250px;
+  margin-right: 10px;
+  color: white;
+}
+
+.bi{
+  color: var(--color-green-600);
+  font-size: 25px;
+}
+
+a{
+  color: var(--color-green-500);
+  font-weight: 700;
+  text-decoration:none ;
   
-    /* Ocultar la barra de desplazamiento en todos los navegadores */
+}
+
+.text-alert{
+  font-size: 15px;
+}
+.icon-container {
+  position: relative; /* Necesario para posicionar .icon-alert relativo a este contenedor */
+}
+
+.icon-alert {
+  background-color: red;
+  color: white;
+  border-radius: 50%; /* 50% para hacer un círculo perfecto */
+  position: absolute; /* Cambiar a absolute */
+  right: 33px; /* Ajusta según necesites */
+  top: -7px; /* Ajusta según necesites */
+  width: 20px; /* Ajusta el tamaño según sea necesario */
+  height: 20px; /* Ajusta el tamaño según sea necesario */
+  display: flex; /* Usar flex para centrar el texto */
+  justify-content: center; /* Centrar horizontalmente */
+  align-items: center; /* Centrar verticalmente */
+  font-size: 10px; /* Tamaño de texto */
+}
+
+.icon-alert p {
+  margin: 0; /* Asegúrate de que no haya márgenes adicionales */
+}
+
+.bi{
+  cursor: pointer;
+  color: var(--color-green-600)!important;
+}

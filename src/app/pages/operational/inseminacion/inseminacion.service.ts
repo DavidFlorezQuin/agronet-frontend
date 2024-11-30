@@ -28,4 +28,9 @@ export class InseminationService {
   createInsemination(insemination: Insemination): Observable<Insemination> {
     return this.http.post<Insemination>(`${this._baseUrl}/Insemination/save`, insemination);
   }
+  registerAbortion(id: number): Observable<void> {
+    const url = `${this._baseUrl}/Insemination/${id}/Abortion`;
+      return this.http.put<void>(url, {});
+  }
+  
 }

@@ -3,18 +3,19 @@
 
   <div class="d-flex justify-content-between">
 
-    <section class="d-flex align-items-center gap-3">
-      <h2 class="fw-normal mb-0">Inseminaciones</h2>
+    <section class="d-flex align-items-center gap-2">
+      <h2 class="fw-normal mb-0" style="font-size: 40px;">Inseminaciones</h2>
       <button type="button" data-bs-toggle="modal" data-bs-target="#inseminacionModal" id="btn-forms" class="btn h-50">
-        <i class="bi bi-plus-circle mx-2"></i>
-        Agregar Inseminación
+        <i class="bi bi-plus-circle mx-1"></i>
+        Nueva Inseminación
       </button>
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-        Descargar PDF
+        <i class="bi bi-file-earmark-pdf-fill"></i>
+        PDF
       </button>
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
         <i class="bi bi-file-spreadsheet"></i>
-        Descargar Excel
+        Excel
       </button>
     </section>
 
@@ -26,9 +27,11 @@
 
   </div>
 
-  <div *ngIf="inseminations.length === 0"><div class="alert alert-warning" role="alert">
-    No hay inseminación activas.
-  </div></div>
+  <div *ngIf="inseminations.length === 0">
+    <div class="alert alert-warning" role="alert">
+      No hay inseminación activas.
+    </div>
+  </div>
 
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
 
@@ -64,26 +67,33 @@
       <td mat-cell *matCellDef="let element"> {{element.inseminationType}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="estado">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado</th>
-      <td mat-cell *matCellDef="let element">
-        <span [ngStyle]="{'color': element.state ? 'green' : 'red'}">
-          ●
-        </span>
-        {{ element.state ? ' ACTIVO' : ' INACTIVO' }}
-      </td>
-    </ng-container>
-      
-    <!-- Acciones Column -->
+
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
-        <div class="d-flex gap-2 justify-content-center" id="icons-section">
-          <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#inseminacionModal" (click)="onEdit(element)"></i>
-          <i class="bi bi-trash" (click)="onDelete(element.id)"></i>
-        </div>
+
+
+<div class="d-flex gap-2 justify-content-center" style="position: absolute;" id="icons-section">
+  
+  <!-- Dropdown -->
+  <div class="dropdown-center" style="position: absolute; z-index: 1050; left: -30px;">
+    <a class="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-bell"></i>
+    </a>
+    <ul class="dropdown-menu gap-3">
+      <li><a class="dropdown-item bg-danger w-75 rounded-5 text-white mx-auto text-center mb-1" style="cursor: pointer;" (click)="registerAbortion(element.id)">Aborto</a></li>
+      <li><a class="dropdown-item bg-green-agro w-75 rounded-5 text-white mx-auto text-center" href="nacimientos">Nacimiento</a></li>
+    </ul>
+  </div>
+
+  <!-- Edit and Delete Icons -->
+  <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#inseminacionModal" (click)="onEdit(element)"></i>
+  <i class="bi bi-trash" (click)="onDelete(element.id)"></i>
+</div>
+
       </td>
     </ng-container>
+    
 
     <!-- Header and Row Definitions -->
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -94,7 +104,8 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="inseminacionModal" #Modal tabindex="-1" aria-labelledby="inseminacionModalLabel" aria-hidden="true">
+<div class="modal fade" id="inseminacionModal" #Modal tabindex="-1" aria-labelledby="inseminacionModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -105,71 +116,74 @@
       </div>
       <div class="modal-body">
         <form #inseminacionForm="ngForm" (ngSubmit)="onSubmit(inseminacionForm)">
-          
+
           <div class="mb-3">
             <label for="description" class="form-label">Descripción</label>
-            <input type="text" class="form-control" id="description" name="description" [(ngModel)]="newInsemination.description" 
-             required minlength="10" #descriptionField="ngModel"
-             [ngClass]="{
+            <input type="text" class="form-control" id="description" name="description"
+              [(ngModel)]="newInsemination.description" required minlength="10" #descriptionField="ngModel" [ngClass]="{
               'is-invalid': descriptionField.invalid && descriptionField.touched,
               'is-valid': descriptionField.valid && descriptionField.touched
-            }"/>
-             <!-- Mensajes de error -->
+            }" />
+            <!-- Mensajes de error -->
             <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
               <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
-              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.
+              </div>
             </div>
 
-           
+
           </div>
           <div class="mb-3">
             <label for="semenId" class="form-label">Padre</label>
-            <select class="form-control" id="semenId" name="semenId" [(ngModel)]="newInsemination.semenId"
-              required>
+            <select class="form-control" id="semenId" name="semenId" [(ngModel)]="newInsemination.semenId" required>
               <option value="">Seleccione un animal</option>
               <!-- <option value="">Semental no propiedad de la finca</option> -->
               <ng-container *ngIf="bulls.length > 0">
                 <option *ngFor="let bull of bulls" [value]="bull.id">{{ bull.name }}</option>
               </ng-container>
-              
+
               <option *ngIf="bulls.length === 0" disabled>No hay animales disponibles</option>
             </select>
-            
+
           </div>
-          
+
           <div class="mb-3">
             <label for="motherId" class="form-label">Madre</label>
-            <select class="form-control" id="motherId" name="motherId" [(ngModel)]="newInsemination.motherId" #motherId="ngModel">
+            <select class="form-control" id="motherId" name="motherId" [(ngModel)]="newInsemination.motherId"
+              #motherId="ngModel">
               <option value="">Seleccione un animal</option>
               <ng-container *ngIf="cows.length > 0">
                 <option *ngFor="let cow of cows" [value]="cow.id">{{ cow.name }}</option>
               </ng-container>
               <option *ngIf="cows.length === 0" disabled>No hay animales disponibles</option>
             </select>
-           
+
           </div>
-          
-          
 
           <div class="mb-3">
             <label for="result" class="form-label">Estado del proceso</label>
-
-            <select class="form-control" id="result" name="result" [(ngModel)]="newInsemination.result" 
-            #inseminationType="ngModel"
-            required>
-              <option value="">Selecciona el resultado</option>
-              <option value="FALLIDO">Fallido</option>
-              <option value="EXITOSO">Exitoso</option>
-              <option value="PENDIENTE">Pendiente</option>
+            <select class="form-control" id="result" name="result" [(ngModel)]="newInsemination.result"
+              #inseminationResult="ngModel" required>
+              <option value="" selected>Selecciona el resultado</option>
+              <!-- Opciones según si es nuevo o edición -->
+              <ng-container *ngIf="!newInsemination.id; else editOptions">
+                <option value="PENDIENTE">Pendiente</option>
+              </ng-container>
+              <ng-template #editOptions>
+                <option value="EXITOSO">Exitoso</option>
+                <option value="FALLIDO">Fallido</option>
+              </ng-template>
             </select>
-            
+            <div *ngIf="inseminationResult.invalid && inseminationResult.touched" class="text-danger">
+              El estado del proceso es obligatorio.
+            </div>
           </div>
+
 
           <div class="mb-5">
             <label for="inseminationType" class="form-label">Tipo Inseminación</label>
-            <select class="form-control" id="inseminationType" name="inseminationType" [(ngModel)]="newInsemination.inseminationType" 
-            #inseminationTypeType="ngModel"
-            required>
+            <select class="form-control" id="inseminationType" name="inseminationType"
+              [(ngModel)]="newInsemination.inseminationType" #inseminationTypeType="ngModel" required>
               <option value="" disabled selected>Selecciona un tipo inseminación</option>
               <option value="NATURAL">Natural</option>
               <option value="ARTIFICIAL">Artificial</option>
@@ -188,5 +202,3 @@
     </div>
   </div>
 </div>
-
-

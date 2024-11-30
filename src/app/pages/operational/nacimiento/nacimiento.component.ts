@@ -49,7 +49,7 @@ export class NacimientoComponent implements OnInit {
   nacimiento: Nacimiento[] = [];
   newNacimiento: Nacimiento = {
     id: 0,
-    assistence: '', 
+    assistence: 0, 
     result: 0,
     description: '',
     birthWeight: 0,
@@ -207,7 +207,7 @@ export class NacimientoComponent implements OnInit {
             form.reset();
             this.newNacimiento = {
               id: 0,
-              assistence: '', 
+              assistence: 0, 
               result: 0,
               description: '',
               birthWeight: 0,
@@ -227,8 +227,17 @@ export class NacimientoComponent implements OnInit {
           }
         });
       } else {
-        this.nacimientoService.createNacimiento(this.newNacimiento).subscribe({
+
+
+        const formData = form.value;
+        const Data: Nacimiento = {
+          ...formData,
+          assistence: this.newNacimiento.assistence === 1 ? true : false ,
+          state:true
+        }
+        this.nacimientoService.createNacimiento(Data).subscribe({
           next: () => {
+
             Swal.fire({
               title: `Nacimiento registrado con éxito!`,
               icon: 'success',

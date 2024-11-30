@@ -6,15 +6,16 @@
       <button class="btn btn-success" id="btn-forms" class="btn h-50" data-bs-toggle="modal"
       class="btn h-50"  data-bs-target="#modalLote">
         <i class="bi bi-plus-circle mx-2"></i>
-        Agregar Lote
+        Nuevo Lote
       </button>
 
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-        Descargar PDF
+        <i class="bi bi-file-earmark-pdf-fill"></i>
+        PDF
       </button>
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
         <i class="bi bi-file-spreadsheet"></i>
-        Descargar Excel
+        Excel
       </button>
 
     </section>
@@ -23,8 +24,6 @@
       <mat-label>Buscar</mat-label>
       <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar por nombre o descripción" />
     </mat-form-field>
-
-
   </div>
 
   <div *ngIf="lote.length === 0"><div class="alert alert-warning" role="alert">
@@ -74,70 +73,72 @@
 
   <!-- Paginación -->
   <mat-paginator [pageSizeOptions]="[5, 10, 15]" showFirstLastButtons></mat-paginator>
-
-  <!-- Modal para agregar/editar lote -->
-  <div class="modal fade" #Modal id="modalLote" tabindex="-1" aria-labelledby="modalLoteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalLoteLabel">{{ newLote.id ? 'Editar Lote' : 'Agregar Lote' }}</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form #loteForm="ngForm" (ngSubmit)="onSubmit(loteForm)">
-            <div class="mb-3">
-              <label for="name" class="form-label">Nombre del lote</label>
-              <input type="text" id="name" class="form-control" name="name" [(ngModel)]="newLote.name" 
-              
+<!-- Modal para agregar/editar lote -->
+<div class="modal fade" #Modal id="modalLote" tabindex="-1" aria-labelledby="modalLoteLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalLoteLabel">{{ newLote.id ? 'Editar Lote' : 'Agregar Lote' }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #loteForm="ngForm" (ngSubmit)="onSubmit(loteForm)">
+          <div class="mb-3">
+            <label for="name" class="form-label">Nombre del lote</label>
+            <input type="text" id="name" class="form-control" name="name" [(ngModel)]="newLote.name" 
               required 
               minlength="4" #NombreDelAnimalDiagnostico="ngModel"
               [ngClass]="{
-               'is-invalid': NombreDelAnimalDiagnostico.invalid && NombreDelAnimalDiagnostico.touched,
-               'is-valid': NombreDelAnimalDiagnostico.valid && NombreDelAnimalDiagnostico.touched
-             }"
-              />
-              <!-- Mensajes de error -->
-           <div *ngIf="NombreDelAnimalDiagnostico.invalid && NombreDelAnimalDiagnostico.touched" class="invalid-feedback">
-             <div *ngIf="NombreDelAnimalDiagnostico.errors?.['required']">El nombre del lote diagnostico es obligatoria.</div>
-             <div *ngIf="NombreDelAnimalDiagnostico.errors?.['minlength']">El nombre del lote diagnostico debe tener al menos 4 caracteres.</div>
-           </div>
+                'is-invalid': NombreDelAnimalDiagnostico.invalid && NombreDelAnimalDiagnostico.touched,
+                'is-valid': NombreDelAnimalDiagnostico.valid && NombreDelAnimalDiagnostico.touched
+              }"
+            />
+            <!-- Mensajes de error -->
+            <div *ngIf="NombreDelAnimalDiagnostico.invalid && NombreDelAnimalDiagnostico.touched" class="invalid-feedback">
+              <div *ngIf="NombreDelAnimalDiagnostico.errors?.['required']">El nombre del lote diagnostico es obligatoria.</div>
+              <div *ngIf="NombreDelAnimalDiagnostico.errors?.['minlength']">El nombre del lote diagnostico debe tener al menos 4 caracteres.</div>
             </div>
+          </div>
 
-            <div class="mb-3">
-              <label for="hectare" class="form-label">Hectáreas</label>
-              <input type="number" id="hectare" class="form-control" name="hectare" [(ngModel)]="newLote.hectare"
-                required min="35" max="1700"required min="1" pattern="^[1-9]\d*$*-" #hectareas="ngModel"
-              [ngClass]="{'is-invalid': hectareas.invalid && hectareas.touched, 'is-valid':
-               hectareas.valid && hectareas.touched}"  (keypress)="preventNegative($event)" />
-              
-               <!-- Mensajes de error -->
-              <div *ngIf="hectareas.invalid && hectareas.touched" class="invalid-feedback">
-                  <div *ngIf="hectareas.errors?.['required']">La hectárea es obligatorio.</div>
-                  <div *ngIf="hectareas.errors?.['min']">La hectárea debe ser mayor a 0.</div>
-                  <div *ngIf="hectareas.errors?.['max']" >La hectárea excede el limite de 1700</div>
-                  <div *ngIf="hectareas.errors?.['pattern']">La hectárea debe ser un número positivo.</div>
+          <div class="mb-3">
+            <label for="hectare" class="form-label">Hectáreas</label>
+            <input type="number" id="hectare" class="form-control" name="hectare" [(ngModel)]="newLote.hectare"
+              required min="35" max="1700" required min="1" pattern="^[1-9]\d*$" #hectareas="ngModel"
+              [ngClass]="{'is-invalid': hectareas.invalid && hectareas.touched, 'is-valid': hectareas.valid && hectareas.touched}" 
+              (keypress)="preventNegative($event)" />
+            <!-- Mensajes de error -->
+            <div *ngIf="hectareas.invalid && hectareas.touched" class="invalid-feedback">
+              <div *ngIf="hectareas.errors?.['required']">La hectárea es obligatorio.</div>
+              <div *ngIf="hectareas.errors?.['min']">La hectárea debe ser mayor a 0.</div>
+              <div *ngIf="hectareas.errors?.['max']">La hectárea excede el limite de 1700</div>
+              <div *ngIf="hectareas.errors?.['pattern']">La hectárea debe ser un número positivo.</div>
             </div>
-            </div>
-            <div class="mb-3">
-              <label for="farmId" class="form-label">Finca</label>
-              <select class="form-control" id="farmId" name="farmId" [(ngModel)]="newLote.farmId" 
-               required
-               
-                >
-                <option value="" selected>Seleccione una Finca</option>
-                <ng-container *ngIf="fincas.length > 0">
-                  <option *ngFor="let finca of fincas" [value]="finca.id">{{ finca.name }}</option>
-  
-                </ng-container>
-                <option *ngIf="fincas.length === 0" disabled>No hay fincas disponibles</option>
-             
-              </select>
-             
-            </div>
-            <button type="submit" class="btn btn-success w-100">{{ newLote.id ? 'Actualizar' : 'Agregar' }}</button>
-          </form>
-        </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="farmId" class="form-label">Finca</label>
+            <select class="form-control" id="farmId" name="farmId" [(ngModel)]="newLote.farmId" required>
+              <option value="" selected>Seleccione una Finca</option>
+              <ng-container *ngIf="fincas.length > 0">
+                <option *ngFor="let finca of fincas" [value]="finca.id">{{ finca.name }}</option>
+              </ng-container>
+              <option *ngIf="fincas.length === 0" disabled>No hay fincas disponibles</option>
+            </select>
+          </div>
+
+          <!-- Campo de estado (checkbox) -->
+          <div class="mb-3 form-check form-switch">
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" [(ngModel)]="newLote.state">
+            <label class="form-check-label" for="flexSwitchCheckChecked">
+              {{ newLote.state ? 'Activo' : 'Inactivo' }}
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100">{{ newLote.id ? 'Actualizar' : 'Agregar' }}</button>
+        </form>
       </div>
     </div>
   </div>
+</div>
+
 </div>

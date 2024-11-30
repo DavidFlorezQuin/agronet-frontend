@@ -25,7 +25,8 @@ export class FincaService {
     return this.http.put<Finca>(`${this._baseUrl}/Farm/${id}`, finca);
   }
 
-  createFinca(finca: Finca): Observable<Finca> {
-    return this.http.post<Finca>(`${this._baseUrl}/Farm/save`, finca);
+  createFinca(finca: Finca, idUser: number): Observable<Finca> {
+    const body = { FarmDto: finca, UserId: idUser };
+    return this.http.post<Finca>(`${this._baseUrl}/Farm/saveAsync`, body);
   }
 }

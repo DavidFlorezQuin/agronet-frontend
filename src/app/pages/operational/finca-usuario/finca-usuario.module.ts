@@ -1,6 +1,8 @@
 export interface FarmUser {
     id: number;
-    FarmsId: number;
+    farmsId: number;
+    farm: string,
+    users: string;
     UsersId: number;
   }
   

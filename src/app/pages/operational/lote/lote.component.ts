@@ -48,6 +48,7 @@ export class LoteComponent implements OnInit {
   newLote: Lote = {
     id: 0, name: '', hectare: 0,
     farmId: 0,
+    state: true
   }
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -117,6 +118,7 @@ export class LoteComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.dataSource.data = data;
+        this.lote = data; 
       },
       error: () => {
         this.alertaService.ErrorAlert('Error al obtener los datos');
@@ -222,6 +224,7 @@ closeModal(): void {
 
         const loteData:Lote ={
           id:this.newLote.id,
+          state: this.newLote.state,
           name:this.newLote.name,
           hectare:this.newLote.hectare,
           farmId:this.newLote.farmId
@@ -233,6 +236,7 @@ closeModal(): void {
             this.alertaService.SuccessAlert('Actualizado correctamente');
             form.reset();
             this.newLote = {
+              state: this.newLote.state,
               id: 0, name: '', hectare: 0,
               farmId: 0,             };
             if (this.IdFarm !== null) {

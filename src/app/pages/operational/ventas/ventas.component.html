@@ -2,18 +2,19 @@
   <div class="d-flex justify-content-between">
     <section class="d-flex align-items-center gap-3">
 
-      <h2 class="fw-normal mb-0">Gestión de Ventas</h2>
+      <h2 class="fw-normal mb-0" style="font-size: 40px;">Venta ganado</h2>
       <!-- Botón para abrir el modal -->
       <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#ventaModal" id="btn-forms">
         <i class="bi bi-plus-circle mx-2"></i>
-        Registrar Venta
+        Nueva Venta
       </button>
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-        Descargar PDF
+        <i class="bi bi-file-earmark-pdf-fill"></i>
+        PDF
       </button>
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
         <i class="bi bi-file-spreadsheet"></i>
-        Descargar Excel
+        Excel
       </button>
     </section>
 

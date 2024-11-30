@@ -44,7 +44,7 @@ declare var bootstrap: any;
 export class FincaUsuarioComponent implements OnInit {
 
   farmUsers: FarmUser[] = [];
-  newFarmUser: FarmUser = { id: 0, FarmsId: 0, UsersId: 0 };
+  newFarmUser: FarmUser = { id: 0, farmsId: 0, UsersId: 0, farm: '', users: ''};
   displayedColumns: string[] = ['farmName', 'userName', 'acciones'];
   dataSource!: MatTableDataSource<FarmUser>;
   
@@ -147,7 +147,7 @@ export class FincaUsuarioComponent implements OnInit {
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.resetForm();
-            this.newFarmUser = { id: 0, FarmsId: 0, UsersId: 0 };
+            this.newFarmUser = { id: 0, farmsId: 0, UsersId: 0, farm: '', users: ''};;
             this.listFarmUsers();
             this.closeModal();
           },

@@ -38,7 +38,7 @@ import { Modal } from 'bootstrap';
     MatPaginatorModule,
     MatSortModule],
   templateUrl: './inseminacion.component.html',
-  styles: []
+  styleUrl: './inseminacion.component.css'
 })
 export class InseminationComponent implements OnInit {
 
@@ -52,7 +52,7 @@ export class InseminationComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('Modal') Modal!: ElementRef;
 
-  displayedColumns: string[] = ['id', 'description', 'semen', 'mother', 'result', 'inseminationType','estado', 'acciones'];
+  displayedColumns: string[] = ['id', 'description', 'semen', 'mother', 'result', 'inseminationType', 'acciones'];
 
   inseminations: Insemination[] = [];
 
@@ -157,6 +157,17 @@ export class InseminationComponent implements OnInit {
         this.alertService.ErrorAlert('Error al obtener los datos');
       }
     });
+  }
+
+  registerAbortion(idRegister:number):void{
+    this.inseminationService.registerAbortion(idRegister).subscribe({
+      next: (res: any) => {
+        this.alertService.SuccessAlert('Registro de aborto');
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los datos');
+      }
+    })
   }
 
   downloadPDF(): void {
@@ -289,8 +300,9 @@ closeModal(): void {
         const Data: Insemination = {
           ...formData,
           semenId: this.newInsemination.semenId ?? null,
-          result: this.newInsemination.result,
-          motherId: this.newInsemination.motherId
+          result: 'PENDIENTE',
+          motherId: this.newInsemination.motherId,
+          state:true
         }
 
         this.inseminationService.createInsemination(Data).subscribe({

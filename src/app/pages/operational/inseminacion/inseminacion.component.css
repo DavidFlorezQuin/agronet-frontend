@@ -1,0 +1,17 @@
+#menu-drop {
+    position: relative !important; /* Asegura que el dropdown se posicione de forma absoluta */
+    z-index: 9999! /* Establece un valor alto para que el dropdown se superponga sobre otros elementos */
+  }
+  
+  a{
+    text-decoration:none ;
+    
+  }
+  
+  .dropdown-menu {
+    left: -90px !important; /* Ajusta el valor para evitar solapamientos */
+  }
+  
+  .bg-green-agro{
+    background-color: var(--color-green-500);
+  }

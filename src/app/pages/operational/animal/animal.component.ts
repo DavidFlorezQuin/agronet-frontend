@@ -50,7 +50,7 @@ export class AnimalComponent implements OnInit {
   IdFarm: number | null = null;
   races: [] = [];
   newAnimales: Animal = {
-    id: 0, name: '', weight: 0, photo: '', gender: '', purpose: '', birthDay: new Date(), state: true, lotId: 0, race: ''
+    id: 0, name: '', weight: 0, photo: '', gender: '', purpose: '', birthDay: new Date(), state: true, lotId: 0, race: '', inProduction:true, durationProduction: new Date(),
   };
   displayedColumns: string[] = ['id', 'animal', 'weight', 'gender', 'race', 'purpose', 'birthDay', 'lotId','estado', 'acciones'];
 
@@ -193,7 +193,7 @@ export class AnimalComponent implements OnInit {
 
 
   ListAnimal(farmId: number): void {
-    this.animalService.getAnimals(farmId).subscribe({
+    this.animalService.getListAnimals(farmId).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.dataSource = new MatTableDataSource(data);
@@ -240,6 +240,17 @@ export class AnimalComponent implements OnInit {
 
   }
 
+  onPhotoChange(event: any): void {
+    const file = event.target.files[0]; // Tomamos el primer archivo seleccionado
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.newAnimales.photo = reader.result as string; // Guardamos el resultado en base64
+      };
+      reader.readAsDataURL(file); // Leemos el archivo como base64
+    }
+  }
+
   onDelete(id: number): void {
     this.alertaService.DeleteAlert().then((res) => {
       if (res.isConfirmed) {
@@ -247,9 +258,7 @@ export class AnimalComponent implements OnInit {
           next: () => {
             this.alertaService.SuccessAlert('Eliminado correctamente');
             if (this.IdFarm !== null) {
-              this.listLot(this.IdFarm);
-            } else {
-              console.warn('No se pudo obtener el ID de la finca.');
+              this.ListAnimal(this.IdFarm);  // Actualizar la lista de animales
             }          },
           error: () => {
             this.alertaService.ErrorAlert('Error al eliminar');
@@ -281,22 +290,22 @@ export class AnimalComponent implements OnInit {
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
+      const formData = form.value; 
+      const animalData: Animal = {
+        ...formData,
+        name: this.newAnimales.name,
+        race: this.newAnimales.race,
+        gender: this.newAnimales.gender,
+        weight: this.newAnimales.weight,
+        photo: this.newAnimales.photo,
+        purpose: this.newAnimales.purpose,
+        birthDay: this.newAnimales.birthDay,
+        lotId: this.newAnimales.lotId,
+        id: this.newAnimales.id,
+        state: this.newAnimales.state
+      };
       if (this.newAnimales.id > 0) {
         // Si el animal ya existe, lo actualiza
-        const formData = form.value; 
-        const animalData: Animal = {
-          ...formData,
-          name: this.newAnimales.name,
-          race: this.newAnimales.race,
-          gender: this.newAnimales.gender,
-          weight: this.newAnimales.weight,
-          photo: this.newAnimales.photo,
-          purpose: this.newAnimales.purpose,
-          birthDay: this.newAnimales.birthDay,
-          lotId: this.newAnimales.lotId,
-          id: this.newAnimales.id,
-          state: this.newAnimales.state
-        };
   
         this.animalService.updateAnimal(animalData, this.newAnimales.id).subscribe({
           next: () => {
@@ -313,7 +322,7 @@ export class AnimalComponent implements OnInit {
         });
       } else {
         // Si es un nuevo animal, lo crea
-        this.animalService.createAnimal(this.newAnimales).subscribe({
+        this.animalService.createAnimal(animalData).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Creado con exito')
             if (this.IdFarm !== null) {

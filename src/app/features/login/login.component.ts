@@ -27,7 +27,12 @@ export class LoginComponent {
       next: (res) => {
         const data = res.data; 
         const id = data.id;
+        const username = data.username;
+        const person = data.personId;
         localStorage.setItem('Usuario', id.toString());
+        localStorage.setItem('username', username.toString());
+        localStorage.setItem('person', person.toString());
+
         console.log(res);
         this.serviceAuth.setRoleMenu(id)
         this.serviceAuth.setLoggedIn(true)  

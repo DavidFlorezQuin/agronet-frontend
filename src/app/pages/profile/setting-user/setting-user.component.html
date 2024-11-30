@@ -1,0 +1,63 @@
+
+<div class="container mt-5">
+    <h5>Ajustes de perfil</h5>
+  <main class="shadow-sm p-4 bg-white rounded">
+            <!-- Formulario para cambiar contraseña -->
+            <form [formGroup]="passwordForm" (ngSubmit)="onSubmit()">
+              <div class="mb-3">
+                <label for="username" class="form-label">Nombre de Usuario</label>
+                <input
+                  id="username"
+                  formControlName="username"
+                  type="text"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+  
+              <div class="mb-3">
+                <label for="currentPassword" class="form-label">Contraseña Actual</label>
+                <input
+                  id="currentPassword"
+                  formControlName="currentPassword"
+                  type="password"
+                  class="form-control"
+                  [ngClass]="{'is-invalid': passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched}"
+                />
+                <div *ngIf="passwordForm.get('currentPassword')?.invalid && passwordForm.get('currentPassword')?.touched" class="invalid-feedback">
+                  La contraseña actual es obligatoria.
+                </div>
+              </div>
+  
+              <div class="mb-3">
+                <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                <input
+                  id="newPassword"
+                  formControlName="newPassword"
+                  type="password"
+                  class="form-control"
+                  [ngClass]="{'is-invalid': passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched}"
+                />
+                <div *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched" class="invalid-feedback">
+                  La nueva contraseña es obligatoria y debe tener al menos 6 caracteres.
+                </div>
+              </div>
+  
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label">Confirmar Contraseña</label>
+                <input
+                  id="confirmPassword"
+                  formControlName="confirmPassword"
+                  type="password"
+                  class="form-control"
+                  [ngClass]="{'is-invalid': passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched}"
+                />
+                <div *ngIf="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched" class="invalid-feedback">
+                  Las contraseñas no coinciden.
+                </div>
+              </div>
+  
+              <button type="submit" class="btn btn-primary w-25" [disabled]="passwordForm.invalid">Actualizar Contraseña</button>
+            </form>
+  </main>
+</div>

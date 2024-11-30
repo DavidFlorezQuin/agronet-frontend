@@ -6,15 +6,16 @@
       <h2 class="fw-normal mb-0">Fincas</h2>
       <button type="button" data-bs-toggle="modal" (click)="resetForm()" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50">
         <i class="bi bi-plus-circle mx-2"></i>
-        Agregar Finca
+        Nueva Finca
       </button>
 
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-        Descargar PDF
+        <i class="bi bi-file-earmark-pdf-fill"></i>
+        PDF
       </button>
       <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
         <i class="bi bi-file-spreadsheet"></i>
-        Descargar Excel
+        Excel
       </button>
     </section>
 
@@ -102,9 +103,9 @@
               }" />
               <div class="mb-3">
                 <label for="photo" class="form-label">Foto de la finca</label>
-                <input type="file" class="form-control" id="photo" name="photo" [(ngModel)]="newFinca.photo" 
-                 />
+                <input type="file" class="form-control" id="photo" name="photo" [(ngModel)]="newFinca.photo" accept=".jpg, .jpeg" (change)="onPhotoChange($event)" />
               </div>
+              
               <!-- Mensajes de error -->
             <div *ngIf="nameField.invalid && nameField.touched" class="invalid-feedback">
               <div *ngIf="nameField.errors?.['required']">El nombre es obligatorio.</div>
@@ -144,6 +145,13 @@
              <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
               <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
               <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+            </div>
+
+            <div class="mb-3 form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" [(ngModel)]="newFinca.state">
+              <label class="form-check-label" for="flexSwitchCheckChecked">
+                {{ newFinca.state ? 'Activo' : 'Inactivo' }}
+              </label>
             </div>
 
            

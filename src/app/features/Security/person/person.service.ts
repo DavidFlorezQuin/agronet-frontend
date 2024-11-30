@@ -29,6 +29,10 @@ export class PersonService {
       return this.http.put<Person>(`${this._baseUrl}/Person/${id}`, person)
     }
 
+    getPersonById(id: number):Observable<Person>{
+      return this.http.get<Person>(`${this._baseUrl}/Person/GetById/${id}`);
+    }
+
     createPerson(person: Person):Observable<Person>{
       return this.http.post<Person>(`${this._baseUrl}/Person`, person);
     }

@@ -1,38 +1,40 @@
 <div class="container mt-5">
 
-  <h2>Bienvenido !</h2>
+  <h3 class="fw-semibold">Bienvenido Granjero! 🧑‍🌾</h3>
 
-  <section class="d-flex gap-3">
-    <div class="card text-bg-primary mb-3" style="max-width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title">N° Animales</h5>
-        <h3 class="card-text">{{ animales.length}}</h3>
+  <p class="mt-1">Selecciona finca de auditoría</p>
+  <section class="d-flex gap-3 mb-4">
+    <div *ngIf="fincas.length === 0">
+      <div class="alert alert-warning" role="alert">
+        Iniciemos agregando una finca!
       </div>
     </div>
-    <div class="card text-bg-success mb-3" style="max-width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title">N° Producciones</h5>
-        <h3 class="card-text">{{productions.length}}</h3>
-      </div>
-    </div>
-    <div class="card text-bg-warning mb-3" style="max-width: 18rem;">
-      <div class="card-body">
-        <h5 class="card-title">N° Ventas</h5>
-        <h3 class="card-text">{{sales.length}}</h3>
-      </div>
-    </div>
-  </section>
-  <h5 class="mt-5">Selecciona finca de auditoría: </h5>
-  <section class="d-flex gap-3">
-    <div *ngIf="fincas.length === 0">No hay fincas disponibles.</div>
     <div *ngFor="let finca of fincas" [class.opacity]="finca.id === idFincaSeleccionada"
-      class="card card-farms text-bg-primary mb-3" style="max-width: 18rem;" (click)="guardarIdFinca(finca.id)">
-      <div class="card-body card-farms">
-        <h5 class="card-title">{{ finca.name }}</h5>
+      [class.inactive]="finca.id !== idFincaSeleccionada" class="card-farms mb-1"
+      style="max-width: 18rem; min-width: 10rem;" (click)="guardarIdFinca(finca.id)">
+      <div class="card-body d-flex flex-column">
+        <p class="text-title mb-0">{{ finca.name }}</p>
         <p class="card-text">{{ finca.description }}</p>
+        <p class="card-text text-white align-items-end">Código: {{ finca.code }}</p>
+      </div>
+    </div>
+
+  </section>
+  <section class="container d-flex mt-5">
+    <div class="row">
+
+      <div class="col-6">
+        <canvas id="char"></canvas> 
+      </div>
+      <div class="col-6">
+        <canvas id="lineChart"></canvas> 
+      </div>
+      <div class="row">
+
+        <div class="w-50">
+          <!--      <canvas id="stackedBarChart"></canvas> Tercer gráfico -->
+        </div>
       </div>
     </div>
   </section>
-
-
 </div>

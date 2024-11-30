@@ -1,33 +1,50 @@
-<div class="flex-shrink-0 p-3 bg-green" style="min-height: 100vh; width: 200px;">
+<div class="d-flex flex-column flex-shrink-0 p-4 bg-green" style="min-height: 100vh; width: 200px;">
   <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
     <img src="assets/logo-vaca.png" class="logo mx-2" alt="Logo">
-    <span class="fs-5 fw-bold link-light">AGRONET</span>
+    <span class="fs- fw-bold link-light medium-text">AGRONET</span>
   </a>
-  <a href="dashboard" class="link-light nav-link rounded">Dashboard</a>
 
-  <ul class="list-unstyled ps-0">
+  <a  [routerLink]="['/dashboard']"class="link-light nav-link rounded nav-link-menu my-0 mb-1">
+    <i class="bi bi-columns" style="margin-right: 10px;"></i>Dashboard
+  </a>
+
+  <ul class="list-unstyled ps-0 flex-grow-1">
     <li *ngFor="let role of menuData">
-
-        <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-          <li *ngFor="let modulo of role.modulo">
-            <button class="btn btn-toggle fw-medium align-items-center rounded collapsed" data-bs-toggle="collapse" [attr.data-bs-target]="'#modulo-collapse-' + modulo.id" aria-expanded="false">
-              {{ modulo.name }}
-            </button>
-            <div class="collapse" [id]="'modulo-collapse-' + modulo.id">
-              <ul class="list-unstyled ps-0">
-                <!-- Itera sobre cada vista dentro del módulo -->
-                <li *ngFor="let view of modulo.views">
-                  <a [routerLink]="view.route" class="link-light nav-link rounded">{{ view.name }}</a>
-
-                </li>
-  
-              </ul>
-            </div>
-          </li>
-        </ul>
-      <!-- </div> -->
+      <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+        <li *ngFor="let modulo of role.modulo">
+          <a
+            class="link-light nav-link fw-medium align-items-center rounded mx-0 nav-link-menu"
+            [class.collapsed]="!isModuleOpen(modulo.id)"
+            (click)="toggleModule(modulo.id)"
+            id="btn-module"
+          >
+          <i class="bi bi-columns" style="margin-right: 10px;"></i>{{ modulo.name }}
+          </a>
+          <div
+            class="collapse"
+            [class.show]="isModuleOpen(modulo.id)"
+            [id]="'modulo-collapse-' + modulo.id"
+          >
+            <ul class="list-unstyled ps-0">
+              <li *ngFor="let view of modulo.views">
+                <a [routerLink]="view.route" class="link-light nav-link rounded">
+                  {{ view.name }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
     </li>
   </ul>
+
   <hr>
-  <a (click)="onLogout()" class="nav-link link-light"><i class="bi bi-power mr-3"></i> Cerrar Sesión</a>
+  <div class="footer-nav mt-auto">
+    <a class="nav-link link-light small-text">
+      <i class="bi bi-gear"></i> Ajustes
+    </a>
+    <a (click)="onLogout()" class="nav-link link-light small-text">
+      <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+    </a>
+  </div>
 </div>

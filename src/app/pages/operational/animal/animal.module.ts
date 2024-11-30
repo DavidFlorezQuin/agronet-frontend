@@ -7,6 +7,8 @@ export interface Animal {
     race: string, 
     purpose: string;
     birthDay: Date | string;
-    state:true;
+    state:boolean;
     lotId: number;
+    inProduction: true;
+    durationProduction:  Date | string;
   }

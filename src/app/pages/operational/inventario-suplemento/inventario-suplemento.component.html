@@ -1,18 +1,19 @@
 <div class="container mt-3 border p-3 shadow-sm">
   <div class="d-flex justify-content-between">
       <section class="d-flex align-items-center gap-3">
-        <h2 class="fw-normal mb-0 w-50">Inventario de Suplementos</h2>
+        <h2 class="fw-normal mb-0" style="font-size: 20px;">Inventario de Suplementos</h2>
         <button type="button" data-bs-toggle="modal" data-bs-target="#suplementoModal" id="btn-forms" class="btn h-50">
           <i class="bi bi-plus-circle mx-2"></i>
-          Agregar Suplemento
+          Nuevo Suplemento
         </button>
 
         <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-          Descargar PDF
+          <i class="bi bi-file-earmark-pdf-fill"></i>
+          PDF
         </button>
         <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
           <i class="bi bi-file-spreadsheet"></i>
-          Descargar Excel
+          Excel
         </button>
       </section>
   

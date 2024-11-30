@@ -1,0 +1,58 @@
+
+<div class="container mt-5">
+    <h5>Ajustes de perfil</h5>
+  <main class="shadow-sm p-4 bg-white rounded">
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <!-- Columna 1 -->
+        <div class="col-md-6 mb-3">
+          <label for="firstName" class="form-label">Primer Nombre:</label>
+          <input id="firstName" formControlName="firstName" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="lastName" class="form-label">Apellido:</label>
+          <input id="lastName" formControlName="lastName" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="email" class="form-label">Correo Electrónico:</label>
+          <input id="email" formControlName="email" type="email" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="phone" class="form-label">Teléfono:</label>
+          <input id="phone" formControlName="phone" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="document" class="form-label">Documento:</label>
+          <input id="document" formControlName="document" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="typeDocument" class="form-label">Tipo de Documento:</label>
+          <input id="typeDocument" formControlName="typeDocument" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="birthday" class="form-label">Fecha de Nacimiento:</label>
+          <input id="birthday" formControlName="birthday" type="date" class="form-control" />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label for="gender" class="form-label">Género:</label>
+          <input id="gender" formControlName="gender" class="form-control" />
+        </div>
+
+        <div class="col-md-12 mb-3">
+          <label for="direction" class="form-label">Dirección:</label>
+          <input id="direction" formControlName="direction" class="form-control" />
+        </div>
+
+      </div>
+
+      <button type="submit" class="btn btn-primary">Guardar cambios</button>
+    </form>
+  </main>
+</div>
