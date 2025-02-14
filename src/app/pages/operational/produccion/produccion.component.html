@@ -27,13 +27,8 @@
 
   </div>
 
-  <div *ngIf="productions.length === 0">
-    <div class="alert alert-warning" role="alert">
-      No hay producción activas.
-    </div>
-  </div>
   <!-- Tabla de productos -->
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+  <table mat-table [dataSource]="dataSource" class="table table-striped" matSort>
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">
@@ -51,10 +46,6 @@
     <ng-container matColumnDef="Stock">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Stock </th>
       <td mat-cell *matCellDef="let element"> {{element.stock}} </td>
-    </ng-container>
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
-      <td mat-cell *matCellDef="let element"> {{element.description}} </td>
     </ng-container>
 
     <!-- Medida Column -->
@@ -84,10 +75,9 @@
     <ng-container matColumnDef="estado">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado</th>
       <td mat-cell *matCellDef="let element">
-        <span [ngStyle]="{'color': element.state ? 'green' : 'red'}">
+        <span [ngStyle]="{'color': element.state ? 'green' : 'red', 'font-size': '24px'}">
           ●
         </span>
-        {{ element.state ? ' ACTIVO' : ' INACTIVO' }}
       </td>
     </ng-container>
 
@@ -107,7 +97,16 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-
+  <div *ngIf="isData">
+    <div class="alert alert-warning" role="alert">
+      No hay producción activas.
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="text-center text-success mt-2">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 
 
@@ -124,7 +123,7 @@
           <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
 
             <div class="mb-3">
-              <label for="animalId" class="form-label">Animales</label>
+              <label for="animalId" class="form-label">Animal</label>
               <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newProduction.animalId"
                 #semenId="ngModel" required (change)="checkValidSelection(semenId)" [ngClass]="{
                 'is-invalid': semenId.invalid && semenId.touched,
@@ -147,62 +146,13 @@
             </div>
             <div class="mb-3">
               <label for="purpose" class="form-label">Tipo producción</label>
-              <select class="form-control" id="typeProduction" name="typeProduction"
-                [(ngModel)]="newProduction.typeProduction" #produccionId="ngModel" required
-                (change)="checkValidSelection(produccionId)" [ngClass]="{
-                  'is-invalid': produccionId.invalid && produccionId.touched,
-                  'is-valid': produccionId.valid && produccionId.touched
-                }">
-                <option value="" disabled selected>Selecciona un propósito</option>
-                <option value="VENTA">Venta</option>
-                <option value="LECHE">Leche</option>
+              <select class="form-control" id="typeProduction" name="typeProduction" required>
+                <option selected value="LECHE">Leche</option>
               </select>
-              <div *ngIf="produccionId.invalid && produccionId.touched" class="text-danger">
-                El selector es obligatorio.
-              </div>
-            </div>
-
-
-            <div class="mb-3">
-              <label for="measurement" class="form-label">Medida</label>
-              <select class="form-control" id="measurement" name="measurement" [(ngModel)]="newProduction.measurement"
-                #medidaId="ngModel" required (change)="checkValidSelection(medidaId)" [ngClass]="{
-                'is-invalid': medidaId.invalid && medidaId.touched,
-                'is-valid': medidaId.valid && medidaId.touched
-              }">
-                <option value="" disabled selected>Selecciona una medida</option>
-
-                <ng-container *ngIf="measurements.length > 0">
-                  <option *ngFor="let measurement of measurements" [value]="measurement">{{ measurement }}</option>
-                </ng-container>
-                <option *ngIf="measurements.length === 0" disabled>No hay animales disponibles</option>
-
-              </select>
-              <!-- Mensajes de error -->
-              <div *ngIf="medidaId.invalid && medidaId.touched" class="invalid-feedback">
-                Seleccionar la medida es obligatorio.
-              </div>
-
             </div>
 
             <div class="mb-3">
-              <label for="description" class="form-label">Descripción</label>
-              <textarea class="form-control" id="description" name="description" [(ngModel)]="newProduction.description"
-                required minlength="10" #descriptionField="ngModel" [ngClass]="{
-               'is-invalid': descriptionField.invalid && descriptionField.touched,
-               'is-valid': descriptionField.valid && descriptionField.touched
-             }"></textarea>
-
-              <!-- Mensajes de error -->
-              <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
-                <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
-                <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="quantityTotal" class="form-label">Cantidad Total</label>
+              <label for="quantityTotal" class="form-label">Cantidad (L)</label>
               <input type="number" class="form-control" id="quantityTotal" name="quantityTotal"
                 [(ngModel)]="newProduction.quantityTotal" (ngModelChange)="updateStock($event)" equired min="1"
                 pattern="^[1-9]\d*$*-" #cantidadTotal="ngModel" [ngClass]="{'is-invalid': cantidadTotal.invalid && cantidadTotal.touched, 'is-valid':
@@ -210,18 +160,15 @@
 
               <!-- Mensajes de error -->
               <div *ngIf="cantidadTotal.invalid && cantidadTotal.touched" class="invalid-feedback">
-                <div *ngIf="cantidadTotal.errors?.['required']">El peso es obligatorio.</div>
-                <div *ngIf="cantidadTotal.errors?.['min']">El peso debe ser mayor a 0.</div>
-                <div *ngIf="cantidadTotal.errors?.['pattern']">El peso debe ser un número positivo.</div>
+                <div *ngIf="cantidadTotal.errors?.['required']">La cantidad es obligatoria.</div>
               </div>
-
             </div>
 
-            <div class="mb-3">
+            <!-- <div class="mb-3">
               <label for="stock" class="form-label">Stock</label>
               <input disabled type="number" class="form-control" id="stock" name="stock"
                 [(ngModel)]="newProduction.stock" required>
-            </div>
+            </div> -->
 
             <div class="mb-3">
               <label for="expirateDate" class="form-label">Fecha de Expiración</label>

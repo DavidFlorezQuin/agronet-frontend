@@ -1,36 +1,32 @@
 <div class="container mt-3 border p-3 shadow-sm">
   <div class="d-flex justify-content-between">
-  <section class="d-flex align-items-center gap-3">
-    <h2 class="fw-normal mb-0" style="font-size: 25px;">Vacunación de Animales</h2>
-    <!-- Botón para abrir el modal -->
-    <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#vaccineAnimalModal" id="btn-forms">
-      <i class="bi bi-plus-circle mx-2"></i>
-      Nueva Vacuna
-    </button>
+    <section class="d-flex align-items-center gap-3">
+      <h2 class="fw-normal mb-0" style="font-size: 25px;">Vacunación de Animales</h2>
+      <!-- Botón para abrir el modal -->
+      <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#vaccineAnimalModal" id="btn-forms">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Nueva Vacuna
+      </button>
 
-    <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-      <i class="bi bi-file-earmark-pdf-fill"></i>
-      PDF
-    </button>
-    <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
-      <i class="bi bi-file-spreadsheet"></i>
-      Excel
-    </button>
-  </section>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        <i class="bi bi-file-earmark-pdf-fill"></i>
+        PDF
+      </button>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadExcel()">
+        <i class="bi bi-file-spreadsheet"></i>
+        Excel
+      </button>
+    </section>
 
-  <!-- Campo de búsqueda -->
-  <mat-form-field appearance="fill">
-    <mat-label>Buscar</mat-label>
-    <input matInput (keyup)="aplicarFiltro($event)" placeholder="Filtrar">
-  </mat-form-field>
-</div>
-
-<div *ngIf="vaccineAnimals.length === 0"><div class="alert alert-warning" role="alert">
-  No hay vacunación para animales activos.
-</div></div>
+    <!-- Campo de búsqueda -->
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Filtrar">
+    </mat-form-field>
+  </div>
 
   <!-- Tabla de datos -->
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z2 mt-4" matSort>
+  <table mat-table [dataSource]="dataSource" matSort class="table table-striped" matSort>
     <!-- ID Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
@@ -76,49 +72,60 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
+  <div *ngIf="isData"><div class="alert alert-warning" role="alert">
+    No hay vacunación para animales activos.
+  </div></div>
+  <div *ngIf="isLoading" class="text-center text-success mt-2">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
 
-  <!-- Modal -->
-  <div class="modal fade" #Modal id="vaccineAnimalModal" tabindex="-1" aria-labelledby="treatmentsModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="treatmentsModalLabel">Agregar Vacunas animal</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
+<!-- Modal -->
+<div class="modal fade" #Modal id="vaccineAnimalModal" tabindex="-1" aria-labelledby="treatmentsModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="treatmentsModalLabel">Agregar Vacunas animal</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #productForm="ngForm" (ngSubmit)="onSubmit(productForm)">
 
-            <div class="mb-3">
-              <label for="animalId" class="form-label">Vacunas</label>
-              <select class="form-control" id="vaccinesId" name="vaccinesId" [(ngModel)]="newVaccineAnimal.vaccinesId" required>
-                <option value="" disabled selected>Seleccione una vacuna</option>
-                <option *ngFor="let vacuna of vacunas" [value]="vacuna.id">{{ vacuna.name }}</option>
-                <option *ngIf="vacunas.length === 0" disabled>No hay vacunas disponibles</option>
-              
-              </select>
-            </div>
+          <div class="mb-3">
+            <label for="animalId" class="form-label">Vacunas</label>
+            <select class="form-control" id="vaccinesId" name="vaccinesId" [(ngModel)]="newVaccineAnimal.vaccinesId"
+              required>
+              <option value="" disabled selected>Seleccione una vacuna</option>
+              <option *ngFor="let vacuna of vacunas" [value]="vacuna.id">{{ vacuna.name }}</option>
+              <option *ngIf="vacunas.length === 0" disabled>No hay vacunas disponibles</option>
 
-            <div class="mb-3">
-              <label for="animalId" class="form-label">Animales</label>
-              <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newVaccineAnimal.animalId" required>
-                <option value="" disabled selected>Selecciona un animal</option>
-                <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
-                <option *ngIf="animales.length === 0" disabled>No hay animales disponibles</option>
-              </select>
-            </div>
+            </select>
+          </div>
 
-            <div class="mb-3">
-              <label for="dateApplied" class="form-label">Fecha de aplicación</label>
-              <input type="date" class="form-control" id="dateApplied" name="dateApplied"
-                [(ngModel)]="newVaccineAnimal.dateApplied" required>
-            </div>
+          <div class="mb-3">
+            <label for="animalId" class="form-label">Animales</label>
+            <select class="form-control" id="animalId" name="animalId" [(ngModel)]="newVaccineAnimal.animalId" required>
+              <option value="" disabled selected>Selecciona un animal</option>
+              <option *ngFor="let animal of animales" [value]="animal.id">{{ animal.name }}</option>
+              <option *ngIf="animales.length === 0" disabled>No hay animales disponibles</option>
+            </select>
+          </div>
 
-            <button type="submit" class="btn btn-success w-100" [disabled]="!productForm.valid">Enviar</button>
-          </form>
-        </div>
+          <div class="mb-3">
+            <label for="dateApplied" class="form-label">Fecha de aplicación</label>
+            <input type="date" class="form-control" id="dateApplied" name="dateApplied"
+              [(ngModel)]="newVaccineAnimal.dateApplied" required>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100" [disabled]="!productForm.valid">Enviar</button>
+        </form>
       </div>
     </div>
   </div>
+</div>

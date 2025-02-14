@@ -46,6 +46,7 @@ import { FormUserComponent } from './features/register/form-user/form-user.compo
 import { ProfileComponent } from './pages/profile/profile.component';
 import { SettingsProfileComponent } from './pages/profile/settings-profile/settings-profile.component';
 import { SettingUserComponent } from './pages/profile/setting-user/setting-user.component';
+import { AnimalSaleComponent } from './pages/operational/animal-sale/animal-sale.component';
 
 export const routes: Routes = [
     {
@@ -84,6 +85,10 @@ export const routes: Routes = [
             {
                 path: 'settings-profile',
                 component: SettingsProfileComponent
+            },
+            {
+                path: '',
+                component: SettingsProfileComponent 
             },
             {
                 path: 'settings-user',
@@ -173,7 +178,10 @@ export const routes: Routes = [
                 path: 'venta',
                 component: VentasComponent
             },
-
+            {
+                path: 'venta-animal',
+                component: AnimalSaleComponent
+            },
             {
                 path: 'tratamientos',
                 component: TratamientoComponent

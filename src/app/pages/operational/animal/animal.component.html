@@ -4,7 +4,8 @@
     <section class="d-flex align-items-center gap-3">
       <h2 class="fw-normal mb-0">Animales</h2>
 
-      <button type="button" data-bs-toggle="modal" data-bs-target="#animalModal" id="btn-forms" class="btn h-50">
+      <button type="button" data-bs-toggle="modal" (click)="resetForm(animalForm)" data-bs-target="#animalModal"
+        id="btn-forms" class="btn h-50">
         <i class="bi bi-plus-circle mx-2"></i>
         Nuevo Animal
       </button>
@@ -13,7 +14,7 @@
         <i class="bi bi-file-earmark-pdf-fill"></i>
         PDF
       </button>
-      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+      <button id="btn-forms" class="btn" mat-button (click)="downloadExcel()">
         <i class="bi bi-file-spreadsheet"></i>
         Excel
       </button>
@@ -25,17 +26,9 @@
       <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla" #Modal>
     </mat-form-field>
 
-
-
-
-  </div>
-  <div *ngIf="animales.length === 0">
-    <div class="alert alert-warning" role="alert">
-      Aún no hay animales agregados!
-    </div>
   </div>
 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+  <table mat-table [dataSource]="dataSource" class="table table-striped" matSort>
 
     <!-- ID Column -->
     <ng-container matColumnDef="id">
@@ -64,7 +57,7 @@
     <!-- Raza Column -->
     <ng-container matColumnDef="gender">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Género </th>
-      <td mat-cell *matCellDef="let element"> {{element.gender}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.gender === 'Male' ? 'Macho':'Hembra'}} </td>
     </ng-container>
 
     <!-- Propósito Column -->
@@ -75,7 +68,7 @@
 
     <!-- Fecha Nacimiento Column -->
     <ng-container matColumnDef="birthDay">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nacimientos </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Nacimiento </th>
       <td mat-cell *matCellDef="let element"> {{element.birthDay | date}} </td>
     </ng-container>
     <!-- Lote Column -->
@@ -92,21 +85,27 @@
     </ng-container>
 
     <ng-container matColumnDef="estado">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado</th>
-      <td mat-cell *matCellDef="let element">
-        <span [ngStyle]="{'color': element.state ? 'green' : 'red'}">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width]="'50px'">
+        Estado
+      </th>
+      <td mat-cell *matCellDef="let element" [style.text-align]="'center'" [style.width]="'50px'">
+        <span [ngStyle]="{'color': element.state ? 'green' : 'red', 'font-size': '24px'}">
           ●
         </span>
-        {{ element.state ? ' ACTIVO' : ' INACTIVO' }}
       </td>
     </ng-container>
-
 
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
-        <div class="d-flex gap-2 justify-content-center" id="icons-section">
+
+        <div *ngIf="element.state == true" class="d-flex gap-2 justify-content-center" id="icons-section">
+          <i *ngIf="element.purpose == 'venta'" data-bs-toggle="modal" data-bs-target="#SaleModal"
+            (click)="selectAnimal(element.id, SaleForm, element.weight)" class="bi bi-coin"></i>
+          <a [routerLink]="['/dashboard/produccion']" class="link-light nav-link rounded nav-link-menu my-0 mb-0">
+            <i *ngIf="element.purpose == 'leche'" class="bi bi-bucket"></i>
+          </a>
           <i class="bi bi-pencil-square" data-bs-toggle="modal" data-bs-target="#animalModal"
             (click)="onEdit(element)"></i>
           <i class="bi bi-trash" (click)="onDelete(element.id)"></i>
@@ -118,6 +117,18 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
+
+  <div *ngIf="isData">
+    <div class="alert alert-warning" role="alert">
+      Aún no hay animales agregados!
+    </div>
+  </div>
+  
+  <div *ngIf="isLoading" class="text-center text-success mt-2">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
 
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
@@ -138,17 +149,7 @@
             <div class="mb-3 w-50">
               <label for="animalName" class="form-label">Nombre</label>
               <input type="text" class="form-control" id="animalName" name="animal" [(ngModel)]="newAnimales.name"
-                required minlength="4" #NombreDelAnimal="ngModel" [ngClass]="{
-               'is-invalid': NombreDelAnimal.invalid && NombreDelAnimal.touched,
-               'is-valid': NombreDelAnimal.valid && NombreDelAnimal.touched
-             }" />
-              <!-- Mensajes de error -->
-              <div *ngIf="NombreDelAnimal.invalid && NombreDelAnimal.touched" class="invalid-feedback">
-                <div *ngIf="NombreDelAnimal.errors?.['required']">El nombre del animal es obligatoria.</div>
-                <div *ngIf="NombreDelAnimal.errors?.['minlength']">El nombre del animal debe tener al menos 4
-                  caracteres.
-                </div>
-              </div>
+                required />
             </div>
 
             <div class="mb-3 w-50">
@@ -210,7 +211,7 @@
             <div class="mb-3 w-50">
               <label for="purpose" class="form-label">Propósito</label>
               <select class="form-control" id="purpose" name="purpose" [(ngModel)]="newAnimales.purpose"
-                #propositoId="ngModel" required [ngClass]="{
+                #propositoId="ngModel" (change)="onFemaleMilk()" required [ngClass]="{
               'is-invalid': propositoId.invalid && propositoId.touched,
               'is-valid': propositoId.valid && propositoId.touched
             }">
@@ -230,11 +231,6 @@
           </div>
 
           <div class="d-flex gap-3">
-            <div class="mb-3 w-50">
-              <label for="file-upload" class="form-label">Subir una Foto</label>
-              <input type="file" class="form-control" id="photo" name="photo" [(ngModel)]="newAnimales.photo"
-                accept=".jpg, .jpeg" (change)="onPhotoChange($event)" />
-            </div>
 
             <div class="mb-3 w-50">
               <label for="lotId" class="form-label">Lote</label>
@@ -258,27 +254,22 @@
 
           <div class="input-group d-flex gap-4 mb-3">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" [(ngModel)]="newAnimales.state" [value]="true">
+              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                [(ngModel)]="newAnimales.state" [value]="true">
               <label class="form-check-label" for="flexRadioDefault1">
                 Activo
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" [(ngModel)]="newAnimales.state" [value]="false">
+              <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                [(ngModel)]="newAnimales.state" [value]="false">
               <label class="form-check-label" for="flexRadioDefault2">
                 Inactivo
               </label>
             </div>
           </div>
-          
-          <p class="d-inline-flex gap-1">
-            <a data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-              aria-controls="collapseExample">
-              <i class="bi bi-arrow-down-circle"></i> Detalles de producción
-            </a>
-          </p>
-          <div class="collapse mb-3" id="collapseExample">
 
+          <div *ngIf="isFemale">
             <div class="row d-flex">
               <div class="mb-3 w-50">
                 <label for="birthDay" class="form-label">En producción</label>
@@ -291,14 +282,46 @@
 
               <div class="mb-3 w-50">
                 <label for="durationProduction" class="form-label">Duración producción</label>
-                <input type="date" class="form-control" id="durationProduction" name="durationProduction" [(ngModel)]="newAnimales.durationProduction"
-                  required>
+                <input type="date" class="form-control" id="durationProduction" name="durationProduction"
+                  [(ngModel)]="newAnimales.durationProduction" required>
               </div>
 
             </div>
           </div>
 
           <button type="submit" class="btn btn-success w-100" [disabled]="!animalForm.valid">Guardar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" #Modal id="SaleModal" tabindex="-1" aria-labelledby="productoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productoModalLabel">Registrar venta</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form #SaleForm="ngForm" (ngSubmit)="onSubmitSale(SaleForm)">
+          <div class="mb-3">
+            <label for="price" class="form-label">Precio</label>
+            <input type="number" id="price" class="form-control" name="price" [(ngModel)]="newSale.price" required
+              required min="1" pattern="^[1-9]\d*$*-" #precio="ngModel" [ngClass]="{'is-invalid': precio.invalid && precio.touched, 'is-valid':
+           precio.valid && precio.touched}" (keypress)="preventNegative($event)" />
+
+            <!-- Mensajes de error -->
+            <div *ngIf="precio.invalid && precio.touched" class="invalid-feedback">
+              <div *ngIf="precio.errors?.['required']">El Precio es obligatorio.</div>
+              <div *ngIf="precio.errors?.['min']">El Precio debe ser mayor a 0.</div>
+              <div *ngIf="precio.errors?.['pattern']">El Precio de45456be ser un número positivo.</div>
+            </div>
+          </div>
+
+          <!--  -->
+          <button type="submit" class="btn btn-success w-100" [disabled]="!SaleForm.valid">Enviar</button>
         </form>
       </div>
     </div>

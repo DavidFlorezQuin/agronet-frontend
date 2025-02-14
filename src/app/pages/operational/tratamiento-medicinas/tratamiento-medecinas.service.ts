@@ -12,16 +12,20 @@ export class TreatmentsMedicinesService {
 
   constructor(private http: HttpClient) {}
 
-  getAllTreatmentsMedicinesService (IdFarm:number): Observable<TreatmentsMedicines[]> {
+  getAllTreatmentsMedicinesService(IdFarm:number): Observable<TreatmentsMedicines[]> {
     return this.http.get<TreatmentsMedicines[]>(`${this._baseUrl}/datatable/${IdFarm}`);
   }
 
-  createTreatmentsMedicinesService (treatmentMedicine: TreatmentsMedicines): Observable<TreatmentsMedicines> {
+  createTreatmentsMedicinesService(treatmentMedicine: TreatmentsMedicines): Observable<TreatmentsMedicines> {
     return this.http.post<TreatmentsMedicines>(`${this._baseUrl}/save`, treatmentMedicine);
   }
 
   updateTreatmentsMedicinesService (id: number, treatmentMedicine: TreatmentsMedicines): Observable<TreatmentsMedicines> {
     return this.http.put<TreatmentsMedicines>(`${this._baseUrl}/${id}`, treatmentMedicine);
+  }
+
+  getMedicineTreatments(id:number):Observable<TreatmentsMedicines>{
+    return this.http.get<TreatmentsMedicines>(`${this._baseUrl}/GetMedicineForTreatments/${id}`);
   }
 
   deleteTreatmentsMedicinesService (id: number): Observable<void> {

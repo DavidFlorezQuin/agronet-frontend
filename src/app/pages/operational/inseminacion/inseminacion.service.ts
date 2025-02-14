@@ -16,6 +16,9 @@ export class InseminationService {
   getInseminations(IdFarm:number): Observable<Insemination[]> {
     return this.http.get<Insemination[]>(`${this._baseUrl}/Insemination/datatable/${IdFarm}`);
   }
+  getInseminationsActive(IdFarm:number): Observable<Insemination[]> {
+    return this.http.get<Insemination[]>(`${this._baseUrl}/Insemination/active/${IdFarm}`);
+  }
 
   deleteInsemination(id: number): Observable<void> {
     return this.http.delete<void>(`${this._baseUrl}/Insemination/${id}`);
@@ -30,6 +33,10 @@ export class InseminationService {
   }
   registerAbortion(id: number): Observable<void> {
     const url = `${this._baseUrl}/Insemination/${id}/Abortion`;
+      return this.http.put<void>(url, {});
+  }
+  registerBorn(id: number): Observable<void> {
+    const url = `${this._baseUrl}/Insemination/${id}/born`;
       return this.http.put<void>(url, {});
   }
   

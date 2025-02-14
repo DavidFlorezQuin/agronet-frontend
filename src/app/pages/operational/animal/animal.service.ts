@@ -26,7 +26,7 @@ export class AnimalService {
     return this.http.get<Animal[]>(`${this._baseUrl}/Animal/datatable/bulls/${farmId}`);
   }
   getAnimalsCows(farmId: number): Observable<Animal[]> {
-    return this.http.get<Animal[]>(`${this._baseUrl}/Animal/datatable/cows/${farmId}`);
+    return this.http.get<Animal[]>(`${this._baseUrl}/Animal/cows/available-insemination/${farmId}`);
   }
   getAnimalsMilks(farmId: number): Observable<Animal[]> {
     return this.http.get<Animal[]>(`${this._baseUrl}/Animal/cows/milk/${farmId}`);

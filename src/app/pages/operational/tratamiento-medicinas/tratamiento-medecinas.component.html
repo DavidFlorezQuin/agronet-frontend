@@ -90,7 +90,7 @@
         <form class="px-5" #categoriaAlertaForm="ngForm" (ngSubmit)="onSubmit(categoriaAlertaForm)">
 
           <div class="mb-3">
-            <label for="Description" class="form-label">Nota</label>
+            <label for="Description" class="form-label">Observación</label>
             <input type="text" class="form-control" id="description" name="description"
               [(ngModel)]="newTreatmentMedicine.description" #descriptionField="ngModel" [ngClass]="{
              'is-invalid': descriptionField.invalid && descriptionField.touched,
@@ -107,7 +107,7 @@
           <div class="row d-flex">
             <div class="mb-3 w-50">
               <label for="Name" class="form-label">Tiempo</label>
-              <select type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newTreatmentMedicine.name" #tratamientoMedicinas="ngModel">
+              <select type="text" class="form-control" id="Name" name="Name" [(ngModel)]="newTreatmentMedicine.number" #tratamientoMedicinas="ngModel">
              <option value="" disabled selected>Selecciona</option>
              <option value="dias">Días</option>
              <option value="horas">Horas</option>
@@ -116,7 +116,7 @@
             <div class="mb-3 w-50">
               <label for="periocityDay" class="form-label">Periocidad</label>
               <input type="number" class="form-control" id="periocityDay" name="periocityDay"
-                [(ngModel)]="newTreatmentMedicine.periocityDay" required min="1" pattern="^[1-9]\d*$*-"
+                [(ngModel)]="newTreatmentMedicine.periocity" required min="1" pattern="^[1-9]\d*$*-"
                 #animal="ngModel" [ngClass]="{'is-invalid': animal.invalid && animal.touched, 'is-valid':
              animal.valid && animal.touched}" (keypress)="preventNegative($event)" />
             </div>

@@ -5,5 +5,8 @@ export interface Insemination {
   motherId: number;
   result:string;
   inseminationType: string;
+  state?:boolean;
+  mother?:string;
+  semen?:string;
 }
 

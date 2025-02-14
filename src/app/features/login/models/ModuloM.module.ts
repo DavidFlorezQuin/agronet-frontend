@@ -7,4 +7,5 @@ export interface ModuloM {
   order: number;
   views: View[]; 
   state: boolean;
+  icon: string
 }

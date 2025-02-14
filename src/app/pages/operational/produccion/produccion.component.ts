@@ -5,6 +5,8 @@ import { ProductionsService } from './produccion.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import { Productions } from './produccion.module';
 import { CommonModule } from '@angular/common';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -44,8 +46,8 @@ import { Modal } from 'bootstrap';
 export class ProduccionComponent implements OnInit {
 
   // Fecha mínima: 1 año en el futuro
-  minExpirateDate: string = new Date(new Date().setFullYear(new Date().getFullYear() + 0,9)).toISOString().split('T')[0];
-  
+  minExpirateDate: string = new Date(new Date().setFullYear(new Date().getFullYear() + 0, 9)).toISOString().split('T')[0];
+
   // Fecha máxima: 10 años en el futuro
   maxExpirateDate: string = new Date(new Date().setFullYear(new Date().getFullYear() + 1)).toISOString().split('T')[0];
 
@@ -71,7 +73,6 @@ export class ProduccionComponent implements OnInit {
     'TypeProduction',
     'Stock',
     'Measurement',
-    'description',
     'QuantityTotal',
     'expirateDate',
     'AnimalId',
@@ -114,7 +115,7 @@ export class ProduccionComponent implements OnInit {
       } else {
         selectControl.control.setErrors(null);
       }
-      selectControl.control.markAsTouched(); 
+      selectControl.control.markAsTouched();
     }
   }
   ListAnimal(farmId: number): void {
@@ -128,9 +129,13 @@ export class ProduccionComponent implements OnInit {
         this.alertService.ErrorAlert('Error al obtener los animales');
       }
     });
-  }  
+  }
+
+  isLoading: boolean = false;
+  isData: boolean = false;
 
   listProductions(farmId: number): void {
+    this.isLoading = true; // Inicia la carga
     this.productionsService.getProductions(farmId).subscribe({
       next: (res: any) => {
         const data = res.data;
@@ -139,10 +144,13 @@ export class ProduccionComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.productions = data;
         this.dataSource.data = data;
+        this.isLoading = false; // Finaliza la carga
+        this.isData = data.lenght === 0; 
       },
       error: (error) => {
         console.log(error);
         this.alertService.ErrorAlert('Error al cargar los medicamentos');
+        this.isLoading = false; 
       }
     });
   }
@@ -164,19 +172,17 @@ export class ProduccionComponent implements OnInit {
     doc.text('Histórico de producción', 14, 23); // Título del PDF
 
     // Encabezados de la tabla
-    const headers = [['id', 'Tipo producción', 'Stock', 'Medida', 'Descripción', 'Cantidad total', 'animal', 'fecha expiración']];
+    const headers = [['id', 'Tipo producción', 'Stock', 'Medida', 'Animal', 'Cantidad total', 'fecha expiración']];
 
     // Datos de la tabla
-    const data = this.dataSource.data.map(productions => [
+    const data = this.productions.map(productions => [
       productions.id,
       productions.typeProduction,
       productions.stock,
       productions.measurement,
-      productions.description,
+      productions.animal,
       productions.quantityTotal,
       productions.expirateDate,
-
-
     ]);
 
     // Generar tabla usando autoTable
@@ -197,14 +203,36 @@ export class ProduccionComponent implements OnInit {
         3: { cellWidth: 20 },
         4: { cellWidth: 30 },
         5: { cellWidth: 20 },
-        6: { cellWidth: 20 },
-        7: { cellWidth: 20 }
+        6: { cellWidth: 20 }
       }
     });
 
     // Guardar el archivo PDF
     doc.save('Produccion.pdf');
   }
+
+downloadExcel(){
+   // Crear un arreglo con los datos de los animales
+      const bornlData = this.productions.map(productions => ({
+        ID: productions.id,
+        TipoProduccion: productions.description,
+        Stock: productions.stock,
+        Medida: productions.measurement,
+        CantidadTotal: productions.quantityTotal,
+        Animal: productions.animal,
+        FechaExpiracion: productions.expirateDate,
+      }));
+  
+      // Crear un libro de trabajo (workbook) y una hoja (worksheet)
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(bornlData);
+      const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'inseminaciones');
+  
+      // Exportar el archivo Excel
+      const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+      saveAs(blob, 'inseminaciones.xlsx');
+    }
 
   listMeasurement(): void {
     this.enumController.getMeasurement().subscribe({
@@ -220,45 +248,42 @@ export class ProduccionComponent implements OnInit {
   updateStock(quantityTotal: number): void {
     this.newProduction.stock = quantityTotal; // Actualiza stock con el valor de cantidad total
   }
-  
- // Función para cerrar el modal
- closeModal(): void {
-  const modalElement = document.getElementById('animalModal');
-  if (modalElement) {
-    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-    modal.hide(); // Cierra el modal
-    modalElement.classList.remove('show');
-    modalElement.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('modal-open');
-    document.body.style.overflow = ''; // Restaurar el overflow del body
 
-    // Eliminar cualquier 'modal-backdrop' que haya quedado
-    const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) {
-      backdrop.remove(); // Elimina la capa de fondo negra
+  // Función para cerrar el modal
+  closeModal(): void {
+    const modalElement = document.getElementById('animalModal');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide(); // Cierra el modal
+      modalElement.classList.remove('show');
+      modalElement.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = ''; // Restaurar el overflow del body
+
+      // Eliminar cualquier 'modal-backdrop' que haya quedado
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove(); // Elimina la capa de fondo negra
+      }
+    } else {
+      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
     }
-  } else {
-    console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
   }
-}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newProduction.id > 0) {
-
         const formData = form.value;
         const Data: Productions = {
           ...formData,
-          id:this.newProduction.id,
+          id: this.newProduction.id,
           animalId: this.newProduction.animalId,
           description: this.newProduction.description,
           expirateDate: this.newProduction.expirateDate,
-          measurement: this.newProduction.measurement,
+          measurement: '',
           quantityTotal: this.newProduction.quantityTotal,
-          typeProduction:this.newProduction.typeProduction,
-          stock:this.newProduction.stock
-      
+          typeProduction: 'LECHE',
+          stock: this.newProduction.stock
         }
-
         this.productionsService.updateProduction(Data, this.newProduction.id).subscribe({
           next: () => {
             this.alertService.SuccessAlert('Actualizado correctamente');
@@ -274,7 +299,7 @@ export class ProduccionComponent implements OnInit {
             };
             if (this.IdFarm !== null) {
               this.listProductions(this.IdFarm);
-              
+
             }
             this.closeModal();
           },
@@ -283,20 +308,30 @@ export class ProduccionComponent implements OnInit {
           }
         });
       } else {
-        this.productionsService.createProduction(this.newProduction).subscribe({
+        const formData = form.value;
+        const Data: Productions = {
+          measurement: 'Litros',
+          stock: this.newProduction.stock,
+          quantityTotal: this.newProduction.quantityTotal,
+          description: '',
+          typeProduction: 'LECHE',
+          state: true,
+          ...formData,
+        }
+        this.productionsService.createProduction(Data).subscribe({
           next: () => {
 
             this.alertService.SuccessAlert('Creado correctamente ');
             form.reset();
             if (this.IdFarm !== null) {
               this.listProductions(this.IdFarm);
-              
+
             }
             this.closeModal();
           },
           error: (err) => {
             let errorMessage = err.error?.message || err.message || "Ha ocurrido un error inesperado.";
-              Swal.fire({
+            Swal.fire({
               icon: "error",
               title: "Oops...",
               text: errorMessage || "Ha ocurrido un error inesperado.",
@@ -310,7 +345,7 @@ export class ProduccionComponent implements OnInit {
   }
   preventNegative(event: KeyboardEvent): void {
     if (event.key === '-') {
-        event.preventDefault(); // Prevenir la entrada del símbolo de menos
+      event.preventDefault(); // Prevenir la entrada del símbolo de menos
     }
   }
   setDefaultSelections(): void {
@@ -318,10 +353,10 @@ export class ProduccionComponent implements OnInit {
     if (this.animales.length > 0) {
       this.newProduction.animalId = this.animales[0].id;
     }
-    
+
   }
 
-  
+
   resetForm(): void {
     this.newProduction = {
       id: 0, typeProduction: '',

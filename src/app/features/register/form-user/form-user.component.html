@@ -1,45 +1,88 @@
 <main class="d-flex justify-content-center align-items-center shadow-sm">
+  <div class="card w-50 border p-5 my-5">
+    <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+      <h3 class="text-center">Ingresa tu usuario</h3>
 
-    <div class="card w-50 border p-5 my-5">
+      <!-- Campo de usuario -->
+      <div class="mb-3">
+        <label for="username" class="form-label">Usuario</label>
+        <input
+          type="text"
+          class="form-control"
+          id="username"
+          name="username"
+          [(ngModel)]="newUser.username"
+          required
+          maxlength="15"
+          minlength="3"
+          #username="ngModel"
+          [ngClass]="{
+            'is-invalid': username.invalid && username.touched,
+            'is-valid': username.valid && username.touched
+          }"
+        />
+        <div *ngIf="username.invalid && username.touched" class="invalid-feedback">
+          <div *ngIf="username.errors?.['required']">El Nombre del usuario es obligatorio.</div>
+          <div *ngIf="username.errors?.['minlength']">El Nombre del usuario debe tener al menos 3 caracteres.</div>
+        </div>
+      </div>
 
-        <form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
-            <h3 class="text-center">Ingresa tu usuario</h3>
-            <div class="mb-3">
-                <label for="username" class="form-label">Usuario</label>
-                <input type="text" class="form-control" id="username" name="username"
-                    [(ngModel)]="newUser.username" required maxlength="15"  minlength="3" #username="ngModel" [ngClass]="{
-                        'is-invalid': username.invalid && username.touched,
-                        'is-valid': username.valid && username.touched
-                      }" />
-                     <!-- Mensajes de error -->
-                     <div *ngIf="username.invalid && username.touched" class="invalid-feedback">
-                       <div *ngIf="username.errors?.['required']">El Nombre del usuario es obligatorio.</div>
-                       <div *ngIf="username.errors?.['minlength']">El Nombre del usuario debe tener al menos 3 caracteres.
-                       </div>
-                    </div>
-            </div>
+      <!-- Campo para subir imagen -->
+      <label for="file" class="form-label">Foto</label>
+      <div class="input-group mb-3">
+        <label class="input-group-text" for="inputGroupFile01"><i class="bi bi-camera-fill"></i></label>
+        <input
+          type="file"
+          class="form-control"
+          (change)="onFileSelected($event)"
+          accept=".jpg, .jpeg, .png"
+          id="inputGroupFile01"
+        />
+      </div>
 
-            <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="text" class="form-control" id="password" name="password" [(ngModel)]="newUser.password"
-                required maxlength="15"  minlength="3" (ngModelChange)="validatePassword()" #password="ngModel" [ngClass]="{
-                    'is-invalid': (password.invalid && password.touched) || passwordError,
-                  'is-valid': password.valid && password.touched && !passwordError
-                     }"  />
-                 <!-- Mensajes de error -->
-                 <div *ngIf="password.invalid && password.touched" class="invalid-feedback">
-                   <div *ngIf="password.errors?.['required']">El Nombre del usuario es obligatorio.</div>
-                   <div *ngIf="password.errors?.['minlength']">El Nombre del usuario debe tener al menos 3 caracteres.
-                   </div>
-                 </div>
-                 
-                 <!-- Mensaje de error personalizado -->
-                 <div *ngIf="passwordError" class="text-danger">
-                   {{ passwordError }}
-                  </div>
-            </div>
-            <button type="submit" id="btn-forms" class="btn w-100 mt-4"
-                [disabled]="!userForm.valid">Crear cuenta</button>
-        </form>
-    </div>
+      <div *ngIf="fileError" class="text-danger text-small mb-3">
+        {{ fileError }}
+      </div>
+
+      <!-- Campo de contraseña -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña</label>
+        <input
+          type="text"
+          class="form-control"
+          id="password"
+          name="password"
+          [(ngModel)]="newUser.password"
+          required
+          maxlength="15"
+          minlength="3"
+          (ngModelChange)="validatePassword()"
+          #password="ngModel"
+          [ngClass]="{
+            'is-invalid': (password.invalid && password.touched) || passwordError,
+            'is-valid': password.valid && password.touched && !passwordError
+          }"
+        />
+        <div *ngIf="password.invalid && password.touched" class="invalid-feedback">
+          <div *ngIf="password.errors?.['required']">La contraseña es obligatoria.</div>
+          <div *ngIf="password.errors?.['minlength']">La contraseña debe tener al menos 3 caracteres.</div>
+        </div>
+        <div *ngIf="passwordError" class="text-danger">
+          {{ passwordError }}
+        </div>
+      </div>
+
+      <!-- Botón deshabilitado según el estado del formulario -->
+      <button
+        type="submit"
+        id="btn-forms"
+        class="btn btn-primary w-100 mt-4"
+        [disabled]="userForm.invalid || isLoading"
+      >
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span *ngIf="!isLoading">Enviar</span>
+        <span *ngIf="isLoading" role="status"> Cargando...</span>
+      </button>
+    </form>
+  </div>
 </main>

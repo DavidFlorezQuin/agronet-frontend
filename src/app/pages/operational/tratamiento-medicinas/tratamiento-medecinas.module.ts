@@ -1,9 +1,10 @@
 export interface TreatmentsMedicines {
     id: number,
-    name: string, 
     description: string;
-    periocityDay: number;
+    periocity: string;
     medicinesId: number;
+    medicines?: string; 
     treatmentId: number;
+    number: number; 
   }
   

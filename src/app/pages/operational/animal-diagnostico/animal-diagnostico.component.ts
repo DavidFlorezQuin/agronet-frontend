@@ -5,6 +5,8 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { FormsModule, NgForm, NgModel } from '@angular/forms';
 import { AlertService } from '../../../shared/components/alert.service';
 import { AnimalDiagnosticsService } from './animal-diagnostico.service';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { AnimalService } from '../animal/animal.service';
 import { UserService } from '../../../features/Security/users/user.service';
 import { Animal } from '../animal/animal.module';
@@ -20,6 +22,9 @@ import jsPDF from 'jspdf';
 import { ViewChild, ElementRef } from '@angular/core';
 declare var bootstrap: any;
 import { Modal } from 'bootstrap';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Treatments } from '../tratamiento/tratamiento.module';
+import { TreatmentsService } from '../tratamiento/tratamiento.service';
 @Component({
   selector: 'app-animal-diagnostico',
   standalone: true,
@@ -33,7 +38,10 @@ import { Modal } from 'bootstrap';
     MatInputModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule],
+    MatSortModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive],
   templateUrl: './animal-diagnostico.component.html',
   styleUrl: './animal-diagnostico.css'
 })
@@ -44,13 +52,33 @@ export class AnimalDiagnosticoComponent implements OnInit {
   diagnostics: AnimalDiagnostics[] = [];
   animales: Animal[] = [];
   usuarios: User[] = [];
+  tratamiento: Treatments[] = [];
+  minDate: string = new Date().toISOString().split('T')[0];
 
   newDiagnostic: AnimalDiagnostics = {
-    id: 0, name:'', animal:'', users:'',state:'', diagnosis: '', animalId: 0, usersId: 0, DiseaseStatus: ''
-
+    id: 0, 
+    name: '', 
+    animal: '', 
+    users: '', 
+    state: '', 
+    diagnosis: '',
+    animalId: 0, 
+    usersId: 0, 
+    DiseaseStatus: ''
   };
 
-  displayedColumns: string[] = ['id', 'name','diagnosis', 'animal', 'users', 'estado', 'acciones'];
+  newTratamiento: Treatments = {
+    id: 0,
+    name: '',
+    state: false,
+    description: '',
+    finishiedDate: new Date(),
+    startDate: new Date(),
+    animalDiagnosticsId: 0,
+    usersId: 0
+  }
+
+  displayedColumns: string[] = ['id', 'name', 'diagnosis', 'animal', 'users', 'estado', 'acciones'];
   dataSource: MatTableDataSource<AnimalDiagnostics> = new MatTableDataSource<AnimalDiagnostics>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -61,13 +89,17 @@ export class AnimalDiagnosticoComponent implements OnInit {
     private diagnosticsService: AnimalDiagnosticsService,
     private animalService: AnimalService,
     private usersService: UserService,
-    private alertaService: AlertService
+    private alertaService: AlertService,
+    private treatmentsService: TreatmentsService
   ) { }
 
   ngOnInit(): void {
     const StorageId: string | null = localStorage.getItem('Usuario');
     this.usersId = Number(StorageId);
+
     this.newDiagnostic.usersId = this.usersId;
+    this.newTratamiento.usersId = this.usersId
+
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
 
     if (idFarmString && !isNaN(Number(idFarmString))) {
@@ -83,7 +115,7 @@ export class AnimalDiagnosticoComponent implements OnInit {
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
-      this.setDefaultSelections();
+    this.setDefaultSelections();
   }
 
   setDefaultSelections(): void {
@@ -91,8 +123,8 @@ export class AnimalDiagnosticoComponent implements OnInit {
     if (this.animales.length > 0) {
       this.newDiagnostic.animalId = this.animales[0].id;
     }
-    
   }
+
   checkValidSelection(field: NgModel) {
     if (field.value === '') {
       field.control.setErrors({ required: true });
@@ -101,7 +133,11 @@ export class AnimalDiagnosticoComponent implements OnInit {
     }
     field.control.markAsTouched();  // Asegurarse de marcar el campo como tocado
   }
+
+  isLoading: boolean = false;
+  isData: boolean = false;
   listDiagnostics(IdFarm: number): void {
+    this.isLoading = true; // Inicia la carga
     this.diagnosticsService.getAnimalDiagnostics(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
@@ -110,21 +146,54 @@ export class AnimalDiagnosticoComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.dataSource.data = data;
         this.diagnostics = data;
+        this.isLoading = false; // Finaliza la carga
+        this.isData = data.lenght === 0;
       },
       error: () => {
         this.alertaService.ErrorAlert('Error al obtener los diagnósticos');
+        this.isLoading = false;
       }
     });
   }
 
+  healthTreatment(id: number): void {
+    this.diagnosticsService.HealthDiagnostic(id).subscribe({
+      next: () => {
+        this.alertaService.SuccessAlert('Registrada');
+        if (this.IdFarm !== null) {
+          this.listDiagnostics(this.IdFarm);
+        }
+      }, error: (err) => {
+        this.alertaService.ErrorAlert('No se pudo procesar la solicitud');
+      }
+    })
+  }
+
+  treatmentModal(Treatments: AnimalDiagnostics) {
+    this.newTratamiento.animalDiagnosticsId = Treatments.id
+    this.newTratamiento.animalDiagnostics = Treatments.name
+  }
+  deathTreatment(id: number): void {
+    this.diagnosticsService.DeathDiagnostic(id).subscribe({
+      next: () => {
+        this.alertaService.SuccessAlert('Registrada');
+        if (this.IdFarm !== null) {
+          this.listDiagnostics(this.IdFarm);
+        }
+      }, error: (err) => {
+        this.alertaService.ErrorAlert('No se pudo procesar la solicitud');
+      }
+    })
+  }
+
   downloadPDF() {
     const doc = new jsPDF();
-  
+
     // Título del PDF
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
     doc.text('AGRONET', 14, 10); // Título del PDF
-  
+
     // Agregar subtítulo debajo del título
     doc.setFontSize(10); // Tamaño de fuente para el subtítulo
     doc.setTextColor(0, 0, 0); // Color negro para el subtítulo
@@ -132,11 +201,11 @@ export class AnimalDiagnosticoComponent implements OnInit {
 
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
-    doc.text('Histórico de modulos', 14, 23); // Título del PDF
-  
+    doc.text('Histórico de diagnósticos', 14, 23); // Título del PDF
+
     // Encabezados de la tabla
-    const headers = [['id','Nombre', 'Diagnostico', 'Usuario', 'Animal','Estado']];
-  
+    const headers = [['id', 'Nombre', 'Diagnostico', 'Usuario', 'Animal', 'Estado']];
+
     // Datos de la tabla
     const data = this.dataSource.data.map(newDiagnostic => [
       newDiagnostic.id,
@@ -146,7 +215,7 @@ export class AnimalDiagnosticoComponent implements OnInit {
       newDiagnostic.animal,
       newDiagnostic.state
     ]);
-  
+
     // Generar tabla usando autoTable
     (doc as any).autoTable({
       head: headers,
@@ -159,20 +228,39 @@ export class AnimalDiagnosticoComponent implements OnInit {
         cellPadding: 2, // Espaciado dentro de las celdas
       },
       columnStyles: {
-        0: { cellWidth: 10 },   
-        1: { cellWidth: 20 },   
-        2: { cellWidth: 40 },  
-        3: { cellWidth: 20 },   
+        0: { cellWidth: 10 },
+        1: { cellWidth: 20 },
+        2: { cellWidth: 40 },
+        3: { cellWidth: 20 },
         4: { cellWidth: 20 },
         5: { cellWidth: 20 }
       }
     });
-  
+
     // Guardar el archivo PDF
     doc.save('animal-diagnostic.pdf');
   }
 
+  downloadExcel() {
+    // Crear un arreglo con los datos de los animales
+    const bornlData = this.diagnostics.map(diagnostics => ({
+      ID: diagnostics.id,
+      Nombre: diagnostics.name,
+      Animal: diagnostics.animal,
+      Usuario: diagnostics.users,
+      Estado: diagnostics.state
+    }));
 
+    // Crear un libro de trabajo (workbook) y una hoja (worksheet)
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(bornlData);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'diagnosticos');
+
+    // Exportar el archivo Excel
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'diagnosticos.xlsx');
+  }
 
   onEdit(AnimalDiagnostic: AnimalDiagnostics) {
     this.newDiagnostic = { ...AnimalDiagnostic };
@@ -185,27 +273,7 @@ export class AnimalDiagnosticoComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  closeModal(): void {
-    const modalElement = document.getElementById('diagnosticsModal');
-    if (modalElement) {
-      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-      modal.hide(); // Cierra el modal
-      modalElement.classList.remove('show');
-      modalElement.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('modal-open');
-      document.body.style.overflow = ''; // Restaurar el overflow del body
-  
-      // Eliminar cualquier 'modal-backdrop' que haya quedado
-      const backdrop = document.querySelector('.modal-backdrop');
-      if (backdrop) {
-        backdrop.remove(); // Elimina la capa de fondo negra
-      }
-    } else {
-      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
-    }
-  }
-
-  onSubmit(form: NgForm): void {
+  onSubmitDiagnos(form: NgForm): void {
     if (form.valid) {
       if (this.newDiagnostic.id > 0) {
         const formData = form.value;
@@ -214,45 +282,44 @@ export class AnimalDiagnosticoComponent implements OnInit {
           ...formData,
           name: this.newDiagnostic.name,
           diagnosis: this.newDiagnostic.diagnosis,
-          animalId:this.newDiagnostic.animalId
+          animalId: this.newDiagnostic.animalId
         };
+        alert('asdasd')
         this.diagnosticsService.updateAnimalDiagnostics(diagnosticData, this.newDiagnostic.id).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Actualizado correctamente');
-            
+
             if (this.IdFarm !== null) {
               this.listDiagnostics(this.IdFarm);
-              
+
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }      
-            form.reset();   
-            this.closeModal();
+            }
+            form.reset();
           },
           error: () => {
             this.alertaService.ErrorAlert('Error al actualizar');
           }
         });
       } else {
-        const formData = form.value; 
+        const formData = form.value;
         const diagnostic: AnimalDiagnostics = {
           ...formData,
-          usersId:Number(formData.usersId),
+          usersId: Number(formData.usersId),
           DiseaseStatus: 'PENDIENTE'
         }
         this.diagnosticsService.createAnimalDiagnostics(diagnostic).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Creado correctamente');
-            
+
             if (this.IdFarm !== null) {
               this.listDiagnostics(this.IdFarm);
-              
+
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
             form.reset();
-            this.closeModal();          
-            },
+          },
           error: () => {
             this.alertaService.ErrorAlert('Error al crear');
           }
@@ -284,16 +351,37 @@ export class AnimalDiagnosticoComponent implements OnInit {
               this.listDiagnostics(this.IdFarm);
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
-            }            },
+            }
+          },
           error: () => {
             this.alertaService.ErrorAlert('Error al eliminar el diagnostico');
           }
         });
       }
     });
-
   }
 
+  onSubmitTreatment(form: NgForm) {
+    const formData = form.value;
+    const tratamiento: Treatments = {
+      ...formData,
+      Result: 'DIAGNOSITCADO',
+      usersId: this.newTratamiento.usersId,
+      animalDiagnosticsId: this.newTratamiento.animalDiagnosticsId,
+    }
+    this.treatmentsService.createTreatment(tratamiento).subscribe({
+      next: () => {
+        this.alertaService.SuccessAlert('Agregado correctamente');
+        if (this.IdFarm !== null) {
 
-
+        } else {
+          console.warn('No se pudo obtener el ID de la finca.');
+        }
+        form.reset();
+      },
+      error: () => {
+        this.alertaService.ErrorAlert('Error al agregar el tratamiento');
+      }
+    });
+  }
 }

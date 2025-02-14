@@ -5,5 +5,7 @@ export interface Treatments {
   startDate: Date | string,
   animalDiagnosticsId: number,
   name: string,
-  state:boolean
+  state:boolean,
+  animalDiagnostics?:string,
+  usersId?:number
 }

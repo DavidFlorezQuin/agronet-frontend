@@ -63,14 +63,14 @@ export class AlertaComponent implements OnInit {
 
   newAlerta: Alerta = {
     id: 0,
-    Name: '',
+    name: '',
     description: '',
     date: new Date(),
     isRead: false,
     farmsId: 0,
     animalId: 0,
     categoryAlertId: 0,
-    usersId: 0,
+    usersId: 0
   };
 
   displayedColumns: string[] = ['id', 'name', 'date', 'isRead', 'animal', 'categoryAlert', 'estado', 'acciones'];
@@ -91,6 +91,7 @@ export class AlertaComponent implements OnInit {
 
     const idFarmString = localStorage.getItem('idFincaSeleccionada');
     const idFarm: number = idFarmString ? Number(idFarmString) : 0;
+    this.IdFarm = idFarmString ? Number(idFarmString) : null;
 
     this.listAlerta(IdUser);
     this.ListAnimal(idFarm);
@@ -114,7 +115,10 @@ export class AlertaComponent implements OnInit {
     });
   }
 
+  isLoading: boolean = false;
+  isData: boolean = false;
   listAlerta(IdUser: number): void {
+    this.isLoading = true; // Inicia la carga
     this.AlertaService.getAlerta(IdUser).subscribe({
       next: (res: any) => {
         const data = res.data;
@@ -123,7 +127,14 @@ export class AlertaComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.dataSource.data = data;
         this.alerta = data;
+        this.isLoading = false; // Finaliza la carga
+        this.isData = data.lenght === 0;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los alertas');
+        this.isLoading = false; // Finaliza la carga incluso si ocurre un error
       }
+
     });
   }
 
@@ -163,7 +174,7 @@ export class AlertaComponent implements OnInit {
     // Datos de la tabla
     const data = this.dataSource.data.map(alerta => [
       alerta.id,
-      alerta.Name,
+      alerta.name,
       alerta.description,
       alerta.date,
       alerta.isRead,
@@ -234,7 +245,7 @@ export class AlertaComponent implements OnInit {
       this.alertService.ErrorAlert('Por favor complete todos los campos');
       return;
     }
-    
+
     const formData = form.value;
     const alertaData: Alerta = {
       id: this.newAlerta.id,
@@ -244,7 +255,7 @@ export class AlertaComponent implements OnInit {
       usersId: Number(formData.usersId),
       isRead: false,
       date: new Date(formData.date).toISOString(),
-      farmsId: Number(formData.farmsId)
+      farmsId: this.IdFarm
     };
 
     if (this.newAlerta.id > 0) {
@@ -264,7 +275,8 @@ export class AlertaComponent implements OnInit {
     } else {
       const alertaData: Alerta = {
         ...formData,
-        farmsId: this.IdFarm
+        farmsId: this.IdFarm,
+        state: true
       };
       alert(this.IdFarm)
       this.AlertaService.createAlerta(alertaData).subscribe({
@@ -296,7 +308,7 @@ export class AlertaComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.newAlerta = { ...this.newAlerta, id: 0, Name: '', description: '', date: new Date(), isRead: false };
+    this.newAlerta = { ...this.newAlerta, id: 0, name: '', description: '', date: new Date(), isRead: false };
   }
 
   private refreshAlertList(): void {

@@ -1,38 +1,42 @@
-
 <div class="container mt-5">
-    <h5>Ajustes de perfil</h5>
+  <h5>Ajustes de perfil</h5>
+  <hr>
   <main class="shadow-sm p-4 bg-white rounded">
+
     <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
       <div class="row">
         <!-- Columna 1 -->
+
+        <input id="id" formControlName="id" type="hidden" />
+
         <div class="col-md-6 mb-3">
           <label for="firstName" class="form-label">Primer Nombre:</label>
-          <input id="firstName" formControlName="firstName" class="form-control" />
+          <input id="firstName" formControlName="firstName" maxlength="25" class="form-control" />
         </div>
 
         <div class="col-md-6 mb-3">
           <label for="lastName" class="form-label">Apellido:</label>
-          <input id="lastName" formControlName="lastName" class="form-control" />
+          <input id="lastName" formControlName="lastName" maxlength="25" class="form-control" />
         </div>
 
         <div class="col-md-6 mb-3">
           <label for="email" class="form-label">Correo Electrónico:</label>
-          <input id="email" formControlName="email" type="email" class="form-control" />
+          <input id="email" formControlName="email" type="email" maxlength="25" class="form-control" />
         </div>
 
         <div class="col-md-6 mb-3">
           <label for="phone" class="form-label">Teléfono:</label>
-          <input id="phone" formControlName="phone" class="form-control" />
+          <input id="phone" formControlName="phone" maxlength="15" class="form-control" />
         </div>
 
         <div class="col-md-6 mb-3">
           <label for="document" class="form-label">Documento:</label>
-          <input id="document" formControlName="document" class="form-control" />
+          <input id="document" formControlName="document" maxlength="20" class="form-control" />
         </div>
 
         <div class="col-md-6 mb-3">
           <label for="typeDocument" class="form-label">Tipo de Documento:</label>
-          <input id="typeDocument" formControlName="typeDocument" class="form-control" />
+          <input id="typeDocument" formControlName="typeDocument" class="form-control" [attr.disabled]="true" />
         </div>
 
         <div class="col-md-6 mb-3">
@@ -40,19 +44,9 @@
           <input id="birthday" formControlName="birthday" type="date" class="form-control" />
         </div>
 
-        <div class="col-md-6 mb-3">
-          <label for="gender" class="form-label">Género:</label>
-          <input id="gender" formControlName="gender" class="form-control" />
-        </div>
-
-        <div class="col-md-12 mb-3">
-          <label for="direction" class="form-label">Dirección:</label>
-          <input id="direction" formControlName="direction" class="form-control" />
-        </div>
-
       </div>
 
-      <button type="submit" class="btn btn-primary">Guardar cambios</button>
+      <button type="submit" id="btn-forms" class="btn">Guardar cambios</button>
     </form>
   </main>
 </div>

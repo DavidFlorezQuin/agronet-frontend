@@ -6,7 +6,8 @@
   <section class="d-flex gap-3 mb-4">
     <div *ngIf="fincas.length === 0">
       <div class="alert alert-warning" role="alert">
-        Iniciemos agregando una finca!
+        Iniciemos agregando una finca! 
+        <a id="text-farm" routerLink="/dashboard/finca">Ir a Fincas</a>
       </div>
     </div>
     <div *ngFor="let finca of fincas" [class.opacity]="finca.id === idFincaSeleccionada"
@@ -26,9 +27,11 @@
       <div class="col-6">
         <canvas id="char"></canvas> 
       </div>
+      
       <div class="col-6">
         <canvas id="lineChart"></canvas> 
       </div>
+
       <div class="row">
 
         <div class="w-50">

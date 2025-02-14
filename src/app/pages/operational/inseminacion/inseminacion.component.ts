@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -9,6 +9,8 @@ import { Insemination } from './Insemination.module';
 import { Subject } from 'rxjs';
 import { Config } from 'datatables.net';
 import { CommonModule } from '@angular/common';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -52,7 +54,7 @@ export class InseminationComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild('Modal') Modal!: ElementRef;
 
-  displayedColumns: string[] = ['id', 'description', 'semen', 'mother', 'result', 'inseminationType', 'acciones'];
+  displayedColumns: string[] = ['id', 'description', 'semen', 'mother', 'result', 'inseminationType', 'state', 'acciones'];
 
   inseminations: Insemination[] = [];
 
@@ -85,39 +87,35 @@ export class InseminationComponent implements OnInit {
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
-    this.setDefaultSelections();
 
   }
   /** el isValidOption sirve para la parte de padre de semental no de la finca*/
   isValidOption(value: string): boolean {
     return value !== '' && value !== 'no-propiedad'; // Cambia 'no-propiedad' al valor que hayas asignado
   }
+
+  isLoading: boolean = false;
+  isData: boolean = false;
   listInseminations(IdFarm: number): void {
+    this.isLoading = true;
     this.inseminationService.getInseminations(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
         this.inseminations = data;
         this.dataSource.data = data;
+        this.isLoading = false;
+        this.isData = data.lenght === 0; 
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
+        this.isLoading = false;
       }
     });
   }
-  setDefaultSelections(): void {
-    // Si hay toros disponibles, seleccionar el primero como valor predeterminado
-    if (this.bulls.length > 0) {
-      this.newInsemination.semenId = this.bulls[0].id;
-    }
-    // Si hay vacas disponibles, seleccionar la primera como valor predeterminado
-    if (this.cows.length > 0) {
-      this.newInsemination.motherId = this.cows[0].id;
-    }
-  }
+
   checkValidSelection(field: NgModel) {
     if (field.value === '') {
       field.control.setErrors({ required: true });
@@ -132,7 +130,6 @@ export class InseminationComponent implements OnInit {
       next: (res: any) => {
         const data = res.data;
         this.cows = data;
-        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
@@ -151,7 +148,6 @@ export class InseminationComponent implements OnInit {
       next: (res: any) => {
         const data = res.data;
         this.bulls = data;
-        this.setDefaultSelections();
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
@@ -159,16 +155,34 @@ export class InseminationComponent implements OnInit {
     });
   }
 
-  registerAbortion(idRegister:number):void{
+  registerAbortion(idRegister: number): void {
     this.inseminationService.registerAbortion(idRegister).subscribe({
       next: (res: any) => {
         this.alertService.SuccessAlert('Registro de aborto');
+        if (this.IdFarm !== null) {
+          this.listInseminations(this.IdFarm);
+        }
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
       }
     })
   }
+
+  registerBorn(idRegister: number): void {
+    this.inseminationService.registerBorn(idRegister).subscribe({
+      next: (res: any) => {
+        this.alertService.SuccessAlert('Registro');
+        if (this.IdFarm !== null) {
+          this.listInseminations(this.IdFarm);
+        }
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los datos');
+      }
+    })
+  }
+
 
   downloadPDF(): void {
     const doc = new jsPDF();
@@ -187,14 +201,17 @@ export class InseminationComponent implements OnInit {
     doc.text('Histórico de inseminaciones', 14, 23); // Título del PDF
 
     // Encabezados de la tabla
-    const headers = [['id', 'Descripción', 'Madre', 'Padre', 'Resultado', 'Tipo Inseminación', 'Estado']];
+    const headers = [['id', 'Observación', 'Madre', 'Padre', 'Resultado', 'Tipo Inseminación', 'Estado']];
 
     // Datos de la tabla
-    const data = this.dataSource.data.map(inseminations => [
+    const data = this.inseminations.map(inseminations => [
       inseminations.id,
       inseminations.description,
+      inseminations.mother,
+      inseminations.semen,
       inseminations.result,
-      inseminations.inseminationType
+      inseminations.inseminationType,
+      inseminations.state
     ]);
 
     // Generar tabla usando autoTable
@@ -223,10 +240,33 @@ export class InseminationComponent implements OnInit {
     doc.save('Inseminaciones.pdf');
   }
 
+  downloadExcel(){
+   // Crear un arreglo con los datos de los animales
+      const bornlData = this.inseminations.map(inseminations => ({
+        ID: inseminations.id,
+        Asistencia: inseminations.description,
+        Madre: inseminations.mother,
+        Padre: inseminations.semen,
+        Resultado: inseminations.result,
+        TipoInseminación: inseminations.inseminationType,
+        Estado: inseminations.state,
+
+      }));
+  
+      // Crear un libro de trabajo (workbook) y una hoja (worksheet)
+      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(bornlData);
+      const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'inseminaciones');
+  
+      // Exportar el archivo Excel
+      const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+      const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+      saveAs(blob, 'inseminaciones.xlsx');
+    }
+
 
   onEdit(insemination: Insemination): void {
     this.newInsemination = { ...insemination };
-    // Verificar si la vaca seleccionada (motherId) existe en la lista de vacas
   }
 
   onDelete(id: number): void {
@@ -246,26 +286,7 @@ export class InseminationComponent implements OnInit {
       }
     });
   }
-// Función para cerrar el modal
-closeModal(): void {
-  const modalElement = document.getElementById('inseminacionModal');
-  if (modalElement) {
-    const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-    modal.hide(); // Cierra el modal
-    modalElement.classList.remove('show');
-    modalElement.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('modal-open');
-    document.body.style.overflow = ''; // Restaurar el overflow del body
 
-    // Eliminar cualquier 'modal-backdrop' que haya quedado
-    const backdrop = document.querySelector('.modal-backdrop');
-    if (backdrop) {
-      backdrop.remove(); // Elimina la capa de fondo negra
-    }
-  } else {
-    console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
-  }
-}
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newInsemination.id > 0) {
@@ -286,9 +307,8 @@ closeModal(): void {
             form.reset();
             if (this.IdFarm !== null) {
               this.listInseminations(this.IdFarm);
-              
+
             }
-            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar');
@@ -302,7 +322,7 @@ closeModal(): void {
           semenId: this.newInsemination.semenId ?? null,
           result: 'PENDIENTE',
           motherId: this.newInsemination.motherId,
-          state:true
+          state: true
         }
 
         this.inseminationService.createInsemination(Data).subscribe({
@@ -319,9 +339,8 @@ closeModal(): void {
             };
             if (this.IdFarm !== null) {
               this.listInseminations(this.IdFarm);
-              
+
             }
-            this.closeModal();
           },
           error: (err) => {
             let errorMessage = err.error?.message || err.message || "Ha ocurrido un error inesperado.";

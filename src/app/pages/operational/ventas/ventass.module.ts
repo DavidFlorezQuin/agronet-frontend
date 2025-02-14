@@ -4,5 +4,7 @@ export interface Ventas {
   quantity: number,
   measurement: string,
   productionId: number,
-  currency: string
+  currency: string,
+  animal?: string,
+  production?:string
 }

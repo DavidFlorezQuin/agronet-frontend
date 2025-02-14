@@ -7,4 +7,5 @@ export interface Productions {
   quantityTotal: number ,
   expirateDate?: Date | string;
   animalId: number 
+  animal?:string
 }

@@ -4,7 +4,8 @@
 
     <section class="d-flex align-items-center gap-3">
       <h2 class="fw-normal mb-0">Fincas</h2>
-      <button type="button" data-bs-toggle="modal" (click)="resetForm()" data-bs-target="#exampleModal" id="btn-forms" class="btn h-50">
+      <button type="button" data-bs-toggle="modal" (click)="resetForm()" data-bs-target="#exampleModal" id="btn-forms"
+        class="btn h-50">
         <i class="bi bi-plus-circle mx-2"></i>
         Nueva Finca
       </button>
@@ -13,7 +14,7 @@
         <i class="bi bi-file-earmark-pdf-fill"></i>
         PDF
       </button>
-      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+      <button id="btn-forms" class="btn" mat-button (click)="downloadExcel()">
         <i class="bi bi-file-spreadsheet"></i>
         Excel
       </button>
@@ -26,11 +27,7 @@
 
   </div>
 
-  <div *ngIf="fincas.length === 0"><div class="alert alert-warning" role="alert">
-    No hay fincas activas.
-  </div></div>
-
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
+  <table mat-table [dataSource]="dataSource" class="table table-striped" matSort>
     <!-- ID Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
@@ -61,13 +58,24 @@
       <td mat-cell *matCellDef="let element"> {{element.city}} </td>
     </ng-container>
 
+    <ng-container matColumnDef="state">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header [style.width]="'50px'">
+        Estado
+      </th>
+      <td mat-cell *matCellDef="let element" [style.text-align]="'center'" [style.width]="'50px'">
+        <span [ngStyle]="{'color': element.state ? 'green' : 'red', 'font-size': '24px'}">
+          ●
+        </span>
+      </td>
+    </ng-container>
 
     <!-- Acciones Column -->
     <ng-container matColumnDef="acciones">
       <th mat-header-cell *matHeaderCellDef> Acciones </th>
       <td mat-cell *matCellDef="let element">
         <div class="d-flex gap-2 justify-content-center" id="icons-section">
-            <i class="bi bi-pencil-square" (click)="onEdit(element)" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
+          <i class="bi bi-pencil-square" (click)="onEdit(element)" data-bs-toggle="modal"
+            data-bs-target="#exampleModal"></i>
           <i class="bi bi-trash" (click)="onDelete(element.id)"></i>
         </div>
       </td>
@@ -78,6 +86,16 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
+  <div *ngIf="isData">
+    <div class="alert alert-warning" role="alert">
+      No hay fincas activas.
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="text-center text-success mt-2">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
 
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
@@ -91,77 +109,85 @@
       </div>
       <div class="modal-body">
         <form #fincaForm="ngForm" (ngSubmit)="onSubmit(fincaForm)">
-          
+
           <div class="mb-3">
             <label for="fincaName" class="form-label">Nombre de la Finca</label>
-            <input type="text" class="form-control" id="fincaName" name="name" [(ngModel)]="newFinca.name" 
-            required
-           required minlength="3" maxlength="29" #nameField="ngModel"
-              [ngClass]="{
+            <input type="text" class="form-control" id="fincaName" name="name" [(ngModel)]="newFinca.name" required
+              required minlength="3" maxlength="29" #nameField="ngModel" [ngClass]="{
                 'is-invalid': nameField.invalid && nameField.touched,
                 'is-valid': nameField.valid && nameField.touched
               }" />
-              <div class="mb-3">
-                <label for="photo" class="form-label">Foto de la finca</label>
-                <input type="file" class="form-control" id="photo" name="photo" [(ngModel)]="newFinca.photo" accept=".jpg, .jpeg" (change)="onPhotoChange($event)" />
-              </div>
-              
-              <!-- Mensajes de error -->
+            <div class="mb-3">
+              <label for="photo" class="form-label">Foto de la finca</label>
+              <input type="file" class="form-control" id="photo" name="photo" [(ngModel)]="newFinca.photo"
+                accept=".jpg, .jpeg" (change)="onPhotoChange($event)" />
+            </div>
+
+            <!-- Mensajes de error -->
             <div *ngIf="nameField.invalid && nameField.touched" class="invalid-feedback">
               <div *ngIf="nameField.errors?.['required']">El nombre es obligatorio.</div>
               <div *ngIf="nameField.errors?.['minlength']">El nombre debe tener al menos 10 caracteres.</div>
               <div *ngIf="nameField.errors?.['maxlength']">El nombre no puede tener más de 29 caracteres.</div>
             </div>
-            
+
           </div>
 
           <div class="mb-3">
             <label for="hectare" class="form-label">Dimensión de Hectarea</label>
             <input type="number" class="form-control" id="hectare" name="hectare" [(ngModel)]="newFinca.hectare"
-             required min="1" pattern="^[1-9]\d*$*-" #hectare="ngModel"
-             [ngClass]="{'is-invalid': hectare.invalid && hectare.touched, 'is-valid':
-             hectare.valid && hectare.touched}"  (keypress)="preventNegative($event)" />
-            
+              required min="1" pattern="^[1-9]\d*$*-" #hectare="ngModel" [ngClass]="{'is-invalid': hectare.invalid && hectare.touched, 'is-valid':
+             hectare.valid && hectare.touched}" (keypress)="preventNegative($event)" />
 
-             
-               <!-- Mensajes de error -->
-               <div *ngIf="hectare.invalid && hectare.touched" class="invalid-feedback">
-                <div *ngIf="hectare.errors?.['required']">La dimención de la hectarea es obligatorio.</div>
-                <div *ngIf="hectare.errors?.['min']">La dimención de la hectarea debe ser mayor o igual a 0.</div>
-                <div *ngIf="hectare.errors?.['pattern']">La dimención de la hectarea debe ser un número positivo.</div>
-          </div>
-           
+
+
+            <!-- Mensajes de error -->
+            <div *ngIf="hectare.invalid && hectare.touched" class="invalid-feedback">
+              <div *ngIf="hectare.errors?.['required']">La dimención de la hectarea es obligatorio.</div>
+              <div *ngIf="hectare.errors?.['min']">La dimención de la hectarea debe ser mayor o igual a 0.</div>
+              <div *ngIf="hectare.errors?.['pattern']">La dimención de la hectarea debe ser un número positivo.</div>
+            </div>
+
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Descripción</label>
             <textarea class="form-control" id="description" name="description" [(ngModel)]="newFinca.description"
-              required minlength="10" #descriptionField="ngModel"
-              [ngClass]="{
+              required minlength="10" #descriptionField="ngModel" [ngClass]="{
                'is-invalid': descriptionField.invalid && descriptionField.touched,
                'is-valid': descriptionField.valid && descriptionField.touched
              }">
             </textarea>
-             <!-- Mensajes de error -->
-             <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+            <!-- Mensajes de error -->
+            <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
               <div *ngIf="descriptionField.errors?.['required']">La descripción es obligatoria.</div>
-              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.</div>
+              <div *ngIf="descriptionField.errors?.['minlength']">La descripción debe tener al menos 10 caracteres.
+              </div>
             </div>
 
-            <div class="mb-3 form-check form-switch">
-              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" [(ngModel)]="newFinca.state">
-              <label class="form-check-label" for="flexSwitchCheckChecked">
-                {{ newFinca.state ? 'Activo' : 'Inactivo' }}
-              </label>
+
+            <div class="input-group d-flex gap-4 mb-3">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                  [(ngModel)]="newFinca.state" [value]="true">
+                <label class="form-check-label" for="flexRadioDefault1">
+                  Activo
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
+                  [(ngModel)]="newFinca.state" [value]="false">
+                <label class="form-check-label" for="flexRadioDefault2">
+                  Inactivo
+                </label>
+              </div>
             </div>
 
-           
           </div>
           <div class="mb-3">
-                <label for="cityId" class="form-label">Ciudad</label>
-                <select class="form-select" id="cityId" name="cityId" [(ngModel)]="newFinca.cityId" required>
-                  <option *ngFor="let city of City" [value]="city.id">{{ city.name }}</option>
-                </select>
-              </div>
+            <label for="cityId" class="form-label">Ciudad</label>
+            <select class="form-select" id="cityId" name="cityId" [(ngModel)]="newFinca.cityId" required>
+              <option *ngFor="let city of City" [value]="city.id">{{ city.name }}</option>
+            </select>
+          </div>
           <button type="submit" class="btn btn-success w-100" [disabled]="!fincaForm.valid">Guardar</button>
         </form>
       </div>

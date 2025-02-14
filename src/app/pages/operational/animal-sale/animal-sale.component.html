@@ -1,0 +1,156 @@
+<div class="container mt-3 border p-3 shadow-sm">
+  <div class="d-flex justify-content-between">
+    <section class="d-flex align-items-center gap-3">
+
+      <h2 class="fw-normal mb-0" style="font-size: 40px;">Venta ganado</h2>
+      <!-- Botón para abrir el modal -->
+      <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#ventaModal" id="btn-forms">
+        <i class="bi bi-plus-circle mx-2"></i>
+        Nueva Venta
+      </button>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+        <i class="bi bi-file-earmark-pdf-fill"></i>
+        PDF
+      </button>
+      <button id="btn-forms" class="btn" mat-button (click)="downloadExcel()">
+        <i class="bi bi-file-spreadsheet"></i>
+        Excel
+      </button>
+    </section>
+
+    <!-- Campo de búsqueda -->
+    <mat-form-field appearance="fill">
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="aplicarFiltro($event)" placeholder="Filtrar">
+    </mat-form-field>
+  </div>
+
+  <!-- Tabla de datos -->
+  <table mat-table [dataSource]="dataSource" matSort class="table table-striped">
+    <!-- ID Column -->
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+      <td mat-cell *matCellDef="let sale"> {{ sale.id }} </td>
+    </ng-container>
+    <!-- Cantidad Column -->
+    <ng-container matColumnDef="animal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Animal </th>
+      <td mat-cell *matCellDef="let sale"> {{ sale.animals }} </td>
+    </ng-container>
+
+    <!-- Precio Column -->
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
+      <td mat-cell *matCellDef="let sale">{{ sale.currency }} {{ sale.price }} </td>
+    </ng-container>
+
+
+    <!-- production Column -->
+    <ng-container matColumnDef="peso">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Peso (Kg) </th>
+      <td mat-cell *matCellDef="let sale"> {{ sale.weight }} </td>
+    </ng-container>
+
+    <!-- Acciones Column -->
+    <ng-container matColumnDef="acciones">
+      <th mat-header-cell *matHeaderCellDef> Acciones </th>
+      <td mat-cell *matCellDef="let element">
+        <div class="d-flex gap-2 justify-content-center" id="icons-section">
+          <i class="bi bi-pencil-square" (click)="onEdit(element)"></i>
+          <i class="bi bi-trash" (click)="onDelete(element)"></i>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <div *ngIf="isLoading" class="text-center text-success mt-2">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+  <div *ngIf="isData">
+    <div class="alert alert-warning" role="alert">
+      No hay ventas activas.
+    </div>
+  </div>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" #Modal id="ventaModal" tabindex="-1" aria-labelledby="ventaModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ventaModalLabel">{{ newSale.id ? 'Editar ventas' : 'Agregar ventas'
+          }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <form #inventoryForm="ngForm" (ngSubmit)="onSubmit(inventoryForm)">
+
+          <label for="animalsId" class="form-label">Animal</label>
+          <select class="form-control" id="animalsId" name="animalsId" [(ngModel)]="newSale.animalsId" required>
+            <option value="">Seleccione un animal</option>
+            <ng-container *ngIf="animals.length > 0">
+              <option *ngFor="let animal of animals" [value]="animal.id">{{ animal.name }}</option>
+            </ng-container>
+            <option *ngIf="animals.length === 0" disabled>No hay animales disponibles</option>
+          </select>
+
+      <div class="mb-3">
+        <label for="price" class="form-label">Peso (Kg)</label>
+        <input type="string" id="price" class="form-control" name="price" [(ngModel)]="newSale.weight" required required
+          min="1" pattern="^[1-9]\d*$*-" #weight="ngModel" [ngClass]="{'is-invalid': weight.invalid && weight.touched, 'is-valid':
+              weight.valid && weight.touched}" (keypress)="preventNegative($event)" />
+
+
+        <!-- Mensajes de error -->
+        <div *ngIf="precio.invalid && precio.touched" class="invalid-feedback">
+          <div *ngIf="weight.errors?.['required']">El peso es obligatorio.</div>
+          <div *ngIf="weight.errors?.['min']">El Precio debe ser mayor a 0.</div>
+          <div *ngIf="weight.errors?.['pattern']">El Precio debe ser un número positivo.</div>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="price" class="form-label">Precio</label>
+        <input type="number" id="price" class="form-control" name="price" [(ngModel)]="newSale.price" required required
+          min="1" pattern="^[1-9]\d*$*-" #precio="ngModel" [ngClass]="{'is-invalid': precio.invalid && precio.touched, 'is-valid':
+               precio.valid && precio.touched}" (keypress)="preventNegative($event)" />
+
+
+        <!-- Mensajes de error -->
+        <div *ngIf="precio.invalid && precio.touched" class="invalid-feedback">
+          <div *ngIf="precio.errors?.['required']">El Precio es obligatorio.</div>
+          <div *ngIf="precio.errors?.['min']">El Precio debe ser mayor a 0.</div>
+          <div *ngIf="precio.errors?.['pattern']">El Precio debe ser un número positivo.</div>
+        </div>
+      </div>
+
+
+
+      <div class="mb-3">
+        <label for="currency" class="form-label">Moneda</label>
+        <input id="currency" class="form-control" name="currency" [(ngModel)]="newSale.currency" required minlength="4"
+          #Moneda="ngModel" [ngClass]="{
+                 'is-invalid': Moneda.invalid && Moneda.touched,
+                 'is-valid': Moneda.valid && Moneda.touched
+               }" />
+        <!-- Mensajes de error -->
+        <div *ngIf="Moneda.invalid && Moneda.touched" class="invalid-feedback">
+          <div *ngIf="Moneda.errors?.['required']">La moneda es obligatoria.</div>
+          <div *ngIf="Moneda.errors?.['minlength']">La moneda debe tener al menos 4 caracteres.</div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success w-100">{{ newSale.id ? 'Actualizar' : 'Agregar' }}</button>
+      </form>
+    </div>
+  </div>
+</div>
+</div>

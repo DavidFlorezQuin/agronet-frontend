@@ -65,12 +65,32 @@ a{
   position: relative; /* Necesario para posicionar .icon-alert relativo a este contenedor */
 }
 
+.dropdown-menu{
+  width: 300px !important
+}
+
+#text-descripcion{
+  color: #a8a8a8;
+  font-size: 15px;
+}
+
+#text-data{
+  color: #a8a8a8;
+  font-size: 11px;
+  margin-left: 10px;
+  margin-bottom: 0px;
+}
+#card-item{
+  cursor: pointer;
+
+}
+
 .icon-alert {
   background-color: red;
   color: white;
   border-radius: 50%; /* 50% para hacer un círculo perfecto */
   position: absolute; /* Cambiar a absolute */
-  right: 33px; /* Ajusta según necesites */
+  right: 12px; /* Ajusta según necesites */
   top: -7px; /* Ajusta según necesites */
   width: 20px; /* Ajusta el tamaño según sea necesario */
   height: 20px; /* Ajusta el tamaño según sea necesario */

@@ -12,10 +12,12 @@ RUN npm run build --prod
 
 # Usa una imagen ligera de Nginx para servir la aplicación
 FROM nginx:alpine
-COPY --from=build /app/dist/TuProyectoAngular /usr/share/nginx/html
+COPY --from=build /app/dist/agro-app-frontend/browser /usr/share/nginx/html
 
 # Exponer el puerto 80 para el tráfico HTTP
 EXPOSE 80
 
 # Comando para iniciar Nginx
 CMD ["nginx", "-g", "daemon off;"]
+# Copia la configuración personalizada de Nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Animal } from './animal.module';
-
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -28,6 +29,9 @@ import { Lote } from '../lote/lote.module';
 import { ViewChild, ElementRef } from '@angular/core';
 declare var bootstrap: any;
 import { Modal } from 'bootstrap';
+import { AnimalSale } from '../animal-sale/animal-sale.module';
+import { VentasAnimalService } from '../animal-sale/animale-sale.service';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 @Component({
   selector: 'app-animal',
   standalone: true,
@@ -41,7 +45,11 @@ import { Modal } from 'bootstrap';
     MatInputModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule],
+    MatSortModule,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive
+  ],
   templateUrl: './animal.component.html'
 })
 export class AnimalComponent implements OnInit {
@@ -50,9 +58,17 @@ export class AnimalComponent implements OnInit {
   IdFarm: number | null = null;
   races: [] = [];
   newAnimales: Animal = {
-    id: 0, name: '', weight: 0, photo: '', gender: '', purpose: '', birthDay: new Date(), state: true, lotId: 0, race: '', inProduction:true, durationProduction: new Date(),
+    id: 0, name: '', weight: 0, photo: '', gender: '', purpose: '', birthDay: new Date(), state: true, lotId: 0, race: '', inProduction: true, durationProduction: new Date(),
   };
-  displayedColumns: string[] = ['id', 'animal', 'weight', 'gender', 'race', 'purpose', 'birthDay', 'lotId','estado', 'acciones'];
+
+  newSale: AnimalSale = {
+    id: 0,
+    price: 0,
+    weight: '',
+    animalsId: 0,
+    currency: 0
+  };
+  displayedColumns: string[] = ['id', 'animal', 'weight', 'gender', 'race', 'purpose', 'birthDay', 'lotId', 'estado', 'acciones'];
 
   dataSource!: MatTableDataSource<Animal>;
 
@@ -62,7 +78,7 @@ export class AnimalComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private animalService: AnimalService, private alertaService: AlertService, private loteService: LoteService, private enumSevice: EnumService) { }
+  constructor(private animalService: AnimalService, private alertaService: AlertService, private loteService: LoteService, private enumSevice: EnumService, private animalSaleService: VentasAnimalService) { }
 
   maxDate: string = new Date().toISOString().split('T')[0];  // Fecha actual
   minDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 20)).toISOString().split('T')[0];
@@ -104,19 +120,31 @@ export class AnimalComponent implements OnInit {
   }
 
   purposeOptions: { value: string, label: string }[] = [];
+  isFemale: boolean = false;
 
   onGenderChange() {
     if (this.newAnimales.gender === 'Male') {
       this.purposeOptions = [{ value: 'venta', label: 'Venta' }];
+      this.isFemale = false
     } else if (this.newAnimales.gender === 'Female') {
       this.purposeOptions = [
         { value: 'leche', label: 'Leche' },
-        { value: 'doble', label: 'Doble propósito' }
+        { value: 'venta', label: 'Venta' }
       ];
     }
     // Reiniciar el propósito seleccionado si cambia el género
     this.newAnimales.purpose = '';
   }
+  onFemaleMilk() {
+    if(this.newAnimales.purpose === 'leche' && this.newAnimales.gender === 'Female'){
+      this.isFemale = true
+    } else{
+      this.isFemale = false
+    }
+
+  }
+
+
   listLot(IdFarm: number): void {
     this.loteService.getLote(IdFarm).subscribe({
       next: (res: any) => {
@@ -128,10 +156,31 @@ export class AnimalComponent implements OnInit {
       }
     })
   }
- // Función para cerrar el modal
-/** */
- 
 
+  downloadExcel(): void {
+    // Crear un arreglo con los datos de los animales
+    const animalData = this.animales.map(animal => ({
+      ID: animal.id,
+      Nombre: animal.name,
+      Raza: animal.race,
+      Peso: animal.weight,
+      Género: animal.gender === 'Male' ? 'Macho' : 'Hembra',
+      Propósito: animal.purpose,
+      Nacimiento: animal.birthDay,
+      Lote: animal.lot,
+      Estado: animal.state ? 'Activo' : 'Inactivo'
+    }));
+
+    // Crear un libro de trabajo (workbook) y una hoja (worksheet)
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(animalData);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Animales');
+
+    // Exportar el archivo Excel
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'animales.xlsx');
+  }
 
   downloadPDF(): void {
     const doc = new jsPDF();
@@ -148,7 +197,7 @@ export class AnimalComponent implements OnInit {
 
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
-    doc.text('Histórico de modulos', 14, 23); // Título del PDF
+    doc.text('Histórico de ganado', 14, 23); // Título del PDF
 
     // Encabezados de la tabla
     const headers = [['id', 'Animal', 'Raza', 'Peso', 'Género', 'Propósito', 'Nacimiento', 'Lote']];
@@ -159,9 +208,10 @@ export class AnimalComponent implements OnInit {
       animales.name,
       animales.race,
       animales.weight,
-      animales.gender,
+      animales.gender === 'Male' ? 'macho' : 'hembra',
       animales.purpose,
       animales.birthDay,
+      animales.lot
     ]);
 
     // Generar tabla usando autoTable
@@ -182,7 +232,7 @@ export class AnimalComponent implements OnInit {
         3: { cellWidth: 20 },
         4: { cellWidth: 20 },
         5: { cellWidth: 20 },
-        6: { cellWidth: 20 },
+        6: { cellWidth: 30 },
         7: { cellWidth: 20 },
       }
     });
@@ -190,9 +240,10 @@ export class AnimalComponent implements OnInit {
     // Guardar el archivo PDF
     doc.save('animal.pdf');
   }
-
-
+  isLoading: boolean = false;
+  isData: boolean = false;
   ListAnimal(farmId: number): void {
+    this.isLoading = true; // Inicia la carga
     this.animalService.getListAnimals(farmId).subscribe({
       next: (res: any) => {
         const data = res.data;
@@ -201,18 +252,19 @@ export class AnimalComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.animales = data;
         this.dataSource.data = data;
+        this.isLoading = false; // Finaliza la carga
+        this.isData = data.lenght === 0;
       },
       error: () => {
         this.alertaService.ErrorAlert('Error al obtener los animales');
+        this.isLoading = false; // Finaliza la carga incluso si ocurre un error
       }
     });
   }
 
   aplicarFiltro(event: Event): void {
-
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
-
   }
 
   onEdit(animal: Animal): void {
@@ -251,6 +303,10 @@ export class AnimalComponent implements OnInit {
     }
   }
 
+  resetForm(form: NgForm): void {
+    form.reset();  // Limpiar el formulario
+
+  }
   onDelete(id: number): void {
     this.alertaService.DeleteAlert().then((res) => {
       if (res.isConfirmed) {
@@ -259,7 +315,8 @@ export class AnimalComponent implements OnInit {
             this.alertaService.SuccessAlert('Eliminado correctamente');
             if (this.IdFarm !== null) {
               this.ListAnimal(this.IdFarm);  // Actualizar la lista de animales
-            }          },
+            }
+          },
           error: () => {
             this.alertaService.ErrorAlert('Error al eliminar');
           }
@@ -268,29 +325,9 @@ export class AnimalComponent implements OnInit {
     });
   }
 
-  closeModal(): void {
-    const modalElement = document.getElementById('animalModal');
-    if (modalElement) {
-      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-      modal.hide(); // Cierra el modal
-      modalElement.classList.remove('show');
-      modalElement.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('modal-open');
-      document.body.style.overflow = ''; // Restaurar el overflow del body
-  
-      // Eliminar cualquier 'modal-backdrop' que haya quedado
-      const backdrop = document.querySelector('.modal-backdrop');
-      if (backdrop) {
-        backdrop.remove(); // Elimina la capa de fondo negra
-      }
-    } else {
-      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
-    }
-  }
-
   onSubmit(form: NgForm): void {
     if (form.valid) {
-      const formData = form.value; 
+      const formData = form.value;
       const animalData: Animal = {
         ...formData,
         name: this.newAnimales.name,
@@ -302,18 +339,19 @@ export class AnimalComponent implements OnInit {
         birthDay: this.newAnimales.birthDay,
         lotId: this.newAnimales.lotId,
         id: this.newAnimales.id,
-        state: this.newAnimales.state
+        state: this.newAnimales.state,
+        inProduction: this.newAnimales.inProduction,
+        durationProduction: this.newAnimales.durationProduction
       };
       if (this.newAnimales.id > 0) {
         // Si el animal ya existe, lo actualiza
-  
+
         this.animalService.updateAnimal(animalData, this.newAnimales.id).subscribe({
           next: () => {
             this.alertaService.SuccessAlert('Actualizado con exito')
             if (this.IdFarm !== null) {
               this.ListAnimal(this.IdFarm);  // Actualizar la lista de animales
             }
-            this.closeModal();  // Cerrar modal
             form.reset();  // Limpiar el formulario
           },
           error: () => {
@@ -328,7 +366,6 @@ export class AnimalComponent implements OnInit {
             if (this.IdFarm !== null) {
               this.ListAnimal(this.IdFarm);  // Actualizar la lista de animales
             }
-            this.closeModal();  // Cerrar modal
             form.reset();  // Limpiar el formulario
           },
           error: () => {
@@ -340,8 +377,37 @@ export class AnimalComponent implements OnInit {
       this.alertaService.ErrorAlert('Por favor completa todos los campos');
     }
   }
-  
-  
+
+  selectAnimal(id: number, SaleForm: NgForm, weight: string) {
+    this.resetForm(SaleForm)
+    this.newSale.animalsId = id;
+    this.newSale.weight = weight;
+  }
+
+  onSubmitSale(form: NgForm): void {
+
+    const formData = form.value;
+    const saleData: AnimalSale = {
+      ...formData,
+      price: this.newSale.price,
+      state: true,
+      weight: this.newSale.weight,
+      currency: 'COP',
+      animalsId: this.newSale.animalsId
+    };
+
+    this.animalSaleService.createSale(saleData).subscribe({
+      next: () => {
+        this.alertaService.SuccessAlert('Creado con exito')
+        if (this.IdFarm !== null) {
+          this.ListAnimal(this.IdFarm);  // Actualizar la lista de animales
+        }
+        form.reset();  // Limpiar el formulario
+      },
+      error: () => {
+        this.alertaService.ErrorAlert('Error al crear');
+      }
+    });
+
+  }
 }
-
-

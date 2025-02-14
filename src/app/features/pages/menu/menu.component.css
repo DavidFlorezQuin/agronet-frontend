@@ -93,7 +93,6 @@
 }
 
 .nav-link-menu{
-  margin: 10px 0;
   font-size: 17px;
   transition: 0.2s all;
 }
@@ -105,4 +104,16 @@
 
 .nav-link-menu:focus{
 color: #cccccc;
+}
+.collapse {
+  opacity: 0;               /* Oculto inicialmente */
+  max-height: 0;            /* Colapsado */
+  overflow: hidden;         /* Evita desbordamientos */
+  transition: opacity 0.5s ease, max-height 0.5s ease; /* Transiciones */
+  will-change: opacity, max-height; /* Optimización del navegador */
+}
+
+.collapse.show {
+  opacity: 1;               /* Totalmente visible */
+  max-height: 500px;        /* Expansión con un límite razonable */
 }

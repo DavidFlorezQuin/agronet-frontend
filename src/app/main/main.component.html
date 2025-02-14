@@ -16,7 +16,7 @@
       <div class="dropdown">
         <a class="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
           
-          <div *ngIf="alerts.length > 0" class="p-3">
+          <div *ngIf="alerts.length > 0">
             <div class="icon-alert p-1">
               {{alerts.length}}
             </div> 
@@ -24,8 +24,16 @@
           <i class="bi bi-bell-fill"></i>
         </a>
 
-        <ul class="dropdown-menu dropdown-menu-lg-end">
-          <li *ngFor="let alert of alerts"><a class="dropdown-item">{{alert.description}}</a></li>
+        <ul class="dropdown-menu dropdown-menu-lg-end shadow-sm">
+          <li *ngFor="let alert of alerts" (click)="updateAlert(alert)">
+            <a class="dropdown-item shadow-sm" id="card-item">
+              <div class="d-flex">
+                <p class="mb-0">{{alert.name}} <p id="text-data">{{alert.date | date}}</p> 
+              </div>
+              <p id="text-descripcion">{{alert.description}}</p>
+            </a>
+
+          </li>
 
           <div *ngIf="alerts.length === 0" class="p-3">
               <p class="text-alert mb-0">¡Aún no hay alertas pendientes!</p> 
@@ -38,8 +46,14 @@
           <p>{{ farmUser.length }}</p>
         </div>
         <i class="bi bi-briefcase-fill" data-bs-toggle="modal" data-bs-target="#myModal"></i>
-        <a class="container-profile d-flex align-items-center gap-2" href="profile">
-          <i class="bi bi-person-circle"></i>
+        
+        <a class="container-profile d-flex align-items-center gap-2 shadow-sm" style="background-color: aliceblue; padding: 3px 8px; border-radius: 5px;" routerLink="/profile" >
+          <div *ngIf="imageUrl">
+            <img [src]="imageUrl" alt="User Photo" style="width: 20px; height: 20px; border-radius: 50%;" />
+          </div>
+          <div *ngIf="!imageUrl">
+            <i class="bi bi-person-circle"></i>
+          </div>
           {{username}}
         </a>
       </div>

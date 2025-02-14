@@ -11,4 +11,5 @@ export interface Animal {
     lotId: number;
     inProduction: true;
     durationProduction:  Date | string;
+    lot?: string
   }

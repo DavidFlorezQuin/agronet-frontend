@@ -26,11 +26,6 @@
       <input matInput (keyup)="aplicarFiltro($event)" placeholder="Buscar en la tabla">
     </mat-form-field>
   </div>
-  <div *ngIf="alerta.length === 0">
-    <div class="alert alert-warning" role="alert">
-      ¡Aún no hay alertas agregadas!
-    </div>
-  </div>
 
   <!-- Tabla con MatTable -->
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z2" matSort>
@@ -106,6 +101,17 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
+  <div *ngIf="isData">
+    <div class="alert alert-warning" role="alert">
+      ¡Aún no hay alertas agregadas!
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="text-center text-success mt-2">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
@@ -127,9 +133,9 @@
 
           <div class=" gap-3 mb-3">
             <div class="w-100">
-              <label for="name" class="form-label">Nombre<span style="color: red;">*</span></label>
+              <label for="name" class="form-label">Nombre <span style="color: red;">*</span></label>
               <input type="text" placeholder="ej. Vacunar al ganado" class="form-control" id="name" name="name"
-                [(ngModel)]="newAlerta.Name" required minlength="4" #NombreDeAlertas="ngModel" [ngClass]="{
+                [(ngModel)]="newAlerta.name" required minlength="4" #NombreDeAlertas="ngModel" [ngClass]="{
                 'is-invalid': NombreDeAlertas.invalid && NombreDeAlertas.touched,
                 'is-valid': NombreDeAlertas.valid && NombreDeAlertas.touched
               }">
@@ -139,27 +145,26 @@
               </div>
             </div>
 
+            
+            <div class="mt-1">
+              <label for="description" class="form-label">Descripción <span style="color: red;">*</span></label>
+              <textarea placeholder="Descripción de la acción a realizar" type="text" class="form-control"
+              id="description" name="description" [(ngModel)]="newAlerta.description" required 
+              #descriptionField="ngModel" [ngClass]="{
+                'is-invalid': descriptionField.invalid && descriptionField.touched,
+                'is-valid': descriptionField.valid && descriptionField.touched
+              }"></textarea>
+
+              <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
+                <div *ngIf="descriptionField.errors?.['required']">La descripción de la alerta es obligatorio.</div>
+              </div>
+            </div>
+            
             <div class="mb-3">
               <label for="Date" class="form-label">Fecha <span style="color: red;">*</span></label>
               <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newAlerta.date" required
                 [min]="minDate">
             </div>
-
-
-            <div class="mt-1">
-              <label for="description" class="form-label">Descripción<span style="color: red;">*</span></label>
-              <textarea placeholder="Descripción de la acción a realizar" type="text" class="form-control"
-                id="description" name="description" [(ngModel)]="newAlerta.description" required minlength="10"
-                #descriptionField="ngModel" [ngClass]="{
-                'is-invalid': descriptionField.invalid && descriptionField.touched,
-                'is-valid': descriptionField.valid && descriptionField.touched
-              }"></textarea>
-              <div *ngIf="descriptionField.invalid && descriptionField.touched" class="invalid-feedback">
-                <div *ngIf="descriptionField.errors?.['required']">La descripción de la alerta es obligatorio.</div>
-                <div *ngIf="descriptionField.errors?.['minlength']">Debe tener al menos 4 caracteres.</div>
-              </div>
-            </div>
-
             <div class="d-flex gap-3 mt-3">
               <div class="mb-3 w-50">
                 <label for="animalId" class="form-label">Animal</label>
@@ -172,7 +177,7 @@
               </div>
 
               <div class="mb-3">
-                <label for="categoryAlertId" class="form-label">Categoría Alerta<span
+                <label for="categoryAlertId" class="form-label">Categoría Alerta <span
                     style="color: red;">*</span></label>
                 <select class="form-control" id="categoryAlertId" name="categoryAlertId"
                   [(ngModel)]="newAlerta.categoryAlertId" required>

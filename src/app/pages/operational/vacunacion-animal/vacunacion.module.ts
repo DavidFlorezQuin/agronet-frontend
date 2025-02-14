@@ -3,5 +3,7 @@ export interface VaccineAnimals {
   animalId: number,
   vaccinesId: number ,
   dateApplied: Date,
-  nextDose: null
+  nextDose: null,
+  animal?:string,
+  vaccine?:string,
 }

@@ -7,5 +7,7 @@ export interface Nacimiento{
     description:string,
     birthWeight: number 
     inseminationId:number
-    AnimalId: number | null;   
+    created_at?: Date, 
+    insemination?:string | null, 
+
 }

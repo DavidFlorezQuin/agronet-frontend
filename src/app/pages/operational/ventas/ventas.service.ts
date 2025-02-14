@@ -17,7 +17,7 @@ export class VentasService {
   }
 
   createSale(sale: Ventas): Observable<Ventas> {
-    return this.http.post<Ventas>(`${this._baseUrl}/Sale/save`, sale);
+    return this.http.post<Ventas>(`${this._baseUrl}/Sale/save-sale`, sale);
   }
 
   updateSale(sale: Ventas, id:number): Observable<Ventas> {
@@ -26,5 +26,9 @@ export class VentasService {
 
   deleteSale(id: number): Observable<void> {
     return this.http.delete<void>(`${this._baseUrl}/Sale/${id}`);
+  }
+
+  getSaleMonth(id:number):Observable<any[]>{
+    return this.http.get<any[]>(`${this._baseUrl}/Sale/monthly-sale/${id}`);
   }
 }

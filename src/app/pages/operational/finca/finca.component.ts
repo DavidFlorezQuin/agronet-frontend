@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { NgForm } from '@angular/forms';
 import { FincaService } from './finca.service';
@@ -49,7 +51,7 @@ export class FincaComponent implements OnInit {
   newFinca: Finca = {
     id: 0,
     City: '',
-    code:'',
+    code: '',
     name: '',
     photo: '',
     hectare: 0,
@@ -58,7 +60,7 @@ export class FincaComponent implements OnInit {
     state: true
   }
 
-  displayedColumns: string[] = ['id', 'name', 'hectare', 'description', 'cityId', 'acciones'];
+  displayedColumns: string[] = ['id', 'name', 'hectare', 'description', 'cityId', 'state', 'acciones'];
   dataSource!: MatTableDataSource<Finca>;
   City: City[] = [];
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -99,7 +101,11 @@ export class FincaComponent implements OnInit {
       event.preventDefault(); // Prevenir la entrada del símbolo de menos
     }
   }
+
+  isLoading: boolean = false;
+  isData: boolean = false;
   listFincas(IdFarm: number): void {
+    this.isLoading = true; // Inicia la carga
     this.fincaService.getFincas(IdFarm).subscribe({
       next: (res: any) => {
         const data = res.data;
@@ -108,9 +114,12 @@ export class FincaComponent implements OnInit {
         this.dataSource.sort = this.sort;
         this.fincas = data;
         this.dataSource.data = data;
+        this.isLoading = false; 
+        this.isData = data.lenght === 0; 
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los datos');
+        this.isLoading = false;
       }
     });
   }
@@ -136,12 +145,12 @@ export class FincaComponent implements OnInit {
     const headers = [['id', 'name', 'hectare', 'description', 'cityId']];
 
     // Datos de la tabla
-    const data = this.dataSource.data.map(fincas => [
+    const data = this.fincas.map(fincas => [
       fincas.id,
       fincas.name,
       fincas.hectare,
       fincas.description,
-      fincas.cityId
+      fincas.City
     ]);
 
     // Generar tabla usando autoTable
@@ -165,13 +174,33 @@ export class FincaComponent implements OnInit {
     });
 
     // Guardar el archivo PDF
-    doc.save('modulos.pdf');
+    doc.save('fincas.pdf');
   }
 
   onEdit(finca: Finca): void {
     this.newFinca = { ...finca };
   }
+  downloadExcel() {
+    // Crear un arreglo con los datos de los animales
+    const bornlData = this.fincas.map(fincas => ({
+      ID: fincas.id,
+      Nombre: fincas.name,
+      Dimensión: fincas.hectare,
+      Descripción: fincas.description,
+      Ciudad: fincas.City,
+      Estado: fincas.state
+    }));
 
+    // Crear un libro de trabajo (workbook) y una hoja (worksheet)
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(bornlData);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'fincas');
+
+    // Exportar el archivo Excel
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'fincas.xlsx');
+  }
   onDelete(id: number): void {
     this.alertService.DeleteAlert().then((res) => {
       if (res.isConfirmed) {
@@ -190,7 +219,7 @@ export class FincaComponent implements OnInit {
       }
     });
   }
-  
+
   onSubmit(form: NgForm): void {
     if (form.valid) {
       const formData = form.value;
@@ -199,10 +228,11 @@ export class FincaComponent implements OnInit {
         id: this.newFinca.id,
         code: this.newFinca.code,
         name: this.newFinca.name,
-        photo:this.newFinca.photo,
+        photo: this.newFinca.photo,
         hectare: this.newFinca.hectare,
         description: this.newFinca.description,
-        cityId: this.newFinca.cityId 
+        cityId: this.newFinca.cityId,
+        state: this.newFinca.state
       };
       if (this.newFinca.id > 0) {
         this.fincaService.updateFinca(fincaData, this.newFinca.id).subscribe({
@@ -210,27 +240,27 @@ export class FincaComponent implements OnInit {
             this.alertService.SuccessAlert('Actualizado correctamente');
             form.reset();
             if (this.IdUser !== null)
-               this.listFincas(this.IdUser);
+              this.listFincas(this.IdUser);
           },
           error: () => this.alertService.ErrorAlert('Error al actualizar')
         });
       } else {
         const formData = form.value;
-        const fincaToCreate: Finca = { ...formData, id: 0, code:'' };
-        
+        const fincaToCreate: Finca = { ...formData, id: 0, code: '' };
+
         if (this.IdUser !== null) {
-        this.fincaService.createFinca(fincaToCreate, this.IdUser).subscribe({
-          next: (response: any) => {
-            this.alertService.SuccessAlert('Finca creada correctamente');
-            form.reset();                
+          this.fincaService.createFinca(fincaToCreate, this.IdUser).subscribe({
+            next: (response: any) => {
+              this.alertService.SuccessAlert('Finca creada correctamente');
+              form.reset();
               if (this.IdUser !== null) {
                 this.listFincas(this.IdUser);
               }
-          },
-          error: () => this.alertService.ErrorAlert('Error al crear finca')
-        });
+            },
+            error: () => this.alertService.ErrorAlert('Error al crear finca')
+          });
+        }
       }
-    }
 
     } else {
       this.alertService.ErrorAlert('Por favor complete todos los campos');

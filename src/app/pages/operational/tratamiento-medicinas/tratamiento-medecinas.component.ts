@@ -44,7 +44,7 @@ export class TratamientoMedecinasComponent implements OnInit {
   treatmentsMedicines: TreatmentsMedicines[] = [];
   tratamientos: Treatments[] = []; 
 
-  newTreatmentMedicine: TreatmentsMedicines = { id: 0, name: '', description: '', periocityDay: 0, medicinesId: 0, treatmentId: 0 };
+  newTreatmentMedicine: TreatmentsMedicines = { id: 0, description: '', periocity:'', medicinesId: 0, treatmentId: 0, number:0};
   displayedColumns: string[] = ['id','description', 'periocityDay', 'medicines', 'treatment', 'actions'];
   dataSource!: MatTableDataSource<TreatmentsMedicines>;
 

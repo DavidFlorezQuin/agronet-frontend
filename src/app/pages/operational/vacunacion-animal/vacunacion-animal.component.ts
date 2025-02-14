@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { VaccineAnimalsService } from './vacunacion.service';
 import { AlertService } from '../../../shared/components/alert.service';
 import { VaccineAnimals } from './vacunacion.module';
@@ -26,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { ElementRef } from '@angular/core';
+import jsPDF from 'jspdf';
 declare var bootstrap: any;
 @Component({
   selector: 'app-vacunacion',
@@ -43,7 +46,7 @@ declare var bootstrap: any;
     MatPaginatorModule,
     MatSortModule,
     MatSelectModule,
-    MatDatepickerModule,  // Asegúrate de incluir este módulo
+    MatDatepickerModule,
     MatNativeDateModule,
   ],
   templateUrl: './vacunacion-animal.component.html'
@@ -97,8 +100,82 @@ export class VacunacionComponent implements OnInit {
   }
 
   downloadPDF() {
+    const doc = new jsPDF();
 
+    // Título del PDF
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('AGRONET', 14, 10); // Título del PDF
+
+    // Agregar subtítulo debajo del título
+    doc.setFontSize(10); // Tamaño de fuente para el subtítulo
+    doc.setTextColor(0, 0, 0); // Color negro para el subtítulo
+    doc.text('Sistema de gestión de ganadería colombiana', 14, 13); // Subtítulo
+
+    doc.setFontSize(16); // Tamaño de fuente para el título
+    doc.setTextColor(22, 160, 133); // Cambiar el color del título
+    doc.text('Histórico de tratamientos', 14, 23); // Título del PDF
+
+    // Encabezados de la tabla
+    const headers = [['id', 'Animal', 'Vacuna', 'Aplicación', 'Próxima dosis']];
+
+    // Datos de la tabla
+    const data = this.vaccineAnimals.map(vacunas => [
+      vacunas.id,
+      vacunas.animal,
+      vacunas.vaccine,
+      vacunas.dateApplied,
+      vacunas.nextDose
+    ]);
+
+    // Generar tabla usando autoTable
+    (doc as any).autoTable({
+      head: headers,
+      body: data,
+      startY: 30, // Posición donde empieza la tabla
+      theme: 'grid', // Estilo de la tabla
+      headStyles: { fillColor: [56, 161, 15] }, // Estilo de encabezado
+      styles: {
+        fontSize: 10, // Tamaño de fuente en la tabla
+        cellPadding: 2, // Espaciado dentro de las celdas
+      },
+      columnStyles: {
+        0: { cellWidth: 10 },
+        1: { cellWidth: 20 },
+        2: { cellWidth: 40 },
+        3: { cellWidth: 20 },
+        4: { cellWidth: 20 }
+      }
+    });
+
+    // Guardar el archivo PDF
+    doc.save('vacunacion.pdf');
   }
+
+
+  downloadExcel() {
+    // Crear un arreglo con los datos de los animales
+    const bornlData = this.vaccineAnimals.map(vaccineAnimals => ({
+      ID: vaccineAnimals.id,
+      Animal: vaccineAnimals.animal,
+      Vacuna: vaccineAnimals.vaccine,
+      Aplicación: vaccineAnimals.dateApplied,
+      PróximaDosis: vaccineAnimals.nextDose
+    }));
+
+    // Crear un libro de trabajo (workbook) y una hoja (worksheet)
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(bornlData);
+    const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'vacunas');
+
+    // Exportar el archivo Excel
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'vacunas.xlsx');
+  }
+
+  isLoading: boolean = false;
+  isData: boolean = false;
   listVaccineAnimals(IdFarm: number): void {
     this.vaccineAnimalsService.getVaccineAnimals(IdFarm).subscribe({
       next: (res: any) => {
@@ -106,12 +183,14 @@ export class VacunacionComponent implements OnInit {
         this.dataSource = new MatTableDataSource(data);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
-
         this.vaccineAnimals = data;
         this.dataSource.data = data;
+        this.isLoading = false; // Finaliza la carga
+        this.isData = data.lenght === 0; 
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los registros de vacunas');
+        this.isLoading = false;
       }
     });
   }
@@ -153,27 +232,7 @@ export class VacunacionComponent implements OnInit {
     });
 
   }
-  
- // Función para cerrar el modal
- closeModal(): void {
-  const modalElement = document.getElementById('vaccineAnimalModal');
-    if (modalElement) {
-      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
-      modal.hide(); // Cierra el modal
-      modalElement.classList.remove('show');
-      modalElement.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('modal-open');
-      document.body.style.overflow = ''; // Restaurar el overflow del body
-  
-      // Eliminar cualquier 'modal-backdrop' que haya quedado
-      const backdrop = document.querySelector('.modal-backdrop');
-      if (backdrop) {
-        backdrop.remove(); // Elimina la capa de fondo negra
-      }
-    } else {
-      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
-    }
-}
+
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newVaccineAnimal.id > 0) {
@@ -183,7 +242,7 @@ export class VacunacionComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listVaccineAnimals(this.IdFarm);
-              
+
             }
             this.newVaccineAnimal = {
               id: 0,
@@ -192,7 +251,6 @@ export class VacunacionComponent implements OnInit {
               dateApplied: new Date(),
               nextDose: null
             };
-            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar la vacuna');
@@ -205,9 +263,8 @@ export class VacunacionComponent implements OnInit {
             form.reset();
             if (this.IdFarm !== null) {
               this.listVaccineAnimals(this.IdFarm);
-              
+
             }
-            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al registrar la vacuna');

@@ -12,17 +12,19 @@ import { FormsModule } from '@angular/forms';
 import { Chart } from 'chart.js/auto';
 import { AlertaService } from '../../../pages/operational/alerta/alerta.service';
 import { Alert } from 'bootstrap';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
 export class HomeComponentD implements OnInit {
 
   public chart!: Chart;
+  public chat2!: Chart;
   userName: string = '';
 
   animales: Animal[] = [];
@@ -38,17 +40,19 @@ export class HomeComponentD implements OnInit {
     private animalService: AnimalService,
     private productionsService: ProductionsService,
     private salesService: VentasService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const storageId: string | null = localStorage.getItem('Usuario');
     const idUser: number = storageId ? Number(storageId) : 0;
-    
-  
+
+
     this.listFincas(idUser);
     this.crearGraficaInicial(); // Crear la gráfica sin datos al cargar la vista
 
   }
+
+
   crearGraficaInicial(): void {
     this.chart = new Chart('char', {
       type: 'bar',
@@ -77,7 +81,37 @@ export class HomeComponentD implements OnInit {
         }
       }
     });
-  }  // Método para guardar el ID de la finca seleccionada y actualizar datos
+
+    this.chat2 = new Chart('lineChart', {
+      type: 'line',
+      data: {
+        labels: ['Sin datos'], // Etiquetas iniciales
+        datasets: [{
+          label: 'Producción de Leche (litros)',
+          data: [0], // Valores iniciales
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: 'Gráfica de ventas (Sin Datos)'
+          }
+        }
+      }
+    });
+  }
+
+  // Método para guardar el ID de la finca seleccionada y actualizar datos
   guardarIdFinca(id: number): void {
     this.idFincaSeleccionada = id;
     localStorage.setItem('idFincaSeleccionada', id.toString());
@@ -87,8 +121,8 @@ export class HomeComponentD implements OnInit {
   // Método que actualiza todos los datos al seleccionar una finca
   actualizarDatosFinca(farmId: number): void {
     this.listProductions(farmId);
-    this.ListAnimal(farmId);
-    this.listSales(farmId);
+    // this.ListAnimal(farmId);
+    // this.listSales(farmId);
     this.actualizarGrafica(farmId); // Llamar al método para actualizar la gráfica
   }
 
@@ -127,14 +161,60 @@ export class HomeComponentD implements OnInit {
           plugins: {
             title: {
               display: true,
-              text: data.length > 0 
-                ? 'Producción Mensual de Leche' 
+              text: data.length > 0
+                ? 'Producción Mensual de Leche'
                 : 'Sin datos, mostrando valores en cero'
             }
           }
         }
       });
     });
+
+    this.salesService.getSaleMonth(farmId).subscribe(data => {
+      const defaultLabels = ['June', 'July', 'August', 'September', 'October'];
+      const defaultValues = [0, 0, 0, 0, 0];
+
+      const labels = data.length > 0 ? data.map(d => d.mes) : defaultLabels;
+      const values = data.length > 0 ? data.map(d => d.litros) : defaultValues;
+
+      if (this.chat2) {
+        this.chat2.destroy(); // Destruir la gráfica anterior antes de crear una nueva
+      }
+
+
+      this.chat2 = new Chart('lineChart', {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Ganancias por mes (COP)',
+            data: values,
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            borderColor: 'rgba(75, 192, 192, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+          plugins: {
+            title: {
+              display: true,
+              text: data.length > 0
+                ? 'Ganancias Mensuales'
+                : 'Sin datos, mostrando valores en cero'
+            }
+          }
+        }
+      });
+
+    })
+
+
   }
 
   listFincas(idUser: number): void {
@@ -148,27 +228,27 @@ export class HomeComponentD implements OnInit {
     });
   }
 
-  listSales(farmId: number): void {
-    this.salesService.getSales(farmId).subscribe({
-      next: (res: any) => {
-        this.sales = res.data;
-      },
-      error: () => {
-        console.error('Error al obtener las ventas');
-      }
-    });
-  }
+  // listSales(farmId: number): void {
+  //   this.salesService.getSales(farmId).subscribe({
+  //     next: (res: any) => {
+  //       this.sales = res.data;
+  //     },
+  //     error: () => {
+  //       console.error('Error al obtener las ventas');
+  //     }
+  //   });
+  // }
 
-  ListAnimal(farmId: number): void {
-    this.animalService.getAnimals(farmId).subscribe({
-      next: (res: any) => {
-        this.animales = res.data;
-      },
-      error: () => {
-        console.error('Error al obtener los animales');
-      }
-    });
-  }
+  // ListAnimal(farmId: number): void {
+  //   this.animalService.getAnimals(farmId).subscribe({
+  //     next: (res: any) => {
+  //       this.animales = res.data;
+  //     },
+  //     error: () => {
+  //       console.error('Error al obtener los animales');
+  //     }
+  //   });
+  // }
 
   listProductions(farmId: number): void {
     this.productionsService.getProductions(farmId).subscribe({

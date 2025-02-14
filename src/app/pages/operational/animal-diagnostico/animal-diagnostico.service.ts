@@ -28,4 +28,13 @@ export class AnimalDiagnosticsService {
   createAnimalDiagnostics(animal: AnimalDiagnostics): Observable<AnimalDiagnostics> {
     return this.http.post<AnimalDiagnostics>(`${this._baseUrl}/AnimalDiagnostic/save`, animal);
   }
-}
+
+  DeathDiagnostic(id:number):Observable<any>{
+    return this.http.put<any>(`${this._baseUrl}/AnimalDiagnostic/${id}/animal-dead`,{});
+  }
+
+  HealthDiagnostic(id:number):Observable<any>{
+    return this.http.put<any>(`${this._baseUrl}/AnimalDiagnostic/${id}/animal-health`,{});
+  }
+  }
+

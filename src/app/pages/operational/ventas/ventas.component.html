@@ -2,7 +2,7 @@
   <div class="d-flex justify-content-between">
     <section class="d-flex align-items-center gap-3">
 
-      <h2 class="fw-normal mb-0" style="font-size: 40px;">Venta ganado</h2>
+      <h2 class="fw-normal mb-0" style="font-size: 40px;">Venta Producción</h2>
       <!-- Botón para abrir el modal -->
       <button type="button" class="btn h-50" data-bs-toggle="modal" data-bs-target="#ventaModal" id="btn-forms">
         <i class="bi bi-plus-circle mx-2"></i>
@@ -12,7 +12,7 @@
         <i class="bi bi-file-earmark-pdf-fill"></i>
         PDF
       </button>
-      <button id="btn-forms" class="btn" mat-button (click)="downloadPDF()">
+      <button id="btn-forms" class="btn" mat-button (click)="downloadExcel()">
         <i class="bi bi-file-spreadsheet"></i>
         Excel
       </button>
@@ -25,22 +25,24 @@
     </mat-form-field>
   </div>
 
-  <div *ngIf="sales.length === 0"><div class="alert alert-warning" role="alert">
-    No hay ventas activas.
-  </div></div>
-
   <!-- Tabla de datos -->
-  <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort class="table table-striped">
     <!-- ID Column -->
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
       <td mat-cell *matCellDef="let sale"> {{ sale.id }} </td>
     </ng-container>
 
+    <!-- Animal Column -->
+    <ng-container matColumnDef="animal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Animal </th>
+      <td mat-cell *matCellDef="let sale"> {{ sale.animal }} </td>
+    </ng-container>
+
     <!-- Precio Column -->
     <ng-container matColumnDef="price">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio </th>
-      <td mat-cell *matCellDef="let sale"> {{ sale.price }} </td>
+      <td mat-cell *matCellDef="let sale"> {{ sale.currency }} {{ sale.price }} </td>
     </ng-container>
 
     <!-- Cantidad Column -->
@@ -48,17 +50,11 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
       <td mat-cell *matCellDef="let sale"> {{ sale.quantity }} </td>
     </ng-container>
-    
+
     <!-- production Column -->
     <ng-container matColumnDef="production">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Producción </th>
       <td mat-cell *matCellDef="let sale"> {{ sale.production }} </td>
-    </ng-container>
-
-    <!-- Moneda Column -->
-    <ng-container matColumnDef="currency">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Moneda </th>
-      <td mat-cell *matCellDef="let sale"> {{ sale.currency }} </td>
     </ng-container>
 
     <!-- Acciones Column -->
@@ -76,7 +72,16 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
-  
+  <div *ngIf="isData">
+    <div class="alert alert-warning" role="alert">
+      No hay ventas activas.
+    </div>
+  </div>
+  <div *ngIf="isLoading" class="text-center text-success mt-2">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
@@ -87,96 +92,70 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="ventaModalLabel">{{ newSale.id ? 'Editar ventas' : 'Agregar ventas'
-        }}</h5>
+          }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <form #inventoryForm="ngForm" (ngSubmit)="onSubmit(inventoryForm)">
           <div class="mb-3">
             <label for="productionId" class="form-label">Producción</label>
-            <select class="form-control" id="productionId" name="productionId" [(ngModel)]="newSale.productionId" 
-            #produccion="ngModel" required
-            (change)="checkValidSelection(produccion)"
-            [ngClass]="{
+            <select class="form-control" id="productionId" name="productionId" [(ngModel)]="newSale.productionId"
+              #produccion="ngModel" required (change)="checkValidSelection(produccion)" [ngClass]="{
               'is-invalid': produccion.invalid && produccion.touched,
               'is-valid': produccion.valid && produccion.touched
-            }"><option value="" selected>Seleccione una Producción</option>
-            <ng-container *ngIf="productions.length > 0">
+            }">
+              <option value="" selected>Seleccione una Producción</option>
+              <ng-container *ngIf="productions.length > 0">
 
-              <option *ngFor="let production of productions" [value]="production.id">{{ production.animal }} - {{ production.typeProduction }} {{ production.stock }} {{ production.measurement }}</option>
-            
-            </ng-container>
-            <option *ngIf="productions.length === 0" disabled>No hay fincas disponibles</option>
+                <option *ngFor="let production of productions" [value]="production.id">{{ production.animal }} - {{
+                  production.typeProduction }} {{ production.stock }} {{ production.measurement }}</option>
+
+              </ng-container>
+              <option *ngIf="productions.length === 0" disabled>No hay fincas disponibles</option>
             </select>
-            
-             <!-- Mensajes de error -->
-             <div *ngIf="produccion.invalid && produccion.touched" class="invalid-feedback">
+
+            <!-- Mensajes de error -->
+            <div *ngIf="produccion.invalid && produccion.touched" class="invalid-feedback">
               Seleccionar una finca es obligatorio.
             </div>
-          </div> 
+          </div>
           <div class="mb-3">
             <label for="price" class="form-label">Precio</label>
-            <input type="number" id="price" class="form-control" name="price" [(ngModel)]="newSale.price" required 
-            required min="1" pattern="^[1-9]\d*$*-" #precio="ngModel"
-            [ngClass]="{'is-invalid': precio.invalid && precio.touched, 'is-valid':
-             precio.valid && precio.touched}"  (keypress)="preventNegative($event)" />
-            
-             
-             <!-- Mensajes de error -->
+            <input type="number" id="price" class="form-control" name="price" [(ngModel)]="newSale.price" required
+              required min="1" pattern="^[1-9]\d*$*-" #precio="ngModel" [ngClass]="{'is-invalid': precio.invalid && precio.touched, 'is-valid':
+             precio.valid && precio.touched}" (keypress)="preventNegative($event)" />
+
+
+            <!-- Mensajes de error -->
             <div *ngIf="precio.invalid && precio.touched" class="invalid-feedback">
               <div *ngIf="precio.errors?.['required']">El Precio es obligatorio.</div>
               <div *ngIf="precio.errors?.['min']">El Precio debe ser mayor a 0.</div>
               <div *ngIf="precio.errors?.['pattern']">El Precio debe ser un número positivo.</div>
-        </div>
+            </div>
           </div>
-
 
           <div class="mb-3">
             <label for="quantity" class="form-label">Cantidad</label>
             <input type="number" id="quantity" class="form-control" name="quantity" [(ngModel)]="newSale.quantity"
-            required min="1" pattern="^[1-9]\d*$*-" #cantidad="ngModel"
-            [ngClass]="{'is-invalid': cantidad.invalid && cantidad.touched, 'is-valid':
-             cantidad.valid && cantidad.touched}"  (keypress)="preventNegative($event)" />
-            
-             
-             <!-- Mensajes de error -->
+              required min="1" pattern="^[1-9]\d*$*-" #cantidad="ngModel" [ngClass]="{'is-invalid': cantidad.invalid && cantidad.touched, 'is-valid':
+             cantidad.valid && cantidad.touched}" (keypress)="preventNegative($event)" />
+
+            <!-- Mensajes de error -->
             <div *ngIf="cantidad.invalid && cantidad.touched" class="invalid-feedback">
               <div *ngIf="cantidad.errors?.['required']">La cantidad es obligatorio.</div>
               <div *ngIf="cantidad.errors?.['min']">La cantidad debe ser mayor a 0.</div>
               <div *ngIf="cantidad.errors?.['pattern']">La cantidad debe ser un número positivo.</div>
-        </div>
+            </div>
           </div>
 
-          
           <div class="mb-3">
             <label for="purpose" class="form-label">Medida</label>
-            <select class="form-control" id="measurement" name="measurement" [(ngModel)]="newSale.measurement"
-              required>
-              <option value="" disabled selected>Selecciona una medida</option>
-              <option *ngFor="let measurement of measurements" [value]="measurement">{{ measurement }}</option>
-
+            <select class="form-control" [(ngModel)]="newSale.measurement" required>
+              <option selected value="L">Litros</option>
             </select>
           </div>
 
-          <div class="mb-3">
-            <label for="currency" class="form-label">Moneda</label>
-            <input id="currency" class="form-control" name="currency" [(ngModel)]="newSale.currency"
-              required minlength="4" #Moneda="ngModel"
-              [ngClass]="{
-               'is-invalid': Moneda.invalid && Moneda.touched,
-               'is-valid': Moneda.valid && Moneda.touched
-             }"
-              />
-              <!-- Mensajes de error -->
-           <div *ngIf="Moneda.invalid && Moneda.touched" class="invalid-feedback">
-             <div *ngIf="Moneda.errors?.['required']">La moneda  es obligatoria.</div>
-             <div *ngIf="Moneda.errors?.['minlength']">La moneda debe tener al menos 4 caracteres.</div>
-           </div>
-          </div>
-
-          
-
-          <button type="submit" class="btn btn-success">{{ newSale.id ? 'Actualizar' : 'Agregar' }}</button>
+          <button type="submit" class="btn btn-success w-100">{{ newSale.id ? 'Actualizar' : 'Agregar' }}</button>
         </form>
       </div>
     </div>

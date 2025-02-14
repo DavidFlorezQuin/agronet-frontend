@@ -4,8 +4,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { AlertService } from '../../../shared/components/alert.service';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,59 +15,63 @@ import { Config } from 'datatables.net';
 import { Subject } from 'rxjs';
 import { ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 import { MatButtonModule } from '@angular/material/button';
 import { DataTablesModule } from 'angular-datatables';
 import { Modal } from 'bootstrap';
-import { VentasService } from './ventas.service';
-import { Ventas } from './ventass.module';
 import { EnumService } from '../../../shared/components/enum.service';
 import { ProductionsService } from '../produccion/produccion.service';
 import { Productions } from '../produccion/produccion.module';
 import { ElementRef } from '@angular/core';
+import { VentasService } from '../ventas/ventas.service';
+import { Ventas } from '../ventas/ventass.module';
+import { AnimalSale } from './animal-sale.module';
+import { VentasAnimalService } from './animale-sale.service';
+import { Animal } from '../animal/animal.module';
+import { AnimalService } from '../animal/animal.service';
 import jsPDF from 'jspdf';
-declare var bootstrap: any;
 @Component({
-  selector: 'app-ventas',
+  selector: 'app-animal-sale',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
     DataTablesModule,
-    CommonModule,
-    FormsModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule],
-  templateUrl: './ventas.component.html'
+    MatSortModule,
+  ],
+  templateUrl: './animal-sale.component.html',
+  styleUrl: './animal-sale.component.css'
 })
-export class VentasComponent implements OnInit {
+export class AnimalSaleComponent {
 
   measurements: [] = [];
+  animals: Animal[] = [];
   IdFarm: number | null = null; // Propiedad para almacenar el ID
 
-  newSale: Ventas = {
+  newSale: AnimalSale = {
     id: 0,
     price: 0,
-    quantity: 0,
-    measurement: '',
-    productionId: 0,
-    currency: ''
+    weight: '',
+    animalsId: 0,
+    currency: 0
   };
   productions: any[] = [];
-  sales: Ventas[] = [];
-  displayedColumns: string[] = ['id', 'animal', 'price', 'quantity', 'production', 'acciones'];
+  sales: AnimalSale[] = [];
+  displayedColumns: string[] = ['id', 'animal', 'price', 'peso', 'acciones'];
   dataSource!: MatTableDataSource<Ventas>;
 
   @ViewChild('Modal') Modal!: ElementRef;
   // referenicas del paginador y sort
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  constructor(private salesService: VentasService, private alertService: AlertService, private enumController: EnumService, private productionsService: ProductionsService) { }
+  constructor(private salesService: VentasAnimalService, private alertService: AlertService, private enumController: EnumService, private productionsService: ProductionsService, private animalsServices: AnimalService) { }
 
   ngOnInit(): void {
 
@@ -84,7 +86,7 @@ export class VentasComponent implements OnInit {
 
     if (this.IdFarm !== null) {
       this.listSales(this.IdFarm);
-      this.listProductions(this.IdFarm);
+      this.listAnimals(this.IdFarm);
     } else {
       console.warn('No se pudo obtener el ID de la finca.');
     }
@@ -107,9 +109,7 @@ export class VentasComponent implements OnInit {
 
   isLoading: boolean = false;
   isData: boolean = false;
-
   listSales(IdFarm: number): void {
-    this.isLoading = true; // Inicia la carga
     this.salesService.getSales(IdFarm).subscribe({
       next: (res: any) => {
 
@@ -118,19 +118,33 @@ export class VentasComponent implements OnInit {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
         this.sales = data;
-        this.dataSource.data = data;
-        this.isLoading = false; // Finaliza la carga
-        this.isData = data.lenght === 0; 
+        this.dataSource.data = data
+        this.isLoading = false;
+        this.isData = data.lenght === 0;
       },
       error: () => {
         this.alertService.ErrorAlert('Error al obtener los registros de ventas');
-        this.isLoading = false; // Finaliza la carga incluso si ocurre un error
+        this.isLoading = false;
       }
     });
   }
+  listAnimals(IdFarm: number): void {
+    this.animalsServices.getAnimals(IdFarm).subscribe({
+      next: (res: any) => {
+
+        const data = res.data;
+        this.animals = data;
+      },
+      error: () => {
+        this.alertService.ErrorAlert('Error al obtener los registros de animales');
+      }
+    });
+  }
+
   downloadPDF() {
     const doc = new jsPDF();
 
+    // Título del PDF
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
     doc.text('AGRONET', 14, 10); // Título del PDF
@@ -142,19 +156,18 @@ export class VentasComponent implements OnInit {
 
     doc.setFontSize(16); // Tamaño de fuente para el título
     doc.setTextColor(22, 160, 133); // Cambiar el color del título
-    doc.text('Histórico de ventas', 14, 23); // Título del PDF
+    doc.text('Histórico de ganado vendidos', 14, 23); // Título del PDF
 
     // Encabezados de la tabla
-    const headers = [['id', 'Animal', 'Precio', 'Cantidad', 'Producción', 'Cantidad Moneda']];
+    const headers = [['id', 'Animal', 'Precio', 'Moneda', 'Peso']];
 
     // Datos de la tabla
     const data = this.sales.map(sales => [
       sales.id,
-      sales.animal,
+      sales.animals,
       sales.price,
-      sales.quantity,
-      sales.production,
-      sales.currency
+      sales.currency,
+      sales.weight
     ]);
 
     // Generar tabla usando autoTable
@@ -170,39 +183,25 @@ export class VentasComponent implements OnInit {
       },
       columnStyles: {
         0: { cellWidth: 10 },
-        1: { cellWidth: 30 },
+        1: { cellWidth: 20 },
         2: { cellWidth: 20 },
         3: { cellWidth: 20 },
-        4: { cellWidth: 30 },
-        5: { cellWidth: 20 }
+        4: { cellWidth: 20 }
       }
     });
 
     // Guardar el archivo PDF
-    doc.save('ventas.pdf');
-  }
-
-  listProductions(farmId: number): void {
-    this.productionsService.getProductions(farmId).subscribe({
-      next: (res: any) => {
-        const data = res.data;
-        this.productions = data;
-      },
-      error: (error) => {
-        this.alertService.ErrorAlert('Error al cargar los medicamentos');
-      }
-    });
+    doc.save('ventas-animal.pdf');
   }
 
   downloadExcel() {
     // Crear un arreglo con los datos de los animales
     const bornlData = this.sales.map(sales => ({
       ID: sales.id,
-      Animal: sales.animal,
-      Precio: sales.price,
-      Cantidad: sales.quantity,
-      Producción: sales.production,
-      Moneda: sales.currency
+      Nombre: sales.price,
+      Dimensión: sales.weight,
+      Descripción: sales.currency,
+      Ciudad: sales.animals
     }));
 
     // Crear un libro de trabajo (workbook) y una hoja (worksheet)
@@ -216,7 +215,6 @@ export class VentasComponent implements OnInit {
     saveAs(blob, 'ventas.xlsx');
   }
 
-
   listMeasurement(): void {
     this.enumController.getMeasurement().subscribe({
       next: (res: any) => {
@@ -227,7 +225,26 @@ export class VentasComponent implements OnInit {
       }
     });
   }
+  // Función para cerrar el modal
+  closeModal(): void {
+    const modalElement = document.getElementById('ventaModal');
+    if (modalElement) {
+      const modal = Modal.getInstance(modalElement) || new Modal(modalElement);
+      modal.hide(); // Cierra el modal
+      modalElement.classList.remove('show');
+      modalElement.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = ''; // Restaurar el overflow del body
 
+      // Eliminar cualquier 'modal-backdrop' que haya quedado
+      const backdrop = document.querySelector('.modal-backdrop');
+      if (backdrop) {
+        backdrop.remove(); // Elimina la capa de fondo negra
+      }
+    } else {
+      console.error('El modal no se encontró. Asegúrate de que el ID sea correcto.');
+    }
+  }
   onSubmit(form: NgForm): void {
     if (form.valid) {
       if (this.newSale.id > 0) {
@@ -238,10 +255,9 @@ export class VentasComponent implements OnInit {
             this.newSale = {
               id: 0,
               price: 0,
-              quantity: 0,
-              measurement: '',
-              productionId: 0,
-              currency: ''
+              weight: '',
+              animalsId: 0,
+              currency: 0
             };
             if (this.IdFarm !== null) {
               this.listSales(this.IdFarm);
@@ -249,6 +265,7 @@ export class VentasComponent implements OnInit {
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al actualizar la venta');
@@ -265,6 +282,7 @@ export class VentasComponent implements OnInit {
             } else {
               console.warn('No se pudo obtener el ID de la finca.');
             }
+            this.closeModal();
           },
           error: () => {
             this.alertService.ErrorAlert('Error al registrar la venta');
@@ -276,7 +294,7 @@ export class VentasComponent implements OnInit {
     }
   }
 
-  onEdit(sale: Ventas): void {
+  onEdit(sale: AnimalSale): void {
     this.newSale = { ...sale };
   }
 

@@ -11,6 +11,11 @@
     pointer-events: none; /* Evitar que el hover afecte el texto */
     padding: 5px;
 }
+#text-farm{
+    text-decoration: underline;
+    color: var(--color-green-700);
+    cursor: pointer;
+}
 .opacity {
     border: 2px solid var(--color-blue-500); /* Bordes destacados */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra para dar profundidad */
